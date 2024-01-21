@@ -1,0 +1,291 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+
+<mat-card>
+    <mat-card-content>
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-2 text-white">
+                        From : <input type="date" class="form-control form-control-sm" [(ngModel)]="from">
+                    </div>
+                    <div class="col-md-2 text-white">
+                        To : <input type="date" class="form-control form-control-sm" [(ngModel)]="to">
+                    </div>
+                    <div class="col-md-2">
+                        <br/>
+                        <button mat-button class="btn btn-success btn-sm btn-block" (click)="getDispatchHistory()">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="row d-flex align-items-center" *ngIf="dispatchHistory?.length > 0">
+                                    <h3 class="text-body">Completed Bookings</h3>
+                                    <a mat-button class="btn btn-primary text-white" (click)="exportAsXLSX()" data-toggle="tooltip" title="Download road pickups data">
+                                        <i class="fa fa-download"></i>
+                                        excel</a>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dispatchHistory" style="font-weight:10">
+                            <td>
+                                <mat-card>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <mat-card-title>
+                                                <h5><b>Customer</b></h5>                                                    
+                                            </mat-card-title>
+
+                                            <p><b>Name: </b>{{data.customerName}}</p>
+                                            <p><b>Mobile: </b>{{data.customerTelephoneNo}}</p>
+                                            <p><b>Pickup At: </b>{{data.pickupLocation.address}}</p>
+                                            <p><b>Pickup Time: </b>{{data.pickupDateTime | date: 'dd/MM/yyyy'}}
+                                                {{data.pickupDateTime | date: 'hh:mm.ss a'}}</p>
+                                            <p *ngIf="data.dropLocation"><b>Drop At: </b>{{data.dropLocation[0].address}}</p>
+                                            <p *ngIf="data.distance"><b>Distance: </b>{{data.distance | number : '1.2-2'}}</p>
+
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <mat-card-title>
+                                                <h5><b>Driver</b></h5>                                                  
+                                            </mat-card-title>
+                                            <div *ngFor='let dr of data.noifiedDrivers'>
+                                                <p *ngIf="data.assignedDriverId == dr.driverId">
+                                                <b>Name: </b>{{dr.driverInfo.driverName}}</p>
+                                                <p *ngIf="data.assignedDriverId == dr.driverId">
+                                                    <b>Mobile: </b>{{dr.driverInfo.driverContactNumber}}</p>
+                                                <p *ngIf="data.assignedDriverId == dr.driverId">
+                                                    <b>Vehicle : </b> {{dr.vehicleInfo.vehicleRegistrationNo}}
+                                                </p>
+                                            </div>
+                                            <p><b>Vehicle Category: </b>{{data.vehicleCategory}}</p>
+                                            <p><b>Vehicle Sub Category: </b>{{data.vehicleSubCategory}}</p>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <mat-card-title>
+                                                <h5><b>Info</b></h5>                                                    
+                                            </mat-card-title>
+                                            <p><b>Bid Value: </b>{{data.bidValue}}</p>
+                                            <p><b>Trip Duration: </b>{{data.tripTime | number : '1.2-2'}}</p>
+                                            <p><b>Waiting Time: </b>{{data.waitTime | number : '1.2-2'}}</p>
+                                            <p><b>Waiting Cost: </b>{{currency}} {{data.waitingCost | number : '1.2-2'}}</p>
+                                            <p><b>Actual Cost: </b>{{currency}} {{data.totalPrice | number : '1.2-2'}}</p>
+                                            <p><b>Estimated Cost: </b>{{currency}} {{data.hireCost | number : '1.2-2'}}</p>
+                                            <p *ngIf="data.notes"><b>Notes: </b>{{data.notes}}</p>
+                                            
+                                            <span class="badge badge-primary p-2" *ngIf="data.type == 'adminDispatch'">
+                                                <strong>Admin Dispatch</strong>
+                                            </span>
+                                            <span class="badge badge-primary p-2" *ngIf="data.type == 'driverDispatch'">
+                                                <strong>Driver Dispatch</strong>
+                                            </span>
+                                            <span class="badge badge-primary p-2" *ngIf="data.type == 'userDispatch'">
+                                                <strong>User Dispatch</strong>
+                                            </span>
+                                            <span class="badge badge-primary p-2" *ngIf="data.type == 'passengerTrip'">
+                                                <strong>User Trip</strong>
+                                            </span>
+
+                                            <!-- driver trip status -->
+                                            <span class="badge badge-info p-2 ml-1" *ngIf="((data.status == 'default') && (data.assignedDriverId != 'null'))">
+                                                <strong>In Progress</strong>
+                                            </span>
+                                            <span class="badge badge-warning p-2 ml-1" *ngIf="((data.status == 'default') && (data.assignedDriverId == 'null'))">
+                                                <strong>Not Accepted</strong>
+                                            </span>
+
+                                            <span class="badge badge-danger p-2 ml-1" *ngIf="data.status == 'canceled'">
+                                                <strong>Canceled</strong>
+                                            </span>
+
+                                            <span class="badge badge-success p-2 ml-1" *ngIf="data.status == 'accepted'">
+                                                <strong>Accepted</strong>
+                                            </span>
+
+                                            <span class="badge badge-success p-2 ml-1" *ngIf="data.status == 'done'">
+                                                <strong><i class="fa fa-check-circle"></i> Success</strong>
+                                            </span>
+    
+                                            
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <mat-card-title class="text-right">
+                                                <h5><b>Actions</b></h5>                                                    
+                                            </mat-card-title>
+                                            <div class="text-right mb-2">
+                                                <button mat-button class="btn btn-info btn-sm ml-1 text-white" 
+                                                    (click)="edit(data)" data-toggle="tooltip" title="Click here to view trip details">
+                                                        View</button>
+                                            </div>
+
+                                            <div class="text-right mb-2">
+                                                <div *ngFor='let dr of data.noifiedDrivers'>
+                                                    <button mat-button class="btn btn-primary btn-sm ml-1 text-white" *ngIf="data.assignedDriverId == dr.driverId"
+                                                    [routerLink]="['/drivers/profile-driver', data.assignedDriverId]" 
+                                                    data-toggle="tooltip" title="Click here to view driver profile">
+                                                    <i class="fa fa-car mr-2"></i>
+                                                    <i class="fa fa-user"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="text-right">
+                                                <button mat-button class="btn btn-primary btn-sm ml-1 text-white" 
+                                                    data-toggle="tooltip" title="Click here to view passenger profile">
+                                                        <i class="fa fa-users"></i>
+                                                </button>
+                                            </div>
+                                            
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 text-right">
+                                            <p><b>Recorded Time: </b>
+                                                {{data.recordedTime | date: 'yyyy-MM-dd'}}
+                                                {{data.recordedTime | date: 'a'}}
+                                                {{data.recordedTime | date: 'hh:mm.ss a'}}
+                                            </p>
+                                        </div>
+                                        
+                                    </div>
+            
+                                </mat-card>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </mat-card-content>
+</mat-card>
+
+
+<!-- <div class="row">
+  <div class="col-sm-12 col-md-12">
+
+    <div class="card p-2">
+      <div class="card-header fix-padding">
+
+        From : <input type="date" [(ngModel)]="from"> To : <input type="date" [(ngModel)]="to">
+        <button mat-button class="btn btn-success btn-sm ml-5" (click)="getDispatchHistory()">Search</button>
+      </div>
+
+      <div class="col-md-12">
+        <div class="card card-outline-inverse">
+          <div class="card-body">
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+              <thead>
+                <tr>
+                  <th>
+                    <h3 class="head">Dispatch History</h3>
+                    <button (click)="exportAsXLSX()"><i class="fa fa-file-excel-o"
+                      style="font-size:35px;color:blue"></i></button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                
+                <tr *ngFor="let data of dispatchHistory" style="font-weight:10">
+                  <td>
+                    <p style="display:none">
+                      {{data.recordedTime | date: 'yyyy-MM-dd'}}
+                      {{data.recordedTime | date: 'a'}}
+                      {{data.recordedTime | date: 'hh:mm.ss a'}}
+                    </p>
+                    <mat-card>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <mat-card-header>
+                            <mat-card-title>
+
+                              <h4><b>Customer</b></h4>
+                              <h3>{{data.customerName}}</h3>
+                            </mat-card-title>
+                            <mat-card-subtitle>
+                              {{data.customerTelephoneNo}}
+                            </mat-card-subtitle>
+                          </mat-card-header>
+                        </div>
+
+                        <div class="col-md-5">
+
+                          <div class="row">
+                            <div class="col-md-6">
+                              <p><b>Actual Price:</b> {{data.totalPrice}}</p>
+                              <p><b>Estimated Cost:</b> {{data.hireCost}}</p>
+                              <p><b>Waiting Cost:</b> {{data.waitingCost}}</p>
+                              <p><b>Wait Time:</b> {{data.waitTime}}</p>
+                              <p><b>Vehicle Category:</b> {{data.vehicleCategory}}</p>
+                              <p><b>Vehicle Sub Category:</b> {{data.vehicleSubCategory}}</p>
+
+                              <button mat-button class="btn btn-success btn-sm ml-1"
+                                *ngIf="data.type == 'adminDispatch'">Admin Dispatch</button>
+                              <button mat-button class="btn btn-danger btn-sm ml-1"
+                                *ngIf="data.type == 'driverDispatch'">Driver Dispatch</button>
+                              <button mat-button class="btn btn-primary btn-sm ml-1"
+                                *ngIf="data.type == 'userDispatch'">User Dispatch</button>
+                                <button mat-button class="btn btn-primary btn-sm ml-1"
+                                    *ngIf="data.type == 'passengerTrip'">User Trip</button>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div *ngFor='let dr of data.noifiedDrivers'>
+                                <p *ngIf="data.assignedDriverId == dr.driverId">
+                                  <b>Driver : </b> {{dr.driverInfo.driverContactNumber}} | {{dr.driverInfo.driverName}}
+                                  <br>
+                                  <b>Vehicle : </b> {{dr.vehicleInfo.vehicleRegistrationNo}}
+                                </p>
+                              </div>
+                               <p><b>Bid Value :</b> {{data.bidValue}}</p>
+                               <p><b>Distance :</b> {{data.distance | number : '1.2-2'}}</p>
+                               <p><b>Drop Time :</b> {{data.dropDateTime | date: 'dd/MM/yyyy'}}
+                                {{data.pickupDateTime | date: 'hh:mm.ss a'}}</p>
+                               <p><b>Trip Duration :</b> {{data.tripTime | number : '1.2-2'}}</p>
+                               <p><b>Notes :</b> {{data.notes}}</p>
+
+                            </div>
+                          </div>
+
+
+                        </div>
+
+                        <div class="col-md-4">
+                          <p><b>Pickup Location:</b> {{data.pickupLocation.address}}</p>
+                          <p><b>Pickup Time:</b> {{data.pickupDateTime | date: 'dd/MM/yyyy'}}
+                            {{data.pickupDateTime | date: 'hh:mm.ss a'}}</p>
+                          <p *ngIf="data.dropLocations[0]"><b>Drop Location:</b> {{data.dropLocations[0].address}}</p>
+                          <p *ngIf="data.distance"><b>Distance :</b> {{data.distance}}</p>
+
+                          <button mat-button class="btn btn-primary btn-sm ml-1">{{data.status}}</button>
+                          
+                        </div>
+                      </div>
+
+                    </mat-card>
+                  </td>
+                  <br>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

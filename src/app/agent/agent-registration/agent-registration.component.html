@@ -1,0 +1,143 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<mat-card class="mt-4">
+  <mat-card-content class="pl-3 pr-3">
+
+    <div class="d-flex align-items-center">
+        <h3 class="text-body">New Agent</h3>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="companyName">Agent Company Name</label>
+                <input class="form-control form-control-sm" id="companyName" type="text" formControlName="companyName"
+                    placeholder="Enter Agent Name" [ngClass]="{ 'is-invalid': submitted && validate.companyName.errors }">
+                <div *ngIf="submitted && validate.companyName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.companyName.errors.required">Agent Company Name is required</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="companyCode">Agent Company Code</label>
+                <input class="form-control form-control-sm" id="companyCode" type="text" formControlName="companyCode"
+                    placeholder="Enter Agent Code" [ngClass]="{ 'is-invalid': submitted && validate.companyCode.errors }">
+                <div *ngIf="submitted && validate.companyCode.errors" class="invalid-feedback">
+                    <div *ngIf="validate.companyCode.errors.required">Agent Company Code is required</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="ownerFirstName">Owner First Name</label>
+                <input class="form-control form-control-sm" id="ownerFirstName" type="text" formControlName="ownerFirstName"
+                    placeholder="Enter Owner Name" [ngClass]="{ 'is-invalid': submitted && validate.ownerFirstName.errors }">
+                <div *ngIf="submitted && validate.ownerFirstName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.ownerFirstName.errors.required">Owner First Name is required</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="ownerLastName">Owner Last Name</label>
+                <input class="form-control form-control-sm" id="ownerLastName" type="text" formControlName="ownerLastName"
+                    placeholder="Enter Last Name" [ngClass]="{ 'is-invalid': submitted && validate.ownerLastName.errors }">
+                <div *ngIf="submitted && validate.ownerLastName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.ownerLastName.errors.required">Owner Last Name is required</div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="agentEmail" class="form-control form-control-sm" id="agentEmail" aria-describedby="emailHelp"
+                  formControlName="agentEmail" placeholder="Enter email"
+                  [ngClass]="{ 'is-invalid': submitted && validate.agentEmail.errors }">
+                <div *ngIf="submitted && validate.agentEmail.errors" class="invalid-feedback">
+                  <div *ngIf="validate.agentEmail.errors.required">Email is required</div>
+                  <div *ngIf="validate.agentEmail.errors.agentEmail">Email must be a valid email address</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="agentContactNumber">Mobile</label>
+                <input class="form-control form-control-sm" id="agentContactNumber" type="text" placeholder="Enter Mobile Number"
+                    formControlName="agentContactNumber" [ngClass]="{ 'is-invalid': submitted && validate.agentContactNumber.errors }">
+                <div *ngIf="submitted && validate.agentContactNumber.errors" class="invalid-feedback">
+                    <div *ngIf="validate.agentContactNumber.errors.required">Mobile Number is required</div>
+                    <div *ngIf="validate.agentContactNumber.errors.pattern">Mobile number must be a valid number</div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="nic">NIC</label>
+                <input class="form-control form-control-sm" id="nic" type="text" placeholder="Enter NIC Number"
+                  formControlName="nic" [ngClass]="{ 'is-invalid': submitted && validate.nic.errors }">
+                <div *ngIf="submitted && validate.nic.errors" class="invalid-feedback">
+                  <div *ngIf="validate.nic.errors.required">NIC Number is required</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+            <label for="birthday">Birthday</label>
+            <input class="form-control form-control-sm" type="date" placeholder="yyyy-mm-dd" name="birthday"
+                formControlName="birthday" [ngClass]="{ 'is-invalid': submitted && validate.birthday.errors }">
+            <div *ngIf="submitted && validate.birthday.errors" class="invalid-feedback">
+                <div *ngIf="validate.birthday.errors.required">Birthday is required</div>
+            </div>
+            </div>
+            <div class="col-md-4">
+            <label for="mobile">Gender</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="male" formControlName="gender"
+                [ngClass]="{ 'is-invalid': submitted && validate.gender.errors }">
+                <label class="form-check-label" for="male">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="female"
+                formControlName="gender" [ngClass]="{ 'is-invalid': submitted && validate.gender.errors }">
+                <label class="form-check-label" for="female">Female</label>
+            </div>
+            <!-- <div *ngIf="submitted && validate.gender.errors" class="invalid-feedback">
+                        <div *ngIf="validate.gender.errors.required">Gender is required</div>
+                    </div> -->
+            </div>
+        </div>
+
+      <div class="form-group row">
+        <div class="col-md-12">
+          <label for="address">Address</label>
+        </div>
+        <div class="col-md-3">
+          <input class="form-control form-control-sm" id="address" type="text" placeholder="No."
+            formControlName="address" [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+          <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+            <div *ngIf="validate.address.errors.required">Number is required</div>
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <input class="form-control form-control-sm" id="street" type="text" placeholder="Street"
+            formControlName="street" [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+          <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+            <div *ngIf="validate.street.errors.required">Street is required</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <input class="form-control form-control-sm" id="city" type="text" placeholder="City" formControlName="city"
+            [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+          <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+            <div *ngIf="validate.city.errors.required">City is required</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="onSubmit()"> Submit</button>
+      </div>
+    </form>
+
+  </mat-card-content>
+</mat-card>

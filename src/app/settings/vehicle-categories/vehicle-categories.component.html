@@ -1,0 +1,2071 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<!-- author : ghost -->
+<!-- <div class="row"> -->
+    <!-- <div class="col-sm-12 col-md-12"> -->
+
+        <div class="card">
+            <div class="card-body bg-primary rounded-top">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-6 col-sm-12">
+                        <h3 class="text-white">Manage Categories</h3>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-right">
+                        <a mat-button class="btn btn-success text-white" data-toggle="modal"
+                        data-target="#exampleModal">
+                            <i class="fa fa-plus"></i>
+                            Add Category</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row" class="form-signin shadow p-3 bg-white rounded">
+                <!-- <div class="col-md-12"> -->
+                    <div class="table-responsive">
+
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div class="row d-flex align-items-center" *ngIf="vehicleCategoryData?.length > 0">
+                                            <h3 class="text-body">Category Details</h3>
+                                            
+                                        </div>
+                                        <div class="row align-items-center" *ngIf="vehicleCategoryData?.length == 0">
+                                            <h2 class="text-muted">No Category Found</h2>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cdata of vehicleCategoryData; let i = index">
+
+                                    <td>
+                                        
+                                        <mat-expansion-panel class="row">
+                                            <mat-expansion-panel-header [collapsedHeight]="'170px'"
+                                                [expandedHeight]="'170px'">
+                                                <div class="col-md-6">
+                                                    <mat-panel-title>
+                                                        <h4>{{cdata.categoryName}}</h4>
+
+                                                    </mat-panel-title>
+                                                    <mat-panel-description>
+
+                                                        <p>{{cdata.description}}</p>
+
+                                                        
+                                                    </mat-panel-description>
+
+                                                    <!-- <mat-checkbox class="example-margin" [(ngModel)]="cdata.isEnable"
+                                                        (change)="enableCategory(cdata)">Enable
+                                                    </mat-checkbox> -->
+
+                                                    <mat-checkbox class="example-margin" [(ngModel)]="cdata.isEnable"
+                                                        (change)="showConfirmDialog('enableCategory', cdata, ['Are you sure?'])">Enable
+                                                    </mat-checkbox>
+
+                                                </div>
+                                                <div class="col-md-6">
+
+                                                    <div class="text-right mb-2">
+                                                        <button mat-button type="button"
+                                                            (click)="UpdateCategory(cdata.categoryName,cdata.description, cdata.isEnable, cdata._id)"
+                                                            class="btn btn-sm btn-info font-weight-bold mr-2"
+                                                            data-toggle="modal" data-target="#exampleModal">
+                                                            Update
+                                                        </button>
+                                                        <button mat-button type="button"
+                                                            (click)="deleteCategory(cdata.categoryName)"
+                                                            class="btn btn-sm btn-danger font-weight-bold">
+                                                            Delete
+                                                        </button>
+                                                        
+                                                    </div>
+                                                    <div class="text-right mb-2">
+                                                        <button mat-button class="btn btn-sm btn-success font-weight-bold"
+                                                            data-toggle="modal" data-target="#exampleModal"
+                                                            (click)="addNewSubCat(cdata.categoryName, cdata.description)">+
+                                                            Add Sub Category</button>
+                                                    </div>
+
+                                                </div>
+                                            </mat-expansion-panel-header>
+
+                                            <div *ngFor="let data of cdata.subCategory; let j = index">
+                                                <mat-card class="example-card border border-dark">
+                                                    <div class="col-md-12  p-3">
+                                                        <div class="row">
+                                                            <!-- S cat data -->
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-7">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <h3>{{data.subCategoryName}}</h3>
+                                                                                <h4>No : {{data.subCategoryNo}}</h4>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <br>
+                                                                                <button mat-button type="button"
+                                                                                    (click)="deleteSubCategory(cdata.categoryName,data.subCategoryName)"
+                                                                                    class="btn btn-sm btn-danger font-weight-bold mb-2">
+                                                                                    Delete
+                                                                                </button>
+
+                                                                                <!-- <img class="edit-icon pull-right" (click)="UpdateSubCategory(i,j)"
+                                                                                    id="{{i}}" style="width:12px; height:12px"
+                                                                                    src="../../assets/img/edit.svg" /> -->
+                                                                                <button mat-button type="button"
+                                                                                    (click)="UpdateSubCategory(i,j)"
+                                                                                    class="btn btn-sm btn-primary font-weight-bold"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#exampleModal">
+                                                                                    Update
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <p>{{data.subDescription}}</p>
+                                                                        <p><b>Trip Send Drivers Count : </b>{{data.tripSendDriversCount}}</p>
+                                                                        <p><b>Higher Bid Trip Chance Count : </b>{{data.higherBidTripChanceCount}}</p>
+                                                                        <p><b>Sub Category Skipping Count : </b>{{data.subCategorySkippingCount}}</p>
+                                                                        <p><b>No of Passengers : </b>{{data.passengerCount}}</p>
+                                                                        <p><b>Driver trip timer in Secs : </b>{{data.driverTripTimerSecoends}}</p>
+
+                                                                    </div>
+                                                                    <!-- <div class="col-md-5">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4">
+                                                                                <label id="label">Icon</label>
+                                                                                <img id="blah"
+                                                                                    src="{{baseUrl}}{{data.subCategoryIcon}}"
+                                                                                    alt="your image"
+                                                                                    style="width:100px" />
+
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <label id="label">Selected </label>
+                                                                                <img id="blah"
+                                                                                    src="{{baseUrl}}{{data.subCategoryIconSelected}}"
+                                                                                    alt="your image"
+                                                                                    style="width:100px" />
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <label id="label">Map Icon</label>
+                                                                                <img id="blah"
+                                                                                    src="{{baseUrl}}{{data.mapIcon}}"
+                                                                                    alt="your image"
+                                                                                    style="width:100px" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> -->
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Icon</label><br>
+                                                                        <img id="blah"
+                                                                            src="{{data.subCategoryIcon}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="subCategoryIcon"
+                                                                            placeholder="subCategoryIcon"
+                                                                            name="subCategoryIcon"
+                                                                            (change)="SelectSubCategoryIcon(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc1"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Icon Selected</label><br>
+                                                                        <img id="blah"
+                                                                            src="{{data.subCategoryIconSelected}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="subCategoryIconSelected"
+                                                                            placeholder="subCategoryIconSelected"
+                                                                            name="subCategoryIconSelected"
+                                                                            (change)="SelectSubCategoryIconSelected(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc2"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Map Icon Online</label><br>
+                                                                        <img id="blah" src="{{data.mapIcon}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="mapIcon" placeholder="Map Icon"
+                                                                            name="mapIcon"
+                                                                            (change)="SelectSubCategoryMapIcon(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc3"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Map Icon Offline</label><br>
+                                                                        <img id="blah" src="{{data.mapIconOffline}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="mapIconOffline" placeholder="Map Icon Offline"
+                                                                            name="mapIconOffline"
+                                                                            (change)="SelectSubCategoryMapIconOffline(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc4"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Map Icon Ontrip</label><br>
+                                                                        <img id="blah" src="{{data.mapIconOntrip}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="mapIcon" placeholder="Map Icon"
+                                                                            name="mapIcon"
+                                                                            (change)="SelectSubCategoryMapIconOntrip(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc5"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <br>
+                                                                        <button mat-button (click)="uploadImages(cdata.categoryName,data.subCategoryName)"
+                                                                            class="btn btn-sm btn-dark pull-right">+
+                                                                            Upload Images</button>
+                                                                    </div>
+                                                                </div> -->
+                                                                <!-- <p>Packaage Delivery : {{data.packageDelivery}}</p>
+                                                                <p>No Of Vehicles : {{data.vehicles.length}}</p> -->
+
+                                                            </div>
+                                                            <!-- end of s cat -->
+
+                                                            <!-- <div class="col-md-5">
+                                                                <mat-card class="example-card">
+                                                                    <h4>Vehicles<button mat-mini-fab color="primary" type="button"
+                                                                            (click)="addNewVehicleToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"
+                                                                            class="btn btn-sm btn-info">
+                                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                        </button></h4>
+                                                                    <div class="pre-scrollable">
+                                                                        <div class="card p-2 border border-dark" *ngFor="let vehicle of data.vehicles; let k = index">
+
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 ">
+                                                                                    <h6>Vahicle {{k+1}}</h6>
+
+                                                                                    &nbsp;
+
+                                                                                    <button mat-button type="button"
+                                                                                        (click)="editNewVehicleToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j,k)"
+                                                                                        class="btn btn-sm btn-primary font-weight-bold pull-right">
+                                                                                        Update
+                                                                                    </button>
+                                                                                    &nbsp;
+                                                                                    <button mat-button type="button"
+                                                                                        (click)="deleteVehicle(cdata.categoryName,data.subCategoryName,vehicle.modelType)"
+                                                                                        class="btn btn-sm btn-danger font-weight-bold pull-right mr-1">
+                                                                                        delete
+                                                                                    </button>
+                                                                                </div>
+
+                                                                                <div class="col-md-12 ml-2">
+                                                                                    <h4>{{vehicle.vehicleName}} |
+                                                                                        {{vehicle.vehicleClass}} |
+                                                                                        {{vehicle.vehicleBrand}} |
+                                                                                        {{vehicle.modelType}}</h4>
+                                                                                    {{vehicle.modelCapacity}} |
+                                                                                    Capasity
+                                                                                    :{{vehicle.vehicleCapacityWeightLimit}}
+                                                                                    |
+                                                                                    {{vehicle.vehiclePassengerCount}}
+                                                                                    of
+                                                                                    Passengers
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                            <li class="list-group-item">
+                                                                                <ul>
+                                                                                </ul>
+                                                                            </li>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-card>
+                                                            </div> -->
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col p-5">
+                                                                <mat-card class="example-card">
+                                                                    <h3>Prices for District
+                                                                        <button mat-mini-fab color="primary"
+                                                                            type="button"
+                                                                            (click)="addNewPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"
+                                                                            class="btn btn-sm btn-info"
+                                                                            data-toggle="modal"
+                                                                            data-target="#exampleModal">
+                                                                            <i class="fa fa-plus"
+                                                                                aria-hidden="true"></i>
+                                                                        </button></h3>
+                                                                    <!-- <i class="fa fa-plus" (click)="addNewPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"></i> -->
+                                                                    <!-- <div class="row">
+                                                                    <button mat-button  class="btn btn-sm btn-primary pull-right" (click)="addSubCategory(i)">+
+                                                                        Add Sub Category</button>
+                                                                </div>
+                                                                <div class="row">
+        
+                                                                    <button mat-button  class="btn btn-sm btn-primary pull-right" (click)="addPrice(content2,i)">+
+                                                                        Add Price</button>
+                                                                </div> -->
+                                                                    <div class="row">
+                                                                        <div class="pre-scrollable">
+                                                                            <div class="card p-2"
+                                                                                *ngFor="let price of data.priceSelection; let l = index"
+                                                                                style="width:500px">
+                                                                                <ul>
+                                                                                    <li><b>District :
+                                                                                            {{price.districtName}}</b>
+
+                                                                                        &nbsp;
+                                                                                        <!-- <img class="edit-icon" (click)="updateNewPriceToSubCat(cdata.categoryName, cdata.description,data.subCategoryName,data.subDescription,i,j,l)"
+                                                                                        id="{{i}}" style="width:12px; height:12px"
+                                                                                        src="../../assets/img/edit.svg" /> -->
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="updateNewPriceToSubCat(cdata.categoryName, cdata.description,data.subCategoryName,data.subDescription,i,j,l)"
+                                                                                            class="btn btn-sm btn-primary font-weight-bold pull-right"
+                                                                                            data-toggle="modal"
+                                                                                            data-target="#exampleModal">
+                                                                                            Update
+                                                                                        </button>
+
+                                                                                        &nbsp;
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="deleteDistPrice(cdata.categoryName,data.subCategoryName,price.districtName)"
+                                                                                            class="btn btn-sm btn-danger font-weight-bold mr-1 pull-right">
+                                                                                            delete
+                                                                                        </button>
+                                                                                        <!-- <i class="fa fa-trash-o" (click)="deleteDistPrice(cdata.categoryName,data.subCategoryName,price.districtName)"></i> -->
+                                                                                    </li>
+                                                                                    <br>
+                                                                                    <div class="border border-dark p-2"
+                                                                                        *ngFor="let tb of price.timeBase; let q = index">
+                                                                                        <h5>{{tb.timeSlotName}}</h5>
+                                                                                        From : {{tb.startingTime}} | To
+                                                                                        :
+                                                                                        {{tb.endingTime}}<br>
+                                                                                        <ul>
+                                                                                            <li>Admin commission
+                                                                                                :{{tb.districtPrice}}
+                                                                                            </li>
+                                                                                            <li>Bidding Minimum Per KM
+                                                                                                Fare
+                                                                                                :{{tb.lowerBidLimit}}
+                                                                                            </li>
+                                                                                            <li>Bidding Maximum Per KM
+                                                                                                Fare
+                                                                                                :{{tb.upperBidLimit}}
+                                                                                            </li>
+                                                                                            <li>Above KM Fare :
+                                                                                                {{tb.aboveKMFare}}</li>
+                                                                                            <li>Booking Fare :
+                                                                                                {{tb.baseFare}}</li>
+                                                                                            <li>belowAboveKMRange :
+                                                                                                {{tb.belowAboveKMRange}}
+                                                                                            </li>
+                                                                                            <!-- <li>Bidding Minimum Per KM Fare :
+                                                                                                {{tb.belowKMFare}}</li> -->
+                                                                                            <li>minimumFare :
+                                                                                                {{tb.minimumFare}}</li>
+                                                                                            <li>minimumKM :
+                                                                                                {{tb.minimumKM}}</li>
+                                                                                            <li>normalWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.normalWaitingChargePerMinute}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerDay
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerDay}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerHour
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerHour}}
+                                                                                            </li>
+                                                                                            <li>radius : {{tb.radius}}
+                                                                                            </li>
+                                                                                            <li>trafficWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.trafficWaitingChargePerMinute}}
+                                                                                            </li>
+                                                                                            <li>Trip Cancelation Fee : {{tb.tripCancelationFee}}</li>
+                                                                            <li>Max Waiting Time Without Charge : {{tb.maxWaitingTimeWithoutCharge}}</li>
+                                                                                        </ul>
+
+                                                                                    </div>
+                                                                                    <!-- <li>Price : {{price.districtPrice}}</li>
+                                                                                <li>Radius : {{price.radius}}</li> -->
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-card>
+                                                            </div>
+                                                            <div class="col p-5">
+                                                                <mat-card class="example-card">
+                                                                    <h3>Road Pickup Prices
+                                                                        <button mat-mini-fab color="primary"
+                                                                            type="button"
+                                                                            (click)="addNewRoadPickupPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"
+                                                                            class="btn btn-sm btn-info"
+                                                                            data-toggle="modal"
+                                                                            data-target="#exampleModal">
+                                                                            <i class="fa fa-plus"
+                                                                                aria-hidden="true"></i>
+                                                                        </button></h3>
+                                                                    <div class="row">
+                                                                        <div class="pre-scrollable">
+                                                                            <div class="card p-2"
+                                                                                *ngFor="let price of data.roadPickupPriceSelection; let l = index"
+                                                                                style="width:500px">
+                                                                                <ul>
+                                                                                    <li><b>District :
+                                                                                            {{price.districtName}}</b>
+
+                                                                                        &nbsp;
+
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="updateNewRoadPickupPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j,l)"
+                                                                                            class="btn btn-sm btn-primary font-weight-bold pull-right"
+                                                                                            data-toggle="modal"
+                                                                                            data-target="#exampleModal">
+                                                                                            Update
+                                                                                        </button>
+                                                                                        &nbsp;
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="deleteRoadPickupPrice(cdata.categoryName,data.subCategoryName,price.districtName)"
+                                                                                            class="btn btn-sm btn-danger font-weight-bold mr-1 pull-right">
+                                                                                            delete
+                                                                                        </button> </li>
+                                                                                    <br>
+                                                                                    <div class="border border-dark p-2"
+                                                                                        *ngFor="let tb of price.timeBase; let q = index">
+                                                                                        <h5>{{tb.timeSlotName}}</h5>
+                                                                                        From : {{tb.startingTime}} | To
+                                                                                        :
+                                                                                        {{tb.endingTime}}<br>
+                                                                                        <ul>
+                                                                                            <li>Admin Commission
+                                                                                                :{{tb.districtPrice}}
+                                                                                            </li>
+                                                                                            <li>aboveKMFare :
+                                                                                                {{tb.aboveKMFare}}</li>
+                                                                                            <li>Booking Fare :
+                                                                                                {{tb.baseFare}}</li>
+                                                                                            <li>belowAboveKMRange :
+                                                                                                {{tb.belowAboveKMRange}}
+                                                                                            </li>
+                                                                                            <li>belowKMFare :
+                                                                                                {{tb.belowKMFare}}</li>
+                                                                                            <li>minimumFare :
+                                                                                                {{tb.minimumFare}}</li>
+                                                                                            <li>minimumKM :
+                                                                                                {{tb.minimumKM}}</li>
+                                                                                            <li>normalWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.normalWaitingChargePerMinute}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerDay
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerDay}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerHour
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerHour}}
+                                                                                            </li>
+                                                                                            <li>radius : {{tb.radius}}
+                                                                                            </li>
+                                                                                            <li>trafficWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.trafficWaitingChargePerMinute}}
+                                                                                            </li>
+
+                                                                                        </ul>
+
+                                                                                    </div>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-card>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </mat-card>
+                                                <br>
+                                            </div>
+                                        </mat-expansion-panel>
+                                        
+                                    </td>
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+
+                    </div>
+                <!-- </div> -->
+                <hr>
+            </div>
+        </div>
+    <!-- </div> -->
+<!-- </div> -->
+
+
+
+
+<!-- <div class="row">
+    <div class="col-sm-12 col-md-12">
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <h3 class="head p-0 m-0 pt-2 pb-2">Manage Categories</h3>
+            </div>
+
+            <div class="card-body p-0 mt-0 mb-0">
+                
+            </div>
+
+
+            <div class="row" class="form-signin shadow p-3 bg-white rounded">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table-hover">
+                            <thead>
+                                <tr>
+                                    <th><h3 class="text-body">Details</h3></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cdata of vehicleCategoryData; let i = index">
+
+                                    <td>
+
+                                        <mat-expansion-panel>
+                                            <mat-expansion-panel-header [collapsedHeight]="'170px'"
+                                                [expandedHeight]="'170px'">
+                                                <mat-panel-title>
+                                                    <h4>{{cdata.categoryName}}</h4>
+
+                                                </mat-panel-title>
+                                                <mat-panel-description>
+
+                                                    <p>{{cdata.description}}</p>
+
+                                                    
+                                                </mat-panel-description>
+
+                                                <mat-checkbox class="example-margin" [(ngModel)]="cdata.isEnable"
+                                                    (change)="enableCategory(cdata)">Enable
+                                                </mat-checkbox>
+                                                
+
+                                                <div class="col-md-6">
+                                                    <button mat-button type="button"
+                                                        (click)="deleteCategory(cdata.categoryName)"
+                                                        class="btn btn-sm btn-danger font-weight-bold pull-right">
+                                                        Delete
+                                                    </button>
+                                                    <button mat-button type="button"
+                                                        (click)="UpdateCategory(cdata.categoryName,cdata.description, cdata.isEnable, cdata._id)"
+                                                        class="btn btn-sm btn-info font-weight-bold pull-right mr-2"
+                                                        data-toggle="modal" data-target="#exampleModal">
+                                                        Update
+                                                    </button>
+                                                    <br>
+                                                    <br>
+                                                    <button mat-button class="btn btn-sm btn-primary pull-right"
+                                                        data-toggle="modal" data-target="#exampleModal"
+                                                        (click)="addNewSubCat(cdata.categoryName, cdata.description)">+
+                                                        Add Sub Category</button>
+
+                                                </div>
+                                            </mat-expansion-panel-header>
+
+                                            <div *ngFor="let data of cdata.subCategory; let j = index">
+                                                <mat-card class="example-card border border-dark">
+                                                    <div class="col-md-12  p-3">
+                                                        <div class="row"> -->
+                                                            <!-- S cat data -->
+                                                            <!-- <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-7">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <h3>{{data.subCategoryName}}</h3>
+                                                                                <h4>No : {{data.subCategoryNo}}</h4>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <br>
+                                                                                <button mat-button type="button"
+                                                                                    (click)="deleteSubCategory(cdata.categoryName,data.subCategoryName)"
+                                                                                    class="btn btn-sm btn-danger font-weight-bold mb-2">
+                                                                                    Delete
+                                                                                </button> -->
+
+                                                                                <!-- <img class="edit-icon pull-right" (click)="UpdateSubCategory(i,j)"
+                                                                                    id="{{i}}" style="width:12px; height:12px"
+                                                                                    src="../../assets/img/edit.svg" /> -->
+                                                                                <!-- <button mat-button type="button"
+                                                                                    (click)="UpdateSubCategory(i,j)"
+                                                                                    class="btn btn-sm btn-primary font-weight-bold"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#exampleModal">
+                                                                                    Update
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <p>{{data.subDescription}}</p>
+                                                                        <p><b>Trip Send Drivers Count : </b>{{data.tripSendDriversCount}}</p>
+                                                                        <p><b>Higher Bid Trip Chance Count : </b>{{data.higherBidTripChanceCount}}</p>
+                                                                        <p><b>Sub Category Skipping Count : </b>{{data.subCategorySkippingCount}}</p>
+                                                                        <p><b>No of Passengers : </b>{{data.passengerCount}}</p>
+                                                                        <p><b>Driver trip timer in Secs : </b>{{data.driverTripTimerSecoends}}</p>
+
+                                                                    </div> -->
+
+
+
+
+
+
+
+                                                                    
+                                                                    <!-- <div class="col-md-5">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4">
+                                                                                <label id="label">Icon</label>
+                                                                                <img id="blah"
+                                                                                    src="{{baseUrl}}{{data.subCategoryIcon}}"
+                                                                                    alt="your image"
+                                                                                    style="width:100px" />
+
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <label id="label">Selected </label>
+                                                                                <img id="blah"
+                                                                                    src="{{baseUrl}}{{data.subCategoryIconSelected}}"
+                                                                                    alt="your image"
+                                                                                    style="width:100px" />
+                                                                            </div>
+                                                                            <div class="col-md-4">
+                                                                                <label id="label">Map Icon</label>
+                                                                                <img id="blah"
+                                                                                    src="{{baseUrl}}{{data.mapIcon}}"
+                                                                                    alt="your image"
+                                                                                    style="width:100px" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> -->
+                                                                <!-- </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Icon</label><br>
+                                                                        <img id="blah"
+                                                                            src="{{data.subCategoryIcon}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="subCategoryIcon"
+                                                                            placeholder="subCategoryIcon"
+                                                                            name="subCategoryIcon"
+                                                                            (change)="SelectSubCategoryIcon(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc1"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Icon Selected</label><br>
+                                                                        <img id="blah"
+                                                                            src="{{data.subCategoryIconSelected}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="subCategoryIconSelected"
+                                                                            placeholder="subCategoryIconSelected"
+                                                                            name="subCategoryIconSelected"
+                                                                            (change)="SelectSubCategoryIconSelected(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc2"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Map Icon Online</label><br>
+                                                                        <img id="blah" src="{{data.mapIcon}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="mapIcon" placeholder="Map Icon"
+                                                                            name="mapIcon"
+                                                                            (change)="SelectSubCategoryMapIcon(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc3"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Map Icon Offline</label><br>
+                                                                        <img id="blah" src="{{data.mapIconOffline}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="mapIconOffline" placeholder="Map Icon Offline"
+                                                                            name="mapIconOffline"
+                                                                            (change)="SelectSubCategoryMapIconOffline(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc4"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label id="label">Map Icon Ontrip</label><br>
+                                                                        <img id="blah" src="{{data.mapIconOntrip}}"
+                                                                            alt="your image" style="width:100px" />
+                                                                        <input type="file"
+                                                                            class="form-control form-control-sm"
+                                                                            id="mapIcon" placeholder="Map Icon"
+                                                                            name="mapIcon"
+                                                                            (change)="SelectSubCategoryMapIconOntrip(cdata._id, data._id,$event)">
+                                                                        <div class="col-md-6">
+                                                                            <img id="blah" [src]="imageSrc5"
+                                                                                alt="your image" style="width:100%" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
+
+                                                                <!-- <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <br>
+                                                                        <button mat-button (click)="uploadImages(cdata.categoryName,data.subCategoryName)"
+                                                                            class="btn btn-sm btn-dark pull-right">+
+                                                                            Upload Images</button>
+                                                                    </div>
+                                                                </div> -->
+                                                                <!-- <p>Packaage Delivery : {{data.packageDelivery}}</p>
+                                                                <p>No Of Vehicles : {{data.vehicles.length}}</p> -->
+
+                                                            <!-- </div> -->
+                                                            <!-- end of s cat -->
+
+                                                            <!-- <div class="col-md-5">
+                                                                <mat-card class="example-card">
+                                                                    <h4>Vehicles<button mat-mini-fab color="primary" type="button"
+                                                                            (click)="addNewVehicleToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"
+                                                                            class="btn btn-sm btn-info">
+                                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                                        </button></h4>
+                                                                    <div class="pre-scrollable">
+                                                                        <div class="card p-2 border border-dark" *ngFor="let vehicle of data.vehicles; let k = index">
+
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 ">
+                                                                                    <h6>Vahicle {{k+1}}</h6>
+
+                                                                                    &nbsp;
+
+                                                                                    <button mat-button type="button"
+                                                                                        (click)="editNewVehicleToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j,k)"
+                                                                                        class="btn btn-sm btn-primary font-weight-bold pull-right">
+                                                                                        Update
+                                                                                    </button>
+                                                                                    &nbsp;
+                                                                                    <button mat-button type="button"
+                                                                                        (click)="deleteVehicle(cdata.categoryName,data.subCategoryName,vehicle.modelType)"
+                                                                                        class="btn btn-sm btn-danger font-weight-bold pull-right mr-1">
+                                                                                        delete
+                                                                                    </button>
+                                                                                </div>
+
+                                                                                <div class="col-md-12 ml-2">
+                                                                                    <h4>{{vehicle.vehicleName}} |
+                                                                                        {{vehicle.vehicleClass}} |
+                                                                                        {{vehicle.vehicleBrand}} |
+                                                                                        {{vehicle.modelType}}</h4>
+                                                                                    {{vehicle.modelCapacity}} |
+                                                                                    Capasity
+                                                                                    :{{vehicle.vehicleCapacityWeightLimit}}
+                                                                                    |
+                                                                                    {{vehicle.vehiclePassengerCount}}
+                                                                                    of
+                                                                                    Passengers
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                            <li class="list-group-item">
+                                                                                <ul>
+                                                                                </ul>
+                                                                            </li>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-card>
+                                                            </div> -->
+                                                        <!-- </div>
+                                                        <div class="row">
+                                                            <div class="col p-5">
+                                                                <mat-card class="example-card">
+                                                                    <h3>Prices for District
+                                                                        <button mat-mini-fab color="primary"
+                                                                            type="button"
+                                                                            (click)="addNewPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"
+                                                                            class="btn btn-sm btn-info"
+                                                                            data-toggle="modal"
+                                                                            data-target="#exampleModal">
+                                                                            <i class="fa fa-plus"
+                                                                                aria-hidden="true"></i>
+                                                                        </button></h3> -->
+                                                                    <!-- <i class="fa fa-plus" (click)="addNewPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"></i> -->
+                                                                    <!-- <div class="row">
+                                                                    <button mat-button  class="btn btn-sm btn-primary pull-right" (click)="addSubCategory(i)">+
+                                                                        Add Sub Category</button>
+                                                                </div>
+                                                                <div class="row">
+        
+                                                                    <button mat-button  class="btn btn-sm btn-primary pull-right" (click)="addPrice(content2,i)">+
+                                                                        Add Price</button>
+                                                                </div> -->
+                                                                    <!-- <div class="row">
+                                                                        <div class="pre-scrollable">
+                                                                            <div class="card p-2"
+                                                                                *ngFor="let price of data.priceSelection; let l = index"
+                                                                                style="width:500px">
+                                                                                <ul>
+                                                                                    <li><b>District :
+                                                                                            {{price.districtName}}</b>
+
+                                                                                        &nbsp; -->
+                                                                                        <!-- <img class="edit-icon" (click)="updateNewPriceToSubCat(cdata.categoryName, cdata.description,data.subCategoryName,data.subDescription,i,j,l)"
+                                                                                        id="{{i}}" style="width:12px; height:12px"
+                                                                                        src="../../assets/img/edit.svg" /> -->
+                                                                                        <!-- <button mat-button type="button"
+                                                                                            (click)="updateNewPriceToSubCat(cdata.categoryName, cdata.description,data.subCategoryName,data.subDescription,i,j,l)"
+                                                                                            class="btn btn-sm btn-primary font-weight-bold pull-right"
+                                                                                            data-toggle="modal"
+                                                                                            data-target="#exampleModal">
+                                                                                            Update
+                                                                                        </button>
+
+                                                                                        &nbsp;
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="deleteDistPrice(cdata.categoryName,data.subCategoryName,price.districtName)"
+                                                                                            class="btn btn-sm btn-danger font-weight-bold mr-1 pull-right">
+                                                                                            delete
+                                                                                        </button> -->
+                                                                                        <!-- <i class="fa fa-trash-o" (click)="deleteDistPrice(cdata.categoryName,data.subCategoryName,price.districtName)"></i> -->
+                                                                                    <!-- </li>
+                                                                                    <br>
+                                                                                    <div class="border border-dark p-2"
+                                                                                        *ngFor="let tb of price.timeBase; let q = index">
+                                                                                        <h5>{{tb.timeSlotName}}</h5>
+                                                                                        From : {{tb.startingTime}} | To
+                                                                                        :
+                                                                                        {{tb.endingTime}}<br>
+                                                                                        <ul>
+                                                                                            <li>Admin commission
+                                                                                                :{{tb.districtPrice}}
+                                                                                            </li>
+                                                                                            <li>Bidding Minimum Per KM
+                                                                                                Fare
+                                                                                                :{{tb.lowerBidLimit}}
+                                                                                            </li>
+                                                                                            <li>Bidding Maximum Per KM
+                                                                                                Fare
+                                                                                                :{{tb.upperBidLimit}}
+                                                                                            </li>
+                                                                                            <li>Above KM Fare :
+                                                                                                {{tb.aboveKMFare}}</li>
+                                                                                            <li>Booking Fare :
+                                                                                                {{tb.baseFare}}</li>
+                                                                                            <li>belowAboveKMRange :
+                                                                                                {{tb.belowAboveKMRange}}
+                                                                                            </li> -->
+                                                                                            <!-- <li>Bidding Minimum Per KM Fare :
+                                                                                                {{tb.belowKMFare}}</li> -->
+                                                                                            <!-- <li>minimumFare :
+                                                                                                {{tb.minimumFare}}</li>
+                                                                                            <li>minimumKM :
+                                                                                                {{tb.minimumKM}}</li>
+                                                                                            <li>normalWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.normalWaitingChargePerMinute}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerDay
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerDay}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerHour
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerHour}}
+                                                                                            </li>
+                                                                                            <li>radius : {{tb.radius}}
+                                                                                            </li>
+                                                                                            <li>trafficWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.trafficWaitingChargePerMinute}}
+                                                                                            </li>
+                                                                                            <li>Trip Cancelation Fee : {{tb.tripCancelationFee}}</li>
+                                                                            <li>Max Waiting Time Without Charge : {{tb.maxWaitingTimeWithoutCharge}}</li>
+                                                                                        </ul>
+
+                                                                                    </div> -->
+                                                                                    <!-- <li>Price : {{price.districtPrice}}</li>
+                                                                                <li>Radius : {{price.radius}}</li> -->
+                                                                                <!-- </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-card>
+                                                            </div>
+                                                            <div class="col p-5">
+                                                                <mat-card class="example-card">
+                                                                    <h3>Road Pickup Prices
+                                                                        <button mat-mini-fab color="primary"
+                                                                            type="button"
+                                                                            (click)="addNewRoadPickupPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j)"
+                                                                            class="btn btn-sm btn-info"
+                                                                            data-toggle="modal"
+                                                                            data-target="#exampleModal">
+                                                                            <i class="fa fa-plus"
+                                                                                aria-hidden="true"></i>
+                                                                        </button></h3>
+                                                                    <div class="row">
+                                                                        <div class="pre-scrollable">
+                                                                            <div class="card p-2"
+                                                                                *ngFor="let price of data.roadPickupPriceSelection; let l = index"
+                                                                                style="width:500px">
+                                                                                <ul>
+                                                                                    <li><b>District :
+                                                                                            {{price.districtName}}</b>
+
+                                                                                        &nbsp;
+
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="updateNewRoadPickupPriceToSubCat(cdata.categoryName,cdata.description,data.subCategoryName,data.subDescription,i,j,l)"
+                                                                                            class="btn btn-sm btn-primary font-weight-bold pull-right"
+                                                                                            data-toggle="modal"
+                                                                                            data-target="#exampleModal">
+                                                                                            Update
+                                                                                        </button>
+                                                                                        &nbsp;
+                                                                                        <button mat-button type="button"
+                                                                                            (click)="deleteRoadPickupPrice(cdata.categoryName,data.subCategoryName,price.districtName)"
+                                                                                            class="btn btn-sm btn-danger font-weight-bold mr-1 pull-right">
+                                                                                            delete
+                                                                                        </button> </li>
+                                                                                    <br>
+                                                                                    <div class="border border-dark p-2"
+                                                                                        *ngFor="let tb of price.timeBase; let q = index">
+                                                                                        <h5>{{tb.timeSlotName}}</h5>
+                                                                                        From : {{tb.startingTime}} | To
+                                                                                        :
+                                                                                        {{tb.endingTime}}<br>
+                                                                                        <ul>
+                                                                                            <li>Admin Commission
+                                                                                                :{{tb.districtPrice}}
+                                                                                            </li>
+                                                                                            <li>aboveKMFare :
+                                                                                                {{tb.aboveKMFare}}</li>
+                                                                                            <li>Booking Fare :
+                                                                                                {{tb.baseFare}}</li>
+                                                                                            <li>belowAboveKMRange :
+                                                                                                {{tb.belowAboveKMRange}}
+                                                                                            </li>
+                                                                                            <li>belowKMFare :
+                                                                                                {{tb.belowKMFare}}</li>
+                                                                                            <li>minimumFare :
+                                                                                                {{tb.minimumFare}}</li>
+                                                                                            <li>minimumKM :
+                                                                                                {{tb.minimumKM}}</li>
+                                                                                            <li>normalWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.normalWaitingChargePerMinute}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerDay
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerDay}}
+                                                                                            </li>
+                                                                                            <li>packageDeliveryKMPerHour
+                                                                                                :
+                                                                                                {{tb.packageDeliveryKMPerHour}}
+                                                                                            </li>
+                                                                                            <li>radius : {{tb.radius}}
+                                                                                            </li>
+                                                                                            <li>trafficWaitingChargePerMinute
+                                                                                                :
+                                                                                                {{tb.trafficWaitingChargePerMinute}}
+                                                                                            </li>
+
+                                                                                        </ul>
+
+                                                                                    </div>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </mat-card>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </mat-card>
+                                                <br>
+                                            </div>
+                                        </mat-expansion-panel>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+
+
+<!-- ############################## floating button -->
+<!-- <div class="float bg-primary" data-toggle="modal" data-target="#exampleModal">
+    <i class="fa fa-plus my-float pt-4"></i>
+</div> -->
+
+
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Add Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <mat-card class="example-card">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="card p-2">
+                                <div class="row ">
+
+                                    <div class="col-md-6">
+                                        <div [formGroup]="formvalid">
+                                            <label id="label" for="category Name">Category Name</label>
+                                            <input type="text" [disabled]="categoryFlag"
+                                                [(ngModel)]="vehicleCategoryVM.categoryName"
+                                                class="form-control form-control-sm" id="categoryName"
+                                                placeholder="Category Name" name="categoryName"
+                                                formControlName="categoryName">
+                                            <label id="label" for="description">Description</label>
+                                            <input type="text" [disabled]="categoryFlag"
+                                                [(ngModel)]="vehicleCategoryVM.description"
+                                                class="form-control form-control-sm" id="description"
+                                                placeholder="description" name="description"
+                                                formControlName="description">
+
+                                            <br>
+
+                                            <div class="col-md-3">
+                                                <label id="label" for="description">Category No</label>
+                                                <input type="number" [(ngModel)]="vehicleCategoryVM.categoryNo"
+                                                    class="form-control form-control-sm" id="categoryNo"
+                                                    placeholder="categoryNo" name="categoryNo"
+                                                    formControlName="categoryNo">
+                                            </div>
+                                            <label id="label">Is Enable : </label>
+                                            <input type="checkbox" id="isEnable" placeholder="Is Enable" name="isEnable"
+                                                [(ngModel)]="vehicleCategoryVM.isEnable" formControlName="isEnable">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- <button mat-button  class="btn  btn-success pull-right" (click)="save()">+ Submit</button> -->
+                                        <!-- <img class="ml-2" style="width:25%" (click)="save()" src="http://www.stickpng.com/assets/images/586383a07d90850fc3ce290f.png"
+                                alt="save"> -->
+                                        <button mat-button type="button"
+                                            class="btn btn-lg btn-danger font-weight-bold h-25 w-10"
+                                            (click)="save()">SAVE</button>
+                                        <!-- <button mat-button  class="btn btn-sm btn-primary pull-right" (click)="aaa()">+ aaa</button> -->
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="scatEnable">
+                                    <div class="col-md-6">
+                                        <br>
+                                        <button mat-button [disabled]="disableAddCategoryButtonFlag"
+                                            class="btn btn-sm btn-dark pull-right" (click)="addSubCat()">+ Add
+                                            Sub Category</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br>
+                                        <button mat-button class="btn btn-sm btn-primary pull-right"
+                                            (click)="clearForm()">Clear</button>
+                                    </div>
+                                </div>
+
+                                <!-- </div> -->
+                                <div class="row "
+                                    *ngFor="let subCategory of vehicleCategoryVM.subCategory; let i=index">
+                                    <div class="col-md-12 p-2 ">
+                                        <!-- scat  -->
+                                        <div class="card bg-light border border-dark  p-2">
+                                            <div class="header" (click)="isCollapsed[i] = !isCollapsed[i]"
+                                                [attr.aria-expanded]="!isCollapsed[i]" aria-controls="collapseExample">
+                                                <h4>Sub category {{i+1}}<button mat-button
+                                                        class="btn btn-sm btn-danger pull-right"
+                                                        (click)="removeSubCat(i)">-
+                                                        Cancel</button></h4>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="content ml-2">
+                                                    <div id="collapseExample" [ngbCollapse]="isCollapsed[i]">
+                                                        <form class="bg-light">
+                                                            <div [formGroup]="subCategoryFormValGroupName[i]">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label id="label">Sub Category Name </label>
+                                                                        <input type="text" [disabled]="subCatFlag"
+                                                                            class="form-control form-control-sm"
+                                                                            id="subcategoryName"
+                                                                            [(ngModel)]="subCategory.subCategoryName"
+                                                                            placeholder="Sub Category Name"
+                                                                            name="subcategoryName"
+                                                                            formControlName="subCatName">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label id="label">Description</label>
+                                                                        <textarea type="text" [disabled]="subCatFlag"
+                                                                            class="form-control form-control-sm"
+                                                                            id="description"
+                                                                            [(ngModel)]="subCategory.subDescription"
+                                                                            placeholder="description" name="description"
+                                                                            formControlName="subDescription"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- <div class="row">
+                                                                    <label id="label">Is Enable : </label>
+                                                                    <input type="checkbox" id="isEnable"
+                                                                        placeholder="Is Enable" name="isEnable"
+                                                                        [(ngModel)]="subCategory.subIsEnable"
+                                                                        formControlName="isEnable">
+                                                                </div> -->
+                                                                <!-- <div class="row">
+                                                            <label id="label">packageDelivery : </label>
+                                                            <input type="checkbox" id="isEnable" placeholder="Is Enable"
+                                                                name="isEnable" [(ngModel)]="subCategory.packageDelivery"
+                                                                formControlName="isEnable">
+                                                        </div> -->
+                                                            </div>
+                                                            <br>
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label id="label">Sub Category No</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="description"
+                                                                        [(ngModel)]="subCategory.subCategoryNo"
+                                                                        placeholder="subCategoryNo"
+                                                                        name="subCategoryNo">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label id="label">Trip Send Drivers Count</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="description"
+                                                                        [(ngModel)]="subCategory.tripSendDriversCount"
+                                                                        placeholder="tripSendDriversCount"
+                                                                        name="tripSendDriversCount">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label id="label">Higher Bid Trip Chance Count</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="description"
+                                                                        [(ngModel)]="subCategory.higherBidTripChanceCount"
+                                                                        placeholder="higherBidTripChanceCount"
+                                                                        name="higherBidTripChanceCount">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                        <label id="label">Sub Category Skipping Count</label>
+                                                                        <input type="number"
+                                                                            class="form-control form-control-sm"
+                                                                            id="description"
+                                                                            [(ngModel)]="subCategory.subCategorySkippingCount"
+                                                                            placeholder="subCategorySkippingCount"
+                                                                            name="subCategorySkippingCount">
+                                                                    </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label id="label">No of Passengers</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="passengerCount"
+                                                                        [(ngModel)]="subCategory.passengerCount"
+                                                                        placeholder="passengerCount"
+                                                                        name="passengerCount">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label id="label">Driver trip timer in Secs</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="driverTripTimerSecoends"
+                                                                        [(ngModel)]="subCategory.driverTripTimerSecoends"
+                                                                        placeholder="driverTripTimerSecoends"
+                                                                        name="driverTripTimerSecoends">
+                                                                </div>
+
+                                                            </div>
+
+                                                            <br>
+                                                            <div class="row">
+
+
+                                                            </div>
+                                                            <!-- <div class="row">
+                                                        <div class="col-md-6">
+                                                            <button mat-button *ngIf="vehEnable" [disabled]="VhAddFlag"
+                                                                class="btn btn-sm btn-primary font-weight-bold"
+                                                                (click)="AddVehicleToSubCat(i)">+
+                                                                Add Vehicle</button>
+                                                            <br>
+                                                        </div>
+                                                    </div> -->
+
+                                                            <div class="row"
+                                                                *ngFor="let vehicle of vehicleCategoryVM.subCategory[i].vehicles; let j = index">
+                                                                <div class="card p-2">
+                                                                    <h6>Vehicle {{j+1}}<button mat-button
+                                                                            class="btn btn-sm btn-danger pull-right"
+                                                                            (click)="removeVehicle(i,j)">-
+                                                                            Cancel</button></h6>
+                                                                    <div [formGroup]="vehicleFormValidGroupName[i][j]">
+                                                                        <div class="col-md-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Vehicle
+                                                                                        Brand</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="vehicleBrand"
+                                                                                        placeholder="Vehicle Brand"
+                                                                                        name="vehicle.vehicleBrand+'_'+j"
+                                                                                        [(ngModel)]="vehicle.vehicleBrand"
+                                                                                        formControlName="vehicleBrand">
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Vehicle
+                                                                                        Name</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="vehicleName"
+                                                                                        placeholder="vehicleName"
+                                                                                        name="vehicleName"
+                                                                                        [(ngModel)]="vehicle.vehicleName"
+                                                                                        formControlName="vehicleName">
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Vehicle
+                                                                                        Class</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="vehicleClass"
+                                                                                        placeholder="vehicleClass"
+                                                                                        name="vehicleClass"
+                                                                                        [(ngModel)]="vehicle.vehicleClass"
+                                                                                        formControlName="vehicleClass">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Model Type</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="modelType"
+                                                                                        placeholder="modelType"
+                                                                                        name="vehicle.modelType + '_' + j"
+                                                                                        [(ngModel)]="vehicle.modelType"
+                                                                                        formControlName="modelType">
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Model
+                                                                                        Capacity</label>
+                                                                                    <input type="text"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="modelCapacity"
+                                                                                        placeholder="modelCapacity"
+                                                                                        name="modelCapacity"
+                                                                                        [(ngModel)]="vehicle.modelCapacity"
+                                                                                        formControlName="modelCapacity">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Vehicle Passenger
+                                                                                        Count</label>
+                                                                                    <input type="number"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="vehiclePassengerCount"
+                                                                                        placeholder="vehiclePassengerCount"
+                                                                                        name="vehiclePassengerCount"
+                                                                                        [(ngModel)]="vehicle.vehiclePassengerCount"
+                                                                                        formControlName="vehiclePassengerCount">
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Vehicle Capasity
+                                                                                        Weight Limit</label>
+                                                                                    <input type="number"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="vehicleCapacityWeightLimit"
+                                                                                        placeholder="vehicleCapacityWeightLimit"
+                                                                                        name="vehicleCapacityWeightLimit"
+                                                                                        [(ngModel)]="vehicle.vehicleCapacityWeightLimit"
+                                                                                        formControlName="vehicleCapacityWeightLimit">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-md-4">
+                                                                                    <label id="number">Admin
+                                                                                        Commission</label>
+                                                                                    <input type="number"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="adminCommission"
+                                                                                        placeholder="adminCommission"
+                                                                                        name="adminCommission"
+                                                                                        [(ngModel)]="vehicle.commission.adminCommission"
+                                                                                        formControlName="adminCommission1">
+                                                                                </div>
+                                                                                <div class="col-md-4">
+                                                                                    <label id="label">Commission
+                                                                                        Range</label>
+                                                                                    <input type="number"
+                                                                                        class="form-control form-control-sm"
+                                                                                        id="companyCommission"
+                                                                                        placeholder="Commission Range"
+                                                                                        name="companyCommission"
+                                                                                        [(ngModel)]="vehicle.commission.companyCommission"
+                                                                                        formControlName="companyCommission1">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <!-- scat end -->
+                                            <!-- price sel -->
+                                            <br>
+                                            <div class="row  p-2" *ngIf="prEnable">
+                                                <div class="col-md-5">
+                                                    <div id="collapseExample" [ngbCollapse]="isCollapsed[i]">
+                                                        <h4>Price Selection</h4>
+                                                        <label id="label">District</label>
+                                                        <div [formGroup]="formvalid2">
+                                                            <select class="form-control form-control-sm"
+                                                                id="priceSelection"
+                                                                *ngIf="!(savetype == 'UpdtPrToSubCat')"
+                                                                placeholder="priceSelection" name="PriceSelection"
+                                                                [(ngModel)]="priceSel.districtName"
+                                                                formControlName="districtName">
+                                                                <option *ngFor="let district of districts" id="op"
+                                                                    value="{{district}}">{{district}}</option>
+                                                            </select>
+                                                        </div>
+                                                        <input disabled class="form-control form-control-sm"
+                                                            [(ngModel)]="priceSel.districtName"
+                                                            *ngIf="savetype == 'UpdtPrToSubCat'"
+                                                            formControlName="districtName">
+                                                        <br>
+                                                        <div class="row border border-dark"
+                                                            *ngFor="let timeBase of priceSel.timeBase; let p = index">
+                                                            <!-- <div class="card p-2"> -->
+                                                            <!-- <h6>Time slot {{p+1}}</h6>
+                                            <br> -->
+                                                            <div class="col-md-12">
+                                                                <h5><b>Time slot {{p+1}}</b> <button mat-button
+                                                                        class="btn btn-sm btn-danger font-weight-bold pull-right m-1"
+                                                                        (click)="removePriceSel(p)">- Cancel</button>
+                                                                </h5>
+                                                            </div>
+                                                            <!-- <div [formGroup]="roadPickupPriceSel[p]"> -->
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Time Slot Name</label>
+                                                                    <input type="text"
+                                                                        class="form-control form-control-sm"
+                                                                        id="timeSlotName" placeholder="Name"
+                                                                        name="timeSlotName"
+                                                                        [(ngModel)]="timeBase.timeSlotName"
+                                                                        formControlName="timeSlotName">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6"></div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Starting Time</label>
+                                                                    <input type="time"
+                                                                        class="form-control form-control-sm"
+                                                                        id="startingTime" placeholder="Starting Time"
+                                                                        name="startingTime"
+                                                                        [(ngModel)]="timeBase.startingTime"
+                                                                        formControlName="startingTime">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">End Time</label>
+                                                                    <input type="time"
+                                                                        class="form-control form-control-sm"
+                                                                        id="endingTime" placeholder="End Time"
+                                                                        name="endingTime"
+                                                                        [(ngModel)]="timeBase.endingTime"
+                                                                        formControlName="endingTime">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Admin Commission</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="districtPrice" placeholder="Price"
+                                                                        name="districtPrice"
+                                                                        [(ngModel)]="timeBase.districtPrice"
+                                                                        formControlName="districtPrice">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Bidding Minimum Per KM
+                                                                        Fare</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="lowerBidLimit" placeholder="Price"
+                                                                        name="lowerBidLimit"
+                                                                        [(ngModel)]="timeBase.lowerBidLimit"
+                                                                        formControlName="lowerBidLimit">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Bidding Maximum Per KM
+                                                                        Fare</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="upperBidLimit" placeholder="Price"
+                                                                        name="upperBidLimit"
+                                                                        [(ngModel)]="timeBase.upperBidLimit"
+                                                                        formControlName="upperBidLimit">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Booking Fare</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="baseFare" placeholder="baseFare"
+                                                                        name="baseFare" [(ngModel)]="timeBase.baseFare"
+                                                                        formControlName="baseFare">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Minimum Fare</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="minimumFare" placeholder="minimumFare"
+                                                                        name="minimumFare"
+                                                                        [(ngModel)]="timeBase.minimumFare"
+                                                                        formControlName="minimumFare">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Minimum KM</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="minimumKM" placeholder="minimumKM"
+                                                                        name="minimumKM"
+                                                                        [(ngModel)]="timeBase.minimumKM"
+                                                                        formControlName="minimumKM">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Below Above KM Range</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="belowAboveKMRange"
+                                                                        placeholder="belowAboveKMRange"
+                                                                        name="belowAboveKMRange"
+                                                                        [(ngModel)]="timeBase.belowAboveKMRange"
+                                                                        formControlName="belowAboveKMRange">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Above KM Fare</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="aboveKMFare" placeholder="aboveKMFare"
+                                                                        name="aboveKMFare"
+                                                                        [(ngModel)]="timeBase.aboveKMFare"
+                                                                        formControlName="aboveKMFare">
+                                                                </div>
+                                                            </div>
+                                                            <!-- <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Bidding Minimum Per KM Fare</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="belowKMFare" placeholder="belowKMFare"
+                                                                        name="belowKMFare"
+                                                                        [(ngModel)]="timeBase.belowKMFare"
+                                                                        formControlName="belowKMFare">
+                                                                </div>
+                                                            </div> -->
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Traffic Waiting Charge Per
+                                                                        Minute</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="trafficWaitingChargePerMinute"
+                                                                        placeholder="trafficWaitingChargePerMinute"
+                                                                        name="trafficWaitingChargePerMinute"
+                                                                        [(ngModel)]="timeBase.trafficWaitingChargePerMinute"
+                                                                        formControlName="trafficWaitingChargePerMinute">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Normal Waiting Charge Per
+                                                                        Minute</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="normalWaitingChargePerMinute"
+                                                                        placeholder="normalWaitingChargePerMinute"
+                                                                        name="normalWaitingChargePerMinute"
+                                                                        [(ngModel)]="timeBase.normalWaitingChargePerMinute"
+                                                                        formControlName="normalWaitingChargePerMinute">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Radius</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm" id="radius"
+                                                                        placeholder="radius" name="radius"
+                                                                        [(ngModel)]="timeBase.radius"
+                                                                        formControlName="radius">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Package Delivery KM Per
+                                                                        Hour</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="packageDeliveryKMPerHour"
+                                                                        placeholder="packageDeliveryKMPerHour"
+                                                                        name="packageDeliveryKMPerHour"
+                                                                        [(ngModel)]="timeBase.packageDeliveryKMPerHour"
+                                                                        formControlName="packageDeliveryKMPerHour">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Package Delivery KM Per
+                                                                        Day</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="packageDeliveryKMPerDay"
+                                                                        placeholder="packageDeliveryKMPerDay"
+                                                                        name="packageDeliveryKMPerDay"
+                                                                        [(ngModel)]="timeBase.packageDeliveryKMPerDay"
+                                                                        formControlName="packageDeliveryKMPerDay">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Trip Cancelation Fee</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm" id="tripCancelationFee"
+                                                                        placeholder="tripCancelationFee" name="tripCancelationFee"
+                                                                        [(ngModel)]="timeBase.tripCancelationFee"
+                                                                        formControlName="tripCancelationFee">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="priceValidation[p]">
+                                                                    <label id="label">Max Waiting Time Without Charge</label>
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm" id="maxWaitingTimeWithoutCharge"
+                                                                        placeholder="maxWaitingTimeWithoutCharge" name="maxWaitingTimeWithoutCharge"
+                                                                        [(ngModel)]="timeBase.maxWaitingTimeWithoutCharge"
+                                                                        formControlName="maxWaitingTimeWithoutCharge">
+                                                                </div>
+                                                            </div>
+                                                            <!-- </div> -->
+                                                            <hr>
+                                                            <!-- </div> -->
+                                                        </div>
+
+                                                        <!-- <div class="col-md-4">
+                                        <label id="label">Price</label>
+                                        <input type="text" class="form-control form-control-sm" id="modelType"
+                                            placeholder="Price" name="Price" [(ngModel)]="DistPrice">
+                                    </div>
+                                    <div class="col-md-4">
+                                            <label id="label">Radius</label>
+                                            <input type="text" class="form-control form-control-sm" id="Radius"
+                                                placeholder="Radius" name="Radius" [(ngModel)]="Distradius">
+                                        </div> -->
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <br>
+                                                                <button mat-button [disabled]="PrSelFlag"
+                                                                    class="btn btn-sm btn-primary font-weight-bold ml-4"
+                                                                    (click)="addTimeBase()">
+                                                                    + Add Time Base</button>
+                                                                <button mat-button [disabled]="PrSelFlag"
+                                                                    class="btn btn-sm btn-dark font-weight-bold pull-right"
+                                                                    (click)="addDistPrice(i)">
+                                                                    + submit Time Base</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6" [ngbCollapse]="isCollapsed[i]">
+                                                    <h4
+                                                        *ngIf="vehicleCategoryVM.subCategory[i].priceSelection.length > 0">
+                                                        Price
+                                                        Selection</h4>
+                                                    <div class="pre-scrollable">
+                                                        <div class="card p-2"
+                                                            *ngFor="let item of vehicleCategoryVM.subCategory[i].priceSelection; let ps = index">
+                                                            <ul>
+                                                                <li>{{item.districtName}}<button mat-button
+                                                                        class="btn btn-sm btn-danger pull-right"
+                                                                        (click)="removeDistPrice(i,q)">-
+                                                                        Cancel</button></li>
+                                                                <div class="card p-2"
+                                                                    *ngFor="let tb of item.timeBase; let q = index">
+                                                                    <h5>{{tb.timeSlotName}}
+
+                                                                    </h5>
+                                                                    <p>From : {{tb.startingTime}} | To :
+                                                                        {{tb.endingTime}}<br>
+                                                                        <ul>
+                                                                            <li>admin Commission :{{tb.districtPrice}}
+                                                                            </li>
+                                                                            <li>Bidding Minimum Per KM Fare
+                                                                                :{{tb.lowerBidLimit}}
+                                                                            </li>
+                                                                            <li>Bidding Maximum Per KM Fare
+                                                                                :{{tb.upperBidLimit}}
+                                                                            </li>
+                                                                            <li>Above KM Fare : {{tb.aboveKMFare}}</li>
+                                                                            <li>Booking Fare : {{tb.baseFare}}</li>
+                                                                            <li>below Above KM Range :
+                                                                                {{tb.belowAboveKMRange}}</li>
+                                                                            <!-- <li>Bidding Minimum Per KM Fare : {{tb.belowKMFare}}</li> -->
+                                                                            <li>Minimum Fare : {{tb.minimumFare}}</li>
+                                                                            <li>Minimum KM : {{tb.minimumKM}}</li>
+                                                                            <li>Normal Waiting Charge Per Minute :
+                                                                                {{tb.normalWaitingChargePerMinute}}</li>
+                                                                            <li>Package Delivery KM Per Day :
+                                                                                {{tb.packageDeliveryKMPerDay}}</li>
+                                                                            <li>Package Delivery KM Per Hour :
+                                                                                {{tb.packageDeliveryKMPerHour}}</li>
+                                                                            <li>Radius : {{tb.radius}}</li>
+                                                                            <li>Traffic Waiting Charge Per Minute :
+                                                                                {{tb.trafficWaitingChargePerMinute}}
+                                                                            </li>
+                                                                            <li>Trip Cancelation Fee : {{tb.tripCancelationFee}}</li>
+                                                                            <li>Max Waiting Time Without Charge : {{tb.maxWaitingTimeWithoutCharge}}</li>
+
+                                                                        </ul>
+
+                                                                </div>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- price sel end -->
+                                            <!-- rd pickup price sel  -->
+                                            <br>
+                                            <div class="row" *ngIf="rdPrEnable">
+                                                <div class="col-md-5">
+                                                    <div id="collapseExample" [ngbCollapse]="isCollapsed[i]">
+                                                        <h4>Road Pickup Price Selection</h4>
+                                                        <label id="label">District</label>
+                                                        <div [formGroup]="formvalid3">
+                                                            <select class="form-control form-control-sm"
+                                                                id="priceSelection" placeholder="priceSelection"
+                                                                name="PriceSelection"
+                                                                [(ngModel)]="roadPickupPriceSel.districtName"
+                                                                formControlName="ddistrictName">
+                                                                <option *ngFor="let district of districts" id="op"
+                                                                    value="{{district}}">{{district}}</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="row"
+                                                            *ngFor="let timeBase of roadPickupPriceSel.timeBase; let q = index">
+                                                            <div class="col-md-12">
+                                                                <h5><b>Time slot {{q+1}}</b><button mat-button
+                                                                        class="btn btn-sm btn-danger font-weight-bold pull-right m-1"
+                                                                        (click)="removeRoadPickupPriceSel(q)">-
+                                                                        Cancel</button></h5>
+                                                            </div>
+                                                            <div class="col-md-6"></div>
+                                                            <div class="col-md-6">
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <label id="label">Time Slot Name</label>
+                                                                    <input type="text"
+                                                                        class="form-control form-control-sm"
+                                                                        id="modelType" placeholder="Name" name="Price"
+                                                                        [(ngModel)]="timeBase.timeSlotName"
+                                                                        formControlName="dtimeSlotName">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <label id="label">Starting Time</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="time"
+                                                                        class="form-control form-control-sm"
+                                                                        id="modelType" placeholder="Starting Time"
+                                                                        name="Price" [(ngModel)]="timeBase.startingTime"
+                                                                        formControlName="dstartingTime">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <label id="label">End Time</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="time"
+                                                                        class="form-control form-control-sm"
+                                                                        id="modelType" placeholder="End Time"
+                                                                        name="Price" [(ngModel)]="timeBase.endingTime"
+                                                                        formControlName="dendingTime">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6">
+                                                                <label id="label">Admin Commission</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="modelType" placeholder="Price" name="Price"
+                                                                        [(ngModel)]="timeBase.districtPrice"
+                                                                        formControlName="ddistrictPrice">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Booking
+                                                                    Fare</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="baseFare" placeholder="baseFare"
+                                                                        name="baseFare" [(ngModel)]="timeBase.baseFare"
+                                                                        formControlName="dbaseFare">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Minimum
+                                                                    Fare</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="minimumFare" placeholder="minimumFare"
+                                                                        name="minimumFare"
+                                                                        [(ngModel)]="timeBase.minimumFare"
+                                                                        formControlName="dminimumFare">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Minimum
+                                                                    KM</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="minimumKM" placeholder="minimumKM"
+                                                                        name="minimumKM"
+                                                                        [(ngModel)]="timeBase.minimumKM"
+                                                                        formControlName="dminimumKM">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Below
+                                                                    Above
+                                                                    KM
+                                                                    Range</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="belowAboveKMRange"
+                                                                        placeholder="belowAboveKMRange"
+                                                                        name="belowAboveKMRange"
+                                                                        [(ngModel)]="timeBase.belowAboveKMRange"
+                                                                        formControlName="dbelowAboveKMRange">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Above
+                                                                    KM
+                                                                    Fare</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="aboveKMFare" placeholder="aboveKMFare"
+                                                                        name="aboveKMFare"
+                                                                        [(ngModel)]="timeBase.aboveKMFare"
+                                                                        formControlName="daboveKMFare">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Below
+                                                                    KM
+                                                                    Fare</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="belowKMFare" placeholder="belowKMFare"
+                                                                        name="belowKMFare"
+                                                                        [(ngModel)]="timeBase.belowKMFare"
+                                                                        formControlName="dbelowKMFare">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Traffic
+                                                                    Waiting
+                                                                    Charge
+                                                                    Per
+                                                                    Minute</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="trafficWaitingChargePerMinute"
+                                                                        placeholder="trafficWaitingChargePerMinute"
+                                                                        name="trafficWaitingChargePerMinute"
+                                                                        [(ngModel)]="timeBase.trafficWaitingChargePerMinute"
+                                                                        formControlName="dtrafficWaitingChargePerMinute">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Normal
+                                                                    Waiting
+                                                                    Charge
+                                                                    Per
+                                                                    Minute</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="normalWaitingChargePerMinute"
+                                                                        placeholder="normalWaitingChargePerMinute"
+                                                                        name="normalWaitingChargePerMinute"
+                                                                        [(ngModel)]="timeBase.normalWaitingChargePerMinute"
+                                                                        formControlName="dnormalWaitingChargePerMinute">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Radius</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm" id="radius"
+                                                                        placeholder="radius" name="radius"
+                                                                        [(ngModel)]="timeBase.radius"
+                                                                        formControlName="dradius">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Package
+                                                                    Delivery
+                                                                    KM
+                                                                    Per
+                                                                    Hour</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="packageDeliveryKMPerHour"
+                                                                        placeholder="packageDeliveryKMPerHour"
+                                                                        name="packageDeliveryKMPerHour"
+                                                                        [(ngModel)]="timeBase.packageDeliveryKMPerHour"
+                                                                        formControlName="dpackageDeliveryKMPerHour">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label id="label">Package
+                                                                    Delivery
+                                                                    KM
+                                                                    Per
+                                                                    Day</label>
+                                                                <div [formGroup]="pickupPriceSelection[q]">
+                                                                    <input type="number"
+                                                                        class="form-control form-control-sm"
+                                                                        id="packageDeliveryKMPerDay"
+                                                                        placeholder="packageDeliveryKMPerDay"
+                                                                        name="packageDeliveryKMPerDay"
+                                                                        [(ngModel)]="timeBase.packageDeliveryKMPerDay"
+                                                                        formControlName="dpackageDeliveryKMPerDay">
+                                                                </div>
+                                                            </div>
+
+                                                            <hr>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <br>
+                                                                <button mat-button [disabled]="PrSelFlag"
+                                                                    class="btn btn-sm btn-primary font-weight-bold ml-4"
+                                                                    (click)="addroadPickupTimeBase()">
+                                                                    + Add Time Base</button>
+                                                                <button mat-button [disabled]="PrSelFlag"
+                                                                    class="btn btn-sm btn-dark font-weight-bold pull-right"
+                                                                    (click)="addroadPickupPistPrice(i)">
+                                                                    + submit Time Base</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6" [ngbCollapse]="isCollapsed[i]">
+                                                    <h4
+                                                        *ngIf="vehicleCategoryVM.subCategory[i].roadPickupPriceSelection.length > 0">
+                                                        Road
+                                                        Pickup
+                                                        Price
+                                                        Selection</h4>
+                                                    <div class="pre-scrollable">
+                                                        <div class="card p-2"
+                                                            *ngFor="let item of vehicleCategoryVM.subCategory[i].roadPickupPriceSelection">
+                                                            <ul>
+                                                                <li>{{item.districtName}}
+                                                                    <button mat-button
+                                                                        class="btn btn-sm btn-danger pull-right"
+                                                                        (click)="removeRdPickupDistPrice(i,q)">-
+                                                                        Cancel</button></li>
+                                                                <br>
+                                                                <div class="card p-2"
+                                                                    *ngFor="let tb of item.timeBase; let q = index">
+                                                                    <h5>{{tb.timeSlotName}}
+                                                                    </h5>
+                                                                    <p>From
+                                                                        :
+                                                                        {{tb.startingTime}}
+                                                                        |
+                                                                        To
+                                                                        :
+                                                                        {{tb.endingTime}}<br>
+                                                                        {{tb.districtPrice}}</p>
+                                                                    <ul>
+                                                                        <li>Admin Commission :{{tb.districtPrice}}</li>
+                                                                        <li>Above KM Fare : {{tb.aboveKMFare}}</li>
+                                                                        <li>Booking Fare : {{tb.baseFare}}</li>
+                                                                        <li>Below Above KM Range :
+                                                                            {{tb.belowAboveKMRange}}</li>
+                                                                        <li>Below KM Fare : {{tb.belowKMFare}}</li>
+                                                                        <li>Minimum Fare : {{tb.minimumFare}}</li>
+                                                                        <li>Minimum KM : {{tb.minimumKM}}</li>
+                                                                        <li>Normal Waiting Charge Per Minute :
+                                                                            {{tb.normalWaitingChargePerMinute}}</li>
+                                                                        <li>Package Delivery KM Per Day :
+                                                                            {{tb.packageDeliveryKMPerDay}}</li>
+                                                                        <li>Package Delivery KM Per Hour :
+                                                                            {{tb.packageDeliveryKMPerHour}}</li>
+                                                                        <li>Radius : {{tb.radius}}</li>
+                                                                        <li>Traffic Waiting Charge Per Minute :
+                                                                            {{tb.trafficWaitingChargePerMinute}}</li>
+
+                                                                    </ul>
+
+                                                                </div>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <!-- end rd pickup price sel -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+                            </form>
+
+
+                        </div>
+                        <div class="col-md-5 order-md-1">
+
+                        </div>
+                    </div>
+                    <!-- </div> -->
+                </mat-card>
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

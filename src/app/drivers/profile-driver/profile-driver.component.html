@@ -1,0 +1,479 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<!-- <mat-card *ngIf="driverDetails?.length > 0" class="bg-primary">
+    <mat-card-content>
+        <h3 class="text-white">{{driverDetails[0].firstName}} {{driverDetails[0].lastName}}</h3>
+    </mat-card-content>
+</mat-card>
+
+<ngb-alert [dismissible]="false" class="alert-success">
+    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+</ngb-alert> -->
+<div *ngIf="driverDetails?.length > 0">
+    <div class="alert alert-warning" *ngIf="driverDetails[0].isApproved == false">
+        <strong>Driver not approved</strong>
+    </div>
+    
+    <div class="alert alert-danger" *ngIf="driverDetails[0].isEnable == false">
+        <strong>Driver disabled</strong>
+    </div>
+    
+    <div class="alert alert-danger" *ngIf="driverDetails[0].wallet[0].totalWalletPoints <= 0">
+        <strong>Driver credit low</strong>
+    </div>
+</div>
+
+
+<mat-card *ngIf="driverDetails?.length > 0" class="mt-4">
+    <mat-card-content class="pl-3 pr-3">
+        <div class="row ml-2 mb-2">
+            <div>
+                <img src="{{driverDetails[0].driverPic}}" class="img-rounded" alt="driver-image" width="100" height="100">
+            </div>
+            <div class="ml-3">
+                <h3 class="text-dark"><b>{{driverDetails[0].firstName}} {{driverDetails[0].lastName}}</b></h3>
+                <span class="badge badge-success p-2 ml-2" *ngIf="driverDetails[0].isDispatchEnable == true">
+                    <strong>Dispatcher</strong>
+                </span>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Registerd on: </b>{{driverDetails[0].recordedTime | date: 'dd/MM/yyyy'}}</h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Ratings: </b></h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Wallet Balance: </b>{{currency}} {{driverDetails[0].wallet[0].totalWalletPoints | number : '.2-2'}}</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Company: </b>{{driverDetails[0].company}}</h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Package Type: </b>{{driverDetails[0].packageType}}</h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Earnings: </b>{{currency}} {{driverDetails[0].wallet[0].driverEarnings | number : '.2-2'}}</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Company Refferel: </b></h5>
+            </div>
+        </div>
+
+        <!-- tabs -->
+        <div class="mt-5 mb-5">
+            <ngb-tabset >
+                <ngb-tab>
+                    <ng-template ngbTabTitle>Driver Info</ng-template>
+                    <ng-template ngbTabContent class="">
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Name: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].firstName}} {{driverDetails[0].lastName}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Mobile: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].mobile}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Email: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].email}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>NIC: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].nic}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Birthday: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].birthday | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Gender: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].gender}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>City: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].address.city}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>District: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].address.district}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Province: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].address.province}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <h6 class="mt-2"><b>Country: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].address.country}}</b></h6>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+                
+                <ngb-tab title="Vehicles" class="" *ngIf="vehicleData">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Brand Name: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleBrandName}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Model: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleModel}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Color: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleColor}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Registration No: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleRegistrationNo}}</b></h6>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Owner Name: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.ownerInfo.ownerContactName}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Owner Email: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.ownerInfo.ownerContactEmail}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Owner Contact Number: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.ownerInfo.ownerContactNumber}}</b></h6>
+                                </div>
+                            </div>
+                            
+                            
+
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Revenue: </b></h6>
+                                    <img src="{{vehicleData.vehicleRevenuePic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Front: </b></h6>
+                                    <img src="{{vehicleData.vehicleFrontPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Insurance: </b></h6>
+                                    <img src="{{vehicleData.vehicleInsurancePic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Book: </b></h6>
+                                    <img src="{{vehicleData.vehicleBookPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Side View: </b></h6>
+                                    <img src="{{vehicleData.vehicleSideViewPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Dispatcher" class="" *ngIf="driverDetails[0].isDispatchEnable == true">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Dispatcher Type: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].type}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Registerd on: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].recordedTime | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>From: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.fromDate | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>To: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.toDate | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Admin Commission: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.dispatchAdminCommission}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Dispatcher Commission: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.dispatcherCommission}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Dispatch Package Type: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].dispatchPackageType}}</b></h6>
+                                </div>
+                            </div>
+                            
+                            
+
+                        </div>
+
+
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Transactions" class="" *ngIf="driverDetails[0].wallet[0]">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4" *ngIf="driverDetails[0].wallet[0].transactionHistory?.length > 0">
+
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                                <thead>
+                                    
+                                    <tr>
+                                        <th>
+                                            <div class="row d-flex align-items-center">
+                                                <h4 class="text-body">Transactions</h4>
+                                                <!-- <a mat-button class="btn btn-primary text-white" (click)="getDrivers()" data-toggle="tooltip" title="Download approved drivers data">
+                                                    <i class="fa fa-download"></i>
+                                                    excel</a> -->
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let transaction of driverDetails[0].wallet[0].transactionHistory; let i = index" style="font-weight:10">
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <mat-card-title>
+                                                        <h6><b>Trip</b></h6>
+                                                    </mat-card-title>
+
+                                                    <p><b>Pickup at: </b>{{transaction.trip.pickupLocation.address}}</p>
+                                                    <p><b>Drop at: </b>{{transaction.trip.destinations[0].address}}</p>
+                                                    
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <mat-card-title>
+                                                        <h6><b>Cost</b></h6>
+                                                    </mat-card-title>
+
+                                                    <p><b>Total Trip Value: </b>{{currency}} {{transaction.trip.totalTripValue}}</p>
+                                                    <p><b>Admin Commission: </b>{{currency}} {{transaction.trip.tripAdminCommission}}</p>
+                                                    <p><b>Driver Earning: </b>{{currency}} {{transaction.trip.tripEarning}}</p>
+                                                    
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <mat-card-title>
+                                                        <h6><b>Details</b></h6>
+                                                    </mat-card-title>
+
+                                                    <p><b>Method: </b>{{transaction.method}}</p>
+                                                    <p><b>Transaction Type: </b>{{transaction.transactionType}}</p>
+                                                    <p><b>Date: </b>{{transaction.dateTime | date: 'dd/MM/yyyy'}}</p>
+                                                    
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <mat-card-title>
+                                                        <h6><b>Status</b></h6>
+                                                    </mat-card-title>
+                                                    <p><b>Credited: </b>{{transaction.isCredited}}</p>
+                                                    
+                                                    
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <div class="col-md-12 pt-4 pb-4" *ngIf="driverDetails[0].wallet[0].transactionHistory?.length <= 0">
+                            <mat-card-title>
+                                <h4>No data found</h4>
+                            </mat-card-title>
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Documents" class="">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Driver: </b></h6>
+                                    <img src="{{driverDetails[0].driverPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Driver Licence Front: </b></h6>
+                                    <img src="{{driverDetails[0].drivingLicenceFrontPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Driver Licence Back: </b></h6>
+                                    <img src="{{driverDetails[0].drivingLicenceBackPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>NIC Front: </b></h6>
+                                    <img src="{{driverDetails[0].nicFrontPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>NIC Back: </b></h6>
+                                    <img src="{{driverDetails[0].nicBackPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </div>
+            
+            
+        
+        
+
+        
+
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="driverDetails?.length === 0">
+    <mat-card-content>
+        <h2>Driver not found</h2>
+    </mat-card-content>
+</mat-card>

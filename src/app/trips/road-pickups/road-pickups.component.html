@@ -1,0 +1,253 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+
+
+<mat-card>
+    <mat-card-content>
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-2 text-white">
+                        From : <input type="date" class="form-control form-control-sm" [(ngModel)]="from">
+                    </div>
+                    <div class="col-md-2 text-white">
+                        To : <input type="date" class="form-control form-control-sm" [(ngModel)]="to">
+                    </div>
+                    <div class="col-md-2">
+                        <br/>
+                        <button mat-button class="btn btn-success btn-sm btn-block" (click)="getRoadPickupTrip()">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="row d-flex align-items-center">
+                                    <h3 class="text-body">Road Pickups</h3>
+                                    <a mat-button class="btn btn-primary text-white" (click)="exportAsXLSX()" data-toggle="tooltip" title="Download road pickups data">
+                                        <i class="fa fa-download"></i>
+                                        excel</a>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of roadPickupData" style="font-weight:10">
+                        <td>
+                            <mat-card>
+                                <div class="row">
+                                    <div class="col-md-3">
+
+                                        <mat-card-title>
+                                            <h5><b>Customer</b></h5>                                                    
+                                        </mat-card-title>
+                                        
+                                        <p><b>Name: </b>{{data.firstName}} {{data.lastName}}</p>
+                                        <p><b>Mobile: </b>{{data.mobile}}</p>
+                                        <p><b>Pickup At: </b>{{data.pickupLocation.address}}</p>
+                                        <p><b>Pickup Time: </b>{{data.pickupDateTime | date: 'dd/MM/yyyy'}}
+                                            {{data.pickupDateTime | date: 'hh:mm.ss a'}}</p>
+                                        <p *ngIf="data.dropLocation"><b>Drop At: </b>{{data.dropLocation.address}}</p>
+                                        <p *ngIf="data.distance"><b>Distance: </b>{{data.distance | number : '1.2-2'}}</p>
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-card-title>
+                                            <h5><b>Driver</b></h5>                                                  
+                                        </mat-card-title>
+                                        <p *ngIf="data.driver?.length > 0"><b>Name: </b>{{data.driver[0].firstName}}
+                                            {{data.driver[0].lastName}}</p>
+                                        <p *ngIf="data.driver?.length > 0"><b>Mobile: </b>{{data.driver[0].mobile}}</p>
+                                        <p *ngIf="data.vehicle?.length > 0"><b>Vehicle: </b>{{data.vehicle[0].vehicleRegistrationNo}}
+                                        </p>
+                                        <p><b>Vehicle Category: </b>{{data.vehicleCategory}}</p>
+                                        <p><b>Vehicle Sub Category: </b>{{data.vehicleSubCategory}}</p>
+                                        
+                                        
+                                        <!-- <p><b>Trip Duration: </b>{{data.tripTime | number : '1.2-2'}}</p>
+                                        <p><b>Waiting Time: </b>{{data.waitTime | number : '1.2-2'}}</p>
+                                        <p>
+                                            <b>Waiting Cost: </b>
+                                            <span class="badge badge-success p-1 pl-2 pr-2">
+                                                <strong>{{currency}} {{data.waitingCost | number : '1.2-2'}}</strong>
+                                            </span>
+                                        </p>
+                                        <p *ngIf="data.totalCost">
+                                            <b>Total cost Rs: </b>
+                                            <span class="badge badge-success p-1 pl-2 pr-2">
+                                                <strong>{{currency}} {{data.totalCost | number : '1.2-2'}}</strong>
+                                            </span>
+                                        </p> -->
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-card-title>
+                                            <h5><b>Info</b></h5>                                                    
+                                        </mat-card-title>
+                                        <p><b>Trip Duration: </b>{{data.tripTime | number : '1.2-2'}}</p>
+                                        <p><b>Waiting Time: </b>{{data.waitTime | number : '1.2-2'}}</p>
+                                        <p><b>Waiting Cost: </b>{{currency}} {{data.waitingCost | number : '1.2-2'}}</p>
+                                        <p><b>Total Cost: </b>{{currency}} {{data.totalCost | number : '1.2-2'}}</p>
+                                        
+                                        <!-- driver trip status -->
+                                        <span class="badge badge-warning p-2" *ngIf="(data.status == 'ongoing')">
+                                            <strong>Ongoing</strong>
+                                        </span>
+
+                                        <!-- <span class="badge badge-danger p-2 ml-1" *ngIf="data.status == 'canceled'">
+                                            <strong>Canceled</strong>
+                                        </span>
+
+                                        <span class="badge badge-success p-2 ml-1" *ngIf="data.status == 'accepted'">
+                                            <strong>Accepted</strong>
+                                        </span> -->
+
+                                        <span class="badge badge-success p-2" *ngIf="data.status == 'done'">
+                                            <strong><i class="fa fa-check-circle"></i> Success</strong>
+                                        </span>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <mat-card-title class="text-right">
+                                            <h5><b>Actions</b></h5>                                                    
+                                        </mat-card-title>
+                                        <div class="text-right mb-2">
+                                            <button mat-button class="btn btn-info btn-sm ml-1 text-white" 
+                                                (click)="edit(data)" data-toggle="tooltip" title="Click here to view trip details">
+                                                    View</button>
+                                        </div>
+                                         
+                                        <div class="text-right">
+                                            <button mat-button class="btn btn-primary btn-sm ml-1 text-white" *ngIf="data.driver?.length > 0" 
+                                                [routerLink]="['/drivers/profile-driver', data.driver[0]._id]" data-toggle="tooltip" title="Click here to view driver profile">
+                                                <i class="fa fa-car mr-2"></i>
+                                                <i class="fa fa-user"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <p><b>Recorded Time: </b>
+                                            {{data.recordedTime | date: 'yyyy-MM-dd'}}
+                                            {{data.recordedTime | date: 'a'}}
+                                            {{data.recordedTime | date: 'hh:mm.ss a'}}
+                                        </p>
+                                    </div>
+                                    
+                                </div>
+                            </mat-card>
+                        </td>
+                        <br>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </mat-card-content>
+</mat-card>
+
+<!-- <div class="row">
+    <div class="col-sm-12 col-md-12">
+
+        <div class="card p-2">
+        <div class="card-header bg-primary">
+
+            From : <input type="date" [(ngModel)]="from"> To : <input type="date" [(ngModel)]="to">
+            <button mat-button class="btn btn-success btn-sm ml-5" (click)="getRoadPickupTrip()">Search</button>
+        </div>
+
+
+        <div class="col-md-12">
+            <div class="card card-outline-inverse">
+            <div class="card-body">
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                <thead>
+                    <tr>
+                    <th>
+                        <h3 class="head">Road Pickup History</h3>
+                        <button (click)="exportAsXLSX()"><i class="fa fa-file-excel-o"
+                        style="font-size:35px;color:blue"></i></button>
+                    </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of roadPickupData" style="font-weight:10">
+                    <td>
+                        <p style="display:none">
+                        {{data.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{data.recordedTime | date: 'a'}}
+                        {{data.recordedTime | date: 'hh:mm.ss a'}}
+                        </p>
+                        <mat-card>
+                        <div class="row">
+                            <div class="col-md-3">
+                            <mat-card-header>
+                                <mat-card-title>
+
+                                <h4><b>Customer</b></h4>
+                                <h3>{{data.firstName}} {{data.lastName}}</h3>
+                                </mat-card-title>
+                                <mat-card-subtitle>
+                                {{data.mobile}}
+                                </mat-card-subtitle>
+                                <mat-card-subtitle>
+                                {{data.email}}
+                                </mat-card-subtitle>
+                            </mat-card-header>
+                            </div>
+
+                            <div class="col-md-4">
+                            <p><b>Trip Duration :</b> {{data.tripTime | number : '1.2-2'}}</p>
+                            <p><b>Waiting Cost :</b> {{data.waitingCost | number : '1.2-2'}}</p>
+                            <p><b>Waiting Time :</b> {{data.waitTime | number : '1.2-2'}}</p>
+                            <p><b>Vehicle Category :</b> {{data.vehicleCategory}}</p>
+                            <p><b>Vehicle Sub Category :</b> {{data.vehicleSubCategory}}</p>
+                            <p *ngIf="data.driver?.length > 0"><b>Driver :</b> {{data.driver[0].firstName}}
+                                {{data.driver[0].lastName}}</p>
+                            <p *ngIf="data.vehicle?.length > 0"><b>Vehicle :</b> {{data.vehicle[0].vehicleRegistrationNo}}
+                            </p>
+                            </div>
+
+                            <div class="col-md-3">
+                            <p><b>Pickup Location :</b> {{data.pickupLocation.address}}</p>
+                            <p><b>Pickup Time :</b> {{data.pickupDateTime | date: 'dd/MM/yyyy'}}
+                                {{data.pickupDateTime | date: 'hh:mm.ss a'}}</p>
+                            <p *ngIf="data.dropLocation"><b>Drop Location :</b> {{data.dropLocation.address}}</p>
+                            <p *ngIf="data.distance"><b>Distance :</b> {{data.distance | number : '1.2-2'}}</p>
+                            
+                            </div>
+
+                            <div class="col-md-2">
+                            <p *ngIf="data.totalCost" class="p-3"><b>Total cost Rs : {{data.totalCost}}</b></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                        </div>
+                        <div class="row">
+                            <button mat-button class="btn btn-success btn-sm ml-3">{{data.status}}</button>
+                        </div>
+                        </mat-card>
+                    </td>
+                    <br>
+                    </tr>
+                </tbody>
+                </table>
+
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div> -->
+
+    

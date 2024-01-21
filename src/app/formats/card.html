@@ -1,0 +1,42 @@
+<!-- card -->
+<mat-card class="example-card">
+    <mat-card-header>
+        <div mat-card-avatar class="example-header-image">
+            <img src="src of image" class="img-circle" alt="a" width="45" height="45">
+        </div>
+        <mat-card-title>
+            <h3>Title</h3>
+        </mat-card-title>
+        <mat-card-subtitle>sub title </mat-card-subtitle>
+        <p>description</p>
+    </mat-card-header>
+    <mat-card-content>
+        <p>Content</p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2" (click)="openVerticallyCentered(content,driver)">Attachments</button>
+        <button mat-button class="btn btn-sm btn-danger" (click)="approveDriver(driver._id)">Approve</button>
+    </mat-card-actions>
+</mat-card>
+
+
+<!-- css -->
+<!--  
+
+      .example-card {
+    max-width: 400px;
+    height: 380px;
+  }
+  
+  .example-header-image {
+    /* background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg'); */
+    background-size: cover;
+  }
+
+-->
+
+<!-- modules -->
+<!-- 
+    import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+ -->

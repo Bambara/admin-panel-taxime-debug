@@ -1,0 +1,89 @@
+table{
+    width: 100%
+  }
+  
+  .detailsButton{
+    /*margin: auto;*/
+     margin: auto;
+  }
+
+  p{
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+
+  .card-body{
+    /* margin: 2px; */
+    padding: 1px;
+  }
+
+/* Add button */
+
+  body{
+      font-family:Verdana, Geneva, sans-serif;
+      font-size:18px;
+      background-color:#CCC;
+  }
+
+  /* Add button */
+
+body{
+  font-family:Verdana, Geneva, sans-serif;
+  font-size:18px;
+  background-color:#CCC;
+}
+
+.float{
+  position:fixed;
+  width:60px;
+  height:60px;
+  bottom:80px;
+  right:20px;
+  background-color:rgb(36, 42, 51);
+  color:#FFF;
+  border-radius:50px;
+  text-align:center;
+  box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+  margin-top:22px;
+}
+
+/* modal */
+.modal-header{
+  background-color:rgb(36, 42, 51);
+}
+
+.modal-title{
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.form-check-label{
+  font-weight: normal
+}
+
+.form-group,label{
+  font-size: 12px;
+  font-weight: 800
+}
+
+.form-control{
+  font-size: 12px;
+}
+h5{
+  color: darkgray;
+}
+
+td {
+  padding: 25px;
+  /* outline-color: #242A33; */
+  outline-style: none;
+  /* outline-width: 2px; */
+}
+.isDispatchEnable{
+  color: green;
+}

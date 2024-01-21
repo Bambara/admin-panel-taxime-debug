@@ -1,0 +1,116 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+
+<ng-snotify></ng-snotify>
+
+<div class="col-md-12">
+  <div class="card card-outline-inverse">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              General Users
+              <button (click)="manualCustomers()"><i class="fa fa-file-excel-o"
+                  style="font-size:35px;color:blue"></i></button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <mat-card>
+                <!-- <mat-card-content>
+                        <label>From : </label><input type="date" [(ngModel)]="from"><label>To : </label><input type="date"
+                          [(ngModel)]="to">
+                      </mat-card-content> -->
+                <mat-card-content>
+                  <form>
+                    <div class="row">
+                      <div class="col-md-1">
+                        <label for="attribute">Attribute:</label>
+                      </div>
+                      <div class="col-md-4">
+                        <select class='form-control' [(ngModel)]="attribute" name="attribute">
+                          <option value="-99">-- Select Option --</option>
+                          <option value="firstName">Name</option>
+                          <option value="mobile">Mobile Number</option>
+                          <option value="nic">NIC</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <input type="text" class="form-control" [(ngModel)]=attributeText name="attributeText"
+                          placeholder="Enter">
+                      </div>
+                      <div class="col-md-2">
+                        <button mat-button class="btn btn-success btn-sm ml-5"
+                          (click)="getAllManualCustomerspagination()">Search</button>
+                      </div>
+                    </div>
+
+                    <br>
+                    <div class="row pt-3">
+                      <div class="col-md-4">
+                        showing {{manualUsers.length}} records out of {{noOfRecords}}
+                      </div>
+                      <div class="col-md-8">
+                        <div style="text-align:center">
+
+                          <table class="table">
+                            <tr *ngFor="let item of manualUsers | paginate: config" style="font-weight:10"></tr>
+                          </table>
+
+                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+                </mat-card-content>
+
+              </mat-card>
+            </td>
+          </tr>
+
+          <tr *ngFor="let user of manualUsers">
+            <td>
+              <p style="display:none">
+                {{user.recordedTime | date: 'yyyy-MM-dd'}}
+                {{user.recordedTime | date: 'a'}}
+                {{user.recordedTime | date: 'hh:mm.ss a'}}
+              </p>
+              <mat-card class="example-card">
+
+                <div class="row">
+                  <div class="col-md-3">
+                    <mat-card-content>
+                      <p><b>Mobile number : </b>{{user.mobile}}</p>
+                    </mat-card-content>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-card-content>
+                      <p><b>Name : </b>{{user.firstName}}</p>
+                    </mat-card-content>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-card-content>
+                      <p><b>Email : </b>{{user.email}}</p>
+                    </mat-card-content>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-card-content>
+                      <p>
+                        {{user.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{user.recordedTime | date: 'hh:mm.ss a'}}
+                      </p>
+                    </mat-card-content>
+                  </div>
+                </div>
+              </mat-card>
+
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+  </div>
+</div>

@@ -1,0 +1,246 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<mat-card>
+  <mat-card-content>
+    <div class="card">
+      <div class="card-body">
+        
+
+        <!-- <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+
+          <thead>
+            <tr>
+              <th>
+                <div class="row d-flex align-items-center" *ngIf="agentDetails?.length > 0">
+                  <h3 class="text-body">Agent List</h3>
+                  <a mat-button class="btn btn-primary text-white" (click)="exportAsXLSX()" data-toggle="tooltip"
+                    title="Download agent data">
+                    <i class="fa fa-download"></i>
+                    excel</a>
+                </div>
+                <div class="row align-items-center" *ngIf="agentDetails?.length == 0">
+                  <h2 class="text-muted">No Agents</h2>
+                </div>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            
+            <tr *ngFor="let agent of agentDetails; let i = index" style="font-weight:10">
+              <td>
+                <mat-card>
+                  <div class="row">
+
+                    <div class="col-md-4">
+                      <mat-card-title>
+                        <h5><b>Agent Info</b></h5>
+                      </mat-card-title>
+
+                      
+                      <p><b>Name: </b>{{agent.companyName}}</p>
+                      <p><b>Code: </b>{{agent.companyCode}}</p>
+                      
+
+                    </div>
+
+                    <div class="col-md-4">
+                      <mat-card-title>
+                        <h5><b>Status</b></h5>
+                      </mat-card-title>
+
+                      
+                    </div>
+
+
+                    <div class="col-md-4">
+                      <mat-card-title class="text-right">
+                        <h5><b>Actions</b></h5>
+                      </mat-card-title>
+
+                      
+
+                      <div class="text-right mb-2">
+                        <button mat-button class="btn btn-outline-primary btn-sm m-1"
+                          (click)="viewTransactions(content,agent)">Transactions</button>
+                        <button mat-button class="btn btn-sm btn-danger m-1"
+                          (click)="deleteDriver(agent._id)">Delete</button>
+                      </div>
+                      
+
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 text-right">
+                      
+                    </div>
+
+                  </div>
+                </mat-card>
+              </td>
+              <br>
+            </tr>
+          </tbody>
+        </table> -->
+
+
+        <div class="row d-flex align-items-center" *ngIf="agentDetails?.length > 0">
+            <h3 class="text-body">Agent List</h3>
+            <a mat-button class="btn btn-primary text-white" (click)="exportAsXLSX()" data-toggle="tooltip"
+              title="Download agent data">
+              <i class="fa fa-download"></i>
+              excel</a>
+        </div>
+        <br>
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="hover">
+            
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Code
+                    </th>
+                    <th>
+                        Mobile
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Logged In
+                    </th>
+                    <th>
+                        Last Login
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th class="text-right">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+      
+            <tbody>
+                <!-- <br> -->
+                <tr *ngFor="let agent of agentDetails; let i = index" style="font-weight:10">
+                    <td>
+                        {{i+1}}
+                    </td>
+                    <td>
+                        {{agent?.companyName}}
+                    </td>
+                    <td>
+                        {{agent?.companyCode}}
+                    </td>
+                    <td>
+                        {{agent?.mobile}}
+                    </td>
+                    <td>
+                        <span class="badge badge-success p-2 ml-2" *ngIf="agent?.isEnable == true">
+                            <strong>Enabled</strong>
+                        </span>
+                        <span class="badge badge-danger p-2 ml-2" *ngIf="agent?.isEnable == false">
+                            <strong>Disabled</strong>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-success p-2 ml-2" *ngIf="agent?.isLoggedIn == true">
+                            <strong>Yes</strong>
+                        </span>
+                        <span class="badge badge-danger p-2 ml-2" *ngIf="agent?.isLoggedIn == false">
+                            <strong>No</strong>
+                        </span>
+                    </td>
+                    <td>
+                        {{agent?.lastLogin | date: 'yyyy-MM-dd'}}
+                        {{agent?.lastLogin | date: 'hh:mm.ss a'}}
+                    </td>
+                    <td>
+                        {{agent?.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{agent?.recordedTime | date: 'hh:mm.ss a'}}
+                    </td>
+                    <td>
+                        <div class="text-right">
+                            <button mat-button class="btn btn-info btn-sm ml-1 text-white"
+                            [routerLink]="['/agent/profile-agent', agent._id]"
+                            data-toggle="tooltip" title="Click here to view agent profile">
+                                    View Profile</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+      </div>
+      <!-- </div> -->
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Transaction History</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+
+      <thead>
+        <tr>
+          <th>
+            Type
+          </th>
+          <th>
+            Method
+          </th>
+          <th>
+            Amount
+          </th>
+          <th>
+            Status
+          </th>
+          <th>
+            Date
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- <br> -->
+        <tr *ngFor="let transaction of transactions; let i = index" style="font-weight:10">
+          <td>
+            {{transaction?.transactionType}}
+          </td>
+          <td>
+            {{transaction?.method}}
+          </td>
+          <td>
+            {{transaction?.transactionAmount | currency: 'LKR'}}
+          </td>
+          <td>
+            {{transaction?.isCredited ? 'Credited' : 'Not Credited'}}
+          </td>
+          <td>
+            {{transaction?.dateTime | date: 'yyyy-MM-dd hh:mm'}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

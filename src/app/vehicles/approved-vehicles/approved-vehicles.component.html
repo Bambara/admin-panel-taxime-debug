@@ -1,0 +1,1393 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<mat-card class="mb-4">
+    <mat-card-content>
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <div class="row d-flex align-items-center">
+
+                    <div class="col-md-3 text-white">
+                        <select class='form-control' [(ngModel)]="attribute" name="attribute">
+                            <option value="-99">-- Select Option --</option>
+                            <option value="ownerInfo.ownerContactName">Owner Name</option>
+                            <option value="ownerInfo.ownerContactNumber">Owner Mobile Number</option>
+                            <option value="ownerInfo.ownerContactEmail">Owner Email</option>
+                            <option value="vehicleRegistrationNo">Vehicle Registration No</option>
+                            <option value="vehicleLicenceNo">Vehicle Licence No</option>
+                            <option value="vehicleCategory">Vehicle Category</option>
+                            <option value="vehicleSubCategory">Vehicle Sub Category</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 text-white">
+                        <input type="text" class="form-control" [(ngModel)]=attributeText name="attributeText"placeholder="Enter">
+                    </div>
+                    <div class="col-md-3">
+                        
+                        <button mat-button class="btn btn-success"
+                            (click)="getApprovedVahiclesPagination()">Search</button>
+                    
+                    </div>
+                    <div class="col-md-3 text-right">
+                        <a mat-button class="btn btn-success text-white" data-toggle="modal"
+                        data-target="#exampleModal" title="Add New Vehicle">
+                            <i class="fa fa-plus"></i>
+                            Add New Vehicle</a>
+                    </div>
+                </div>
+                <br>
+                <div class="row d-flex align-items-center" *ngIf="vehicleDetails">
+                    <div class="col-md-4 text-white">
+                        showing {{vehicleDetails.length}} records out of {{noOfRecords}}
+                    </div>
+                    <div class="col-md-8 text-right" *ngIf="vehicleDetails?.length > 0">
+                        <!-- <div style="text-align:center" *ngIf="failedDispatches.length > 0" > -->
+
+                            <table class="table">
+                                <tr *ngFor="let item of vehicleDetails | paginate: config" style="font-weight:10"></tr>
+                            </table>
+
+                            <pagination-controls style="background-color: aliceblue" (pageChange)="pageChanged($event)"></pagination-controls>
+                            
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-body">
+        
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                    <thead>
+                        
+                        <tr>
+                            <th>
+                                <div class="row d-flex align-items-center">
+                                    <h3 class="text-body">Approved Vehicles</h3>
+                                    <a mat-button class="btn btn-primary text-white" (click)="getApprovedVehicles()" data-toggle="tooltip" title="Download approved drivers data">
+                                        <i class="fa fa-download"></i>
+                                        excel</a>
+                                </div>
+                            </th>
+                        </tr>
+                        
+                    </thead>
+                        <tbody>
+                            <tr *ngFor="let vehicle of vehicleDetails; let i = index" style="font-weight:10">
+                                <td>
+                                <!-- <p style="display:none">
+                                {{driver.recordedTime | date: 'yyyy-MM-dd'}}
+                                {{driver.recordedTime | date: 'a'}}
+                                {{driver.recordedTime | date: 'hh:mm.ss a'}}</p> -->
+                                <mat-card class="mb-3">
+            
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <mat-card-title>
+                                            <h5><b>Vehicle Info</b></h5>
+                                        </mat-card-title>
+                                            
+                                        <img src="{{vehicle.vehicleSideViewPic}}" class="img-rounded" alt="vehicle-image" width="100" height="100" *ngIf="vehicle.vehicleSideViewPic">
+                                        <img src="/src/assets/images/car.png" class="img-rounded" alt="driver-image" width="100" height="100" *ngIf="vehicle.vehicleSideViewPic == null">
+                                        <span class="badge badge-success p-2 ml-2" *ngIf="vehicle.isEnable">
+                                            <strong>Enabled</strong>
+                                        </span>
+                                        <!-- <p class="mt-2"><b>Registered on </b>{{vehicle.recordedTime | date: 'dd/MM/yyyy'}}</p> -->
+
+                                        <p><b>Reg No: </b>{{vehicle.vehicleRegistrationNo}}</p>
+                                        <p><b>Brand Name: </b>{{vehicle.vehicleBrandName}}</p>
+                                        <!-- <p><b>Manufacture Year: </b>{{vehicle.manufactureYear}}</p> -->
+                                        <p><b>Vehicle Model: </b>{{vehicle.vehicleModel}}</p>
+                                        <p><b>Color: </b>{{vehicle.vehicleColor}}</p>
+                                        <p><b>Capacity (Seats): </b>{{vehicle.passengerCapacity}}</p>
+                                        
+                                    </div>
+            
+                                    <div class="col-md-3">
+                                        <mat-card-title>
+                                            <h5><b>Category Info</b></h5>
+                                        </mat-card-title>
+
+                                        <span class="badge badge-danger p-2 ml-2" *ngIf="vehicle.vehicleCategory == undefined && vehicle.vehicleSubCategory == undefined">
+                                            <strong>No Category</strong>
+                                        </span>
+
+                                        <p *ngIf="vehicle.vehicleCategory"><b>Category: </b>{{vehicle.vehicleCategory}}</p>
+                                        <p *ngIf="vehicle.vehicleSubCategory"><b>Sub Category: </b>{{vehicle.vehicleSubCategory}}</p>
+                                        
+                                        <!-- <div style="width:250px">
+                                            <p><b>Driver Code: </b><input type="text" id="driverCode" class="form-control form-control-sm"
+                                                [(ngModel)]="driver.driverCode" placeholder="Driver Code" name="driverCode"></p>
+                                            <button mat-button type="button" class="btn btn-primary  pull-right"
+                                            (click)="changeCode(driver._id, driver.driverCode)">Change</button>
+                                        </div> -->
+                                    </div>
+            
+                                    <div class="col-md-3">
+                                        <mat-card-title>
+                                            <h5><b>Owner Info</b></h5>
+                                        </mat-card-title>
+
+                                        <p><b>Contact Name: </b>{{vehicle.ownerInfo.ownerContactName}}</p>
+                                        <p><b>Contact Email: </b>{{vehicle.ownerInfo.ownerContactEmail}}</p>
+                                        <p><b>Contact Number: </b>{{vehicle.ownerInfo.ownerContactNumber}}</p>
+                                        <p *ngIf="vehicle.ownerInfo.address"><b>Address: </b>{{vehicle.ownerInfo.address.address}}</p>
+                                        <p *ngIf="vehicle.ownerInfo.address"><b>Street: </b>{{vehicle.ownerInfo.address.street}}</p>
+                                        <p *ngIf="vehicle.ownerInfo.address"><b>City: </b>{{vehicle.ownerInfo.address.city}}</p>
+                                        <p *ngIf="vehicle.ownerInfo.address"><b>Country: </b>{{vehicle.ownerInfo.address.country}}</p>
+                                        <p *ngIf="vehicle.ownerInfo.address"><b>Zipcode: </b>{{vehicle.ownerInfo.address.zipcode}}</p>
+
+                                        <!-- <div class="row align-items-center"> -->
+                                            
+                                            <!-- <div class="col-md-4"> -->
+                                                <br />
+                                                <!-- <div class="form-group"> -->
+                                                    <label for="driverId">Assign New Driver</label>
+                                                    <select class='form-control form-control-sm' [(ngModel)]="driverIdAssignDriver"
+                                                    name="driverIdAssignDriver">
+                                                        <option [value]="driver._id" *ngFor='let driver of driverList'>
+                                                            {{driver.firstName}}</option>
+                                                    </select>
+                                                    
+                                                <!-- </div> -->
+                                            <!-- </div> -->
+                                            <!-- <div class="col-md-2"> -->
+                                                <button mat-button class="btn btn-danger btn-sm btn-block pull-right mt-2"
+                                                    (click)="assignDriver(vehicle._id)">Assign Driver</button>
+                                            <!-- </div> -->
+                                        <!-- </div> -->
+                                        
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-card-title class="text-right">
+                                            <h5><b>Actions</b></h5>
+                                        </mat-card-title>
+                                        
+                                        <div class="text-right mb-2">
+                                            <!-- <button mat-button class="btn btn-info btn-sm mr-2 text-white"
+                                            [routerLink]="['/drivers/profile-driver', driver._id]"
+                                            data-toggle="tooltip" title="Click here to view driver profile">
+                                                    <i class="fa fa-user"></i>
+                                                    View Profile</button> -->
+                                            <!-- <button mat-button class="btn btn-warning btn-sm" data-toggle="modal"
+                                                data-target="#exampleModal" (click)="feedData(vehicle, vehicle.ownerInfo)">Edit</button> -->
+
+                                            <button mat-button class="btn btn-warning btn-sm" data-toggle="modal"
+                                                data-target="#editVehicleModal" (click)="feedData(vehicle, vehicle.ownerInfo)">Edit</button>
+                                        </div>
+
+                                        <div class="text-right mb-2">
+                                            <!-- <button mat-button class="btn btn-primary btn-sm"
+                                                (click)="openVerticallyCentered(content,vehicle)">Attachments</button> -->
+                                            <!-- <button mat-button class="btn btn-success btn-sm" data-toggle="modal"
+                                                data-target="#exampleModal2" (click)="getwalletData(driver._id)">Wallet</button> -->
+                                        </div>
+
+                                        <div class="text-right mb-2">
+                                            <button mat-button class="btn btn-primary btn-sm" data-toggle="modal"
+                                                data-target="#attachmentModal" (click)="attachementView(content,vehicle)">Attachments</button>
+                                            <!-- <button mat-button class="btn btn-success btn-sm" data-toggle="modal"
+                                                data-target="#exampleModal2" (click)="getwalletData(driver._id)">Wallet</button> -->
+                                        </div>
+
+                                        <div class="text-right mb-2">
+                                            <button mat-button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                                data-target="#exampleModal2" (click)="getDriversAssignedToVehicle(vehicle._id)">Manage
+                                                Drivers</button>
+                                        </div>
+
+                                        <div class="text-right mb-2">
+                                            <!-- <div class="isDispatchEnable text-right" *ngIf="driver.dispatcher[0] != null">
+                                                <p><b>Dispatcher</b></p>
+                                            </div> -->
+                                            <!-- <div class="text-right" *ngIf="driver.dispatcher[0] == null">
+                                                <button mat-button class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                                    data-target="#exampleModal3" (click)="assignDispatcher(driver._id)">Dispatch Enable</button>
+                                            </div> -->
+                                        </div>
+
+                                        <div class="text-right mb-2">
+                                            <mat-checkbox class="example-margin" [(ngModel)]="vehicle.isEnable"
+                                                (change)="enableVehicle(vehicle._id,$event.checked)">Enable</mat-checkbox>
+                                        </div>
+
+                                        <!-- <div class="text-right mb-2">
+                                            <button mat-button class="btn btn-outline-primary btn-sm"
+                                                (click)="test()">Manage
+                                                Test</button>
+                                        </div> -->
+                                        
+                                    </div>
+                                </div>
+                                <!-- <br/> -->
+                                <!-- <div class="row align-items-center">
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="driverId">Assign Driver</label>
+                                            <select class='form-control form-control-sm' [(ngModel)]="driverIdAssignDriver"
+                                            name="driverIdAssignDriver">
+                                            <option [value]="driver._id" *ngFor='let driver of driverList'>
+                                                {{driver.firstName}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button mat-button class="btn btn-danger btn-sm pull-right"
+                                            (click)="assignDriver(vehicle._id)">Assign Driver</button>
+                                    </div>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <p><b>Recorded Time: </b>
+                                            {{vehicle.recordedTime | date: 'yyyy-MM-dd'}}
+                                            {{vehicle.recordedTime | date: 'a'}}
+                                            {{vehicle.recordedTime | date: 'hh:mm.ss a'}}
+                                        </p>
+                                    </div>
+                                    
+                                </div>
+                            </mat-card>
+                        </td>
+                        <br>
+                        </tr>
+                    </tbody>
+                </table>
+          
+              </div>
+
+
+
+
+        </div>
+
+    </mat-card-content>
+</mat-card>
+
+<!-- <div class="col-md-12">
+  <ng-snotify></ng-snotify>
+  <div class="card card-outline-inverse">
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              Approved Vehicles
+              <button (click)="getApprovedVehicles()"><i class="fa fa-file-excel-o"
+                  style="font-size:35px;color:blue"></i></button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <mat-card>
+                
+                <mat-card-content>
+                  <form>
+                    <div class="row">
+                      <div class="col-md-1">
+                        <label for="attribute">Attribute:</label>
+                      </div>
+                      <div class="col-md-4">
+                        <select class='form-control' [(ngModel)]="attribute" name="attribute">
+                          <option value="-99">-- Select Option --</option>
+                          <option value="ownerInfo.ownerContactName">Owner Name</option>
+                          <option value="ownerInfo.ownerContactNumber">Owner Mobile Number</option>
+                          <option value="ownerInfo.ownerContactEmail">Owner Email</option>
+                          <option value="vehicleRegistrationNo">Vehicle Registration No</option>
+                          <option value="vehicleLicenceNo">Vehicle Licence No</option>
+                          <option value="vehicleCategory">Vehicle Category</option>
+                          <option value="vehicleSubCategory">Vehicle Sub Category</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <input type="text" class="form-control" [(ngModel)]=attributeText name="attributeText"
+                          placeholder="Enter">
+                      </div>
+                      <div class="col-md-2">
+                        <button mat-button class="btn btn-success btn-sm ml-5"
+                          (click)="getApprovedVahiclesPagination()">Search</button>
+                      </div>
+                    </div>
+
+                    <br>
+                    <div class="row pt-3">
+                      <div class="col-md-4">
+                        showing {{vehicleDetails.length}} records out of {{noOfRecords}}
+                      </div>
+                      <div class="col-md-8">
+                        <div style="text-align:center">
+
+                          <table class="table">
+                            <tr *ngFor="let item of vehicleDetails | paginate: config" style="font-weight:10"></tr>
+                          </table>
+
+                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+                </mat-card-content>
+
+              </mat-card>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> -->
+
+
+<!-- <div class="col-md-12">
+  <div class="card card-outline-inverse">
+
+    <div class="card-body">
+      <table>
+        <thead>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let vehicle of vehicleDetails; let i = index" style="font-weight:10">
+            <td>
+              <p style="display:none">
+                {{vehicle.recordedTime | date: 'yyyy-MM-dd'}}
+                {{vehicle.recordedTime | date: 'a'}}
+                {{vehicle.recordedTime | date: 'hh:mm.ss a'}}</p>
+              <mat-card>
+                <div class="row">
+                  <div class="col-md-3">
+                    <mat-card-header>
+
+                      <div mat-card-avatar class="example-header-image">
+                        <img src="{{vehicle.vehicleSideViewPic}}" class="img-circle" alt="a" width="45"
+                          height="45">
+                      </div>
+
+                      <mat-card-title>
+                        <h3>{{vehicle.vehicleRegistrationNo}}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle>
+                      </mat-card-subtitle>
+                      <p>{{vehicle.ownerInfo.vehicleCategory}} {{vehicle.vehicleSubCategory}}</p>
+                    </mat-card-header><br>
+                    <mat-card-content>
+                      <p>Category: {{vehicle.vehicleCategory}}</p>
+                      <p>Sub Category: {{vehicle.vehicleSubCategory}}</p>
+                      <p>Registered Date :
+                        {{vehicle.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{vehicle.recordedTime | date: 'hh:mm.ss a'}}</p>
+                    </mat-card-content>
+                  </div>
+                  <div class="col-md-3">
+                    <h5>Vehicle Info</h5>
+                    <p>Registration No: {{vehicle.vehicleRegistrationNo}}</p>
+                    <p>Brand Name: {{vehicle.vehicleBrandName}}</p>
+                    <p>Manufacture Year: {{vehicle.manufactureYear}}</p>
+                    <p>Color: {{vehicle.vehicleColor}}</p>
+                    <p>Revenue No: {{vehicle.vehicleRevenueNo}}</p>
+                  </div>
+                  <div class="col-md-3">
+                    <h5>Owner Info</h5>
+                    <p>Contact Name: {{vehicle.ownerInfo.ownerContactName}}</p>
+                    <p>Contact Email: {{vehicle.ownerInfo.ownerContactEmail}}</p>
+                    <p>Contact Number: {{vehicle.ownerInfo.ownerContactNumber}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Address: {{vehicle.ownerInfo.address.address}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Street: {{vehicle.ownerInfo.address.street}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">City: {{vehicle.ownerInfo.address.city}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Country: {{vehicle.ownerInfo.address.country}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Zipcode: {{vehicle.ownerInfo.address.zipcode}}</p>
+                  </div>
+
+                  <div class="col-md-3">
+                    <h5>Assign Driver</h5>
+
+                    <div>
+                      <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="driverId">Driver</label>
+                          <select class='form-control form-control-sm' [(ngModel)]="driverIdAssignDriver"
+                            name="driverIdAssignDriver">
+                            <option [value]="driver._id" *ngFor='let driver of driverList'>
+                              {{driver.firstName}}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <button mat-button class="btn btn-danger btn-sm mb-2 mr-2 pull-right"
+                        (click)="assignDriver(vehicle._id)">Assign Driver</button>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-card-actions>
+                      <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2"
+                        (click)="openVerticallyCentered(content,vehicle)">Attachments</button>
+
+                      <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2" data-toggle="modal"
+                        data-target="#exampleModal" (click)="feedData(vehicle, vehicle.ownerInfo)">Edit</button>
+
+                      <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2" data-toggle="modal"
+                        data-target="#exampleModal2" (click)="getDriversAssignedToVehicle(vehicle._id)">Manage
+                        Drivers</button>
+
+                      <mat-checkbox class="example-margin" [(ngModel)]="vehicle.isEnable"
+                        (change)="enableVehicle(vehicle._id,$event.checked)">Enable</mat-checkbox>
+                    </mat-card-actions>
+                  </div>
+
+                </div>
+              </mat-card>
+            </td>
+            <br>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> -->
+
+<!-- Attachments Modal-->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Attachments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <div class="card"> -->
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Vehicle Book Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleBookPic1}}" target="_blank"><img src="{{vehicleBookPic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Vehicle Front Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleFrontPic1}}" target="_blank"><img src="{{vehicleFrontPic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Vehicle Insurance Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleInsurancePic1}}" target="_blank"><img src="{{vehicleInsurancePic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Vehicle Revenue Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleRevenuePic1}}" target="_blank"><img src="{{vehicleRevenuePic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Vehicle Side View Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleSideViewPic1}}" target="_blank"><img src="{{vehicleSideViewPic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<!-- Add Vehicle Button -->
+<div class="float" data-toggle="modal" data-target="#exampleModal" (click)="modalUpdate()">
+  <i class="fa fa-plus my-float"></i>
+</div>
+
+<!-- new Vehicle Modal-->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Add Vehicle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Vehicle Card -->
+                <div class="col-md-12">
+                    <div class="card card-outline-inverse">
+
+                        <!-- <div class="card-body"> -->
+                        <form [formGroup]="addVehicleForm" (ngSubmit)="addVehicle()">
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vehicleCategory">Vehicle Category</label>
+                                <div class="input-group">
+                                <select class="form-control form-control-sm" id="vehicleCategory" name="vehicleCategory"
+                                    placeholder="Vehicle Category" [(ngModel)]="vehicleCategory"
+                                    (ngModelChange)='getSubcategorys($event)' formControlName="vehicleCategory"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleCategory.errors  && !update}">
+                                    <div *ngIf="submitted && validate.vehicleCategory.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleCategory.errors.required && !update">Required</div>
+                                    </div>
+                                    <option value="-99">-- Select option --</option>
+                                    <option [ngValue]="i" *ngFor='let i of vehicleCategoryList'>{{i.categoryName}}</option>
+                                </select>
+
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vehicleSubcategory">Vehicle Subcategory</label>
+                                <div class="input-group">
+                                <select class="form-control form-control-sm" id="vehicleSubcategory" name="vehicleSubcategory"
+                                    placeholder="Vehicle Subcategory" [(ngModel)]="vehicleSubcategory"
+                                    formControlName="subCategoryName"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleCategory.errors  && !update}">
+                                    <option value="-99">-- Select option --</option>
+                                    <option [ngValue]="i" *ngFor='let i of vehicleSubcategoryList'>{{i.subCategoryName}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <label class="label-header" for="ownerHeader"
+                            style="font-size: 150%; font-variant-caps: all-petite-caps;">Owner
+                            Details</label>
+
+                        <div class="form-group">
+                            <label for="ownerContactName">Contact Name</label>
+                            <div class="input-group">
+                            <input type="text" id="ownerContactName" class="form-control form-control-sm"
+                                placeholder="Contact Name" name="ownerContactName" [(ngModel)]="vehicle.ownerContactName"
+                                formControlName="ownerContactName"
+                                [ngClass]="{ 'is-invalid': submitted && validate.ownerContactName.errors }">
+                            <div *ngIf="submitted && validate.ownerContactName.errors" class="invalid-feedback">
+                                <div *ngIf="validate.ownerContactName.errors.required && !update">Contact Name is required</div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="ownerContactNumber">Contact Number</label>
+                                <div class="input-group">
+                                <input type="text" id="ownerContactNumber" class="form-control form-control-sm"
+                                    placeholder="Contact Number" name="ownerContactNumber" [(ngModel)]="vehicle.ownerContactNumber"
+                                    formControlName="ownerContactNumber"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.ownerContactNumber.errors }">
+                                <div *ngIf="submitted && validate.ownerContactNumber.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.ownerContactNumber.errors.required && !update">Contact Number is required
+                                    </div>
+                                    <div *ngIf="validate.ownerContactNumber.errors.pattern && !update">Contact Number must be a
+                                    valid number
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="ownerContactEmail">Contact Email</label>
+                                <div class="input-group">
+                                <input type="email" id="ownerContactEmail" class="form-control form-control-sm"
+                                    placeholder="Contact Email" name="ownerContactEmail" [(ngModel)]="vehicle.ownerContactEmail"
+                                    formControlName="ownerContactEmail"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.ownerContactEmail.errors }">
+                                <div *ngIf="submitted && validate.ownerContactEmail.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.ownerContactEmail.errors.required && !update">Email is required</div>
+                                    <div *ngIf="validate.ownerContactEmail.errors.email && !update">Email must be a valid email
+                                    address</div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                                <input type="text" id="address" class="form-control form-control-sm" placeholder="Address"
+                                    name="address" [(ngModel)]="vehicle.address" formControlName="address">
+                                <!-- <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.address.errors.required && !update">Address is required</div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                            <input type="text" id="address" class="form-control form-control-sm" placeholder="Address"
+                                name="address" [(ngModel)]="vehicle.address" formControlName="address"
+                                [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+                            <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                                <div *ngIf="validate.address.errors.required && !update">Address is required</div>
+                            </div>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="street">Street</label>
+                                <div class="input-group">
+                                <input type="text" id="street" class="form-control form-control-sm" placeholder="Street"
+                                    name="street" [(ngModel)]="vehicle.street" formControlName="street"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+                                <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.street.errors.required && !update">Street is required</div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <div class="input-group">
+                                <input type="text" id="city" class="form-control form-control-sm" placeholder="City" name="city"
+                                    [(ngModel)]="vehicle.city" formControlName="city"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+                                <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.city.errors.required && !update">City is required</div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="zipcode">Zipcode</label>
+                                <div class="input-group">
+                                <input type="number" id="zipcode" class="form-control form-control-sm" placeholder="Zipcode"
+                                    name="zipcode" [(ngModel)]="vehicle.zipcode" formControlName="zipcode">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <div class="input-group">
+                                <input type="text" id="country" class="form-control form-control-sm" placeholder="Country"
+                                    name="country" [(ngModel)]="vehicle.country" formControlName="country">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="driverId">Driver </label>
+                            <div class="input-group">
+                            <ng-select class="form-control form-control-sm" [items]="driverList" bindLabel="firstName"
+                                bindValue="_id" [(ngModel)]="selectedDriver" name="selectedDriver" formControlName="driverId"
+                                [ngClass]="{ 'is-invalid': submitted && validate.driverId.errors && !update}">
+                                <div *ngIf="submitted && validate.driverId.errors  && !update" class="invalid-feedback">
+                                    <div *ngIf="validate.driverId.errors.required">Driver Id is required</div>
+                                </div>
+                            </ng-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                            <mat-checkbox class="example-margin" [(ngModel)]="vehicle.ownerVerify" formControlName="ownerVerify">
+                                Owner Verify</mat-checkbox>
+                            </div>
+                        </div>
+                        <hr />
+                        <label class="label-header" for="ownerHeader"
+                            style="font-size: 150%; font-variant-caps: all-petite-caps;">Vehicle
+                            Details</label>
+                        <div class="row">
+                            <div class="col">
+                            <!-- <div class="form-group">
+                                <label for="vehicleRevenueNo">Vehicle Revenue No</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleRevenueNo" class="form-control form-control-sm"
+                                    placeholder="Vehicle Revenue No" name="vehicleRevenueNo" [(ngModel)]="vehicle.vehicleRevenueNo"
+                                    formControlName="vehicleRevenueNo"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleRevenueNo.errors }">
+                                <div *ngIf="submitted && validate.vehicleRevenueNo.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleRevenueNo.errors.required && !update">Vehicle Revenue No is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div> -->
+                            <!-- <div class="form-group">
+                                <label for="vehicleLicenceNo">Vehicle Licence No</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleLicenceNo" class="form-control form-control-sm"
+                                    placeholder="Vehicle Licence No" name="vehicleLicenceNo" [(ngModel)]="vehicle.vehicleLicenceNo"
+                                    formControlName="vehicleLicenceNo"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleLicenceNo.errors }">
+                                <div *ngIf="submitted && validate.vehicleLicenceNo.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleLicenceNo.errors.required && !update">Vehicle Licence No is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label for="vehicleColor">Vehicle Color</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleColor" class="form-control form-control-sm"
+                                    placeholder="Vehicle Color" name="vehicleColor" [(ngModel)]="vehicle.vehicleColor"
+                                    formControlName="vehicleColor">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicleBrandName">Vehicle Brand Name</label>
+                                <div class="input-group">
+                                <input type="text" type=text d="vehicleBrandName" class="form-control form-control-sm"
+                                    placeholder="Vehicle Brand Name" name="vehicleBrandName" [(ngModel)]="vehicle.vehicleBrandName"
+                                    formControlName="vehicleBrandName"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleBrandName.errors }">
+                                <div *ngIf="submitted && validate.vehicleBrandName.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleBrandName.errors.required && !update">Vehicle Brand Name is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col">
+                            <!-- <div class="form-group">
+                                <label for="vehicleRevenueExpiryDate">Vehicle Revenue Expiry Date</label>
+                                <div class="input-group">
+                                <input type="date" id="vehicleRevenueExpiryDate" class="form-control form-control-sm"
+                                    placeholder="yyyy-mm-dd" name="vehicleRevenueExpiryDate"
+                                    [(ngModel)]="vehicle.vehicleRevenueExpiryDate" formControlName="vehicleRevenueExpiryDate"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleRevenueExpiryDate.errors }">
+                                <div *ngIf="submitted && validate.vehicleRevenueExpiryDate.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleRevenueExpiryDate.errors.required && !update">Vehicle Revenue Expiry
+                                    Date is
+                                    required</div>
+                                </div>
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label for="vehicleRegistrationNo">Vehicle Registration No</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleRegistrationNo" class="form-control form-control-sm"
+                                    placeholder="Vehicle Registration No" name="vehicleRegistrationNo"
+                                    [(ngModel)]="vehicle.vehicleRegistrationNo" formControlName="vehicleRegistrationNo"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleRegistrationNo.errors }">
+                                <div *ngIf="submitted && validate.vehicleRegistrationNo.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleRegistrationNo.errors.required && !update">Vehicle Registration No
+                                    is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label for="manufactureYear">Manufacture Year</label>
+                                <div class="input-group">
+                                <input type="text" id="manufactureYear" class="form-control form-control-sm"
+                                    placeholder="Manufacture Year (yyyy)" name="manufactureYear"
+                                    [(ngModel)]="vehicle.manufactureYear" formControlName="manufactureYear"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.manufactureYear.errors }">
+                                <div *ngIf="submitted && validate.manufactureYear.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.manufactureYear.errors.required && !update">Manufacture Year is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+
+                            <div class="form-group">
+                                <label for="street">Vehicle Book Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleBookPic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleBookPic" class="form-control form-control-sm" name="vehicleBookPic"
+                                    (change)=onFileSelected($event) formControlName="vehicleBookPic">
+
+                                <div class="col-md-3" *ngIf="imageBookPic">
+                                    <img class="p-2" id="blah" [src]="imageBookPic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicleFrontPic">Vehicle Front Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleFrontPic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleFrontPic" class="form-control form-control-sm"
+                                    name="vehicleFrontPic" (change)=onFileSelected($event) formControlName="vehicleFrontPic">
+
+                                <div class="col-md-3" *ngIf="imageFrontPic">
+                                    <img class="p-2" id="blah" [src]="imageFrontPic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicleRevenuePic">Vehicle Revenue Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleRevenuePic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleRevenuePic" class="form-control form-control-sm"
+                                    name="vehicleRevenuePic" (change)=onFileSelected($event) formControlName="vehicleRevenuePic">
+
+                                <div class="col-md-3" *ngIf="imageRevenuePic">
+                                    <img class="p-2" id="blah" [src]="imageRevenuePic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="vehicleInsurancePic">Vehicle Insurance Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleInsurancePic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleInsurancePic" class="form-control form-control-sm"
+                                    name="vehicleInsurancePic" (change)=onFileSelected($event)
+                                    formControlName="vehicleInsurancePic">
+
+                                <div class="col-md-3" *ngIf="imageInsurancePic">
+                                    <img class="p-2" id="blah" [src]="imageInsurancePic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicleSideViewPic">Vehicle Side View Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleSideViewPic.invalid  && !update"><sup>*
+                                    required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleSideViewPic" class="form-control form-control-sm"
+                                    name="vehicleSideViewPic" (change)=onFileSelected($event) formControlName="vehicleSideViewPic">
+
+                                <div class="col-md-3" *ngIf="imageSideViewPic">
+                                    <img class="p-2" id="blah" [src]="imageSideViewPic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-dark" (click)="addVehicle()">+ Add</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- edit vehicle: author | ghost -->
+<div class="modal fade bd-example-modal-lg" id="editVehicleModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Edit Vehicle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Add Vehicle Card -->
+                <div class="col-md-12">
+                    <div class="card card-outline-inverse">
+
+                        <!-- <div class="card-body"> -->
+                        <form [formGroup]="addVehicleForm" (ngSubmit)="addVehicle()">
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vehicleCategory">Vehicle Category</label>
+                                <div class="input-group">
+                                <select class="form-control form-control-sm" id="vehicleCategory" name="vehicleCategory"
+                                    placeholder="Vehicle Category" [(ngModel)]="vehicleCategory"
+                                    (ngModelChange)='getSubcategorys($event)' formControlName="vehicleCategory"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleCategory.errors  && !update}">
+                                    <div *ngIf="submitted && validate.vehicleCategory.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleCategory.errors.required && !update">Required</div>
+                                    </div>
+                                    <option value="-99">-- Select option --</option>
+                                    <option [ngValue]="i" *ngFor='let i of vehicleCategoryList'>{{i.categoryName}}</option>
+                                </select>
+
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vehicleSubcategory">Vehicle Subcategory</label>
+                                <div class="input-group">
+                                <select class="form-control form-control-sm" id="vehicleSubcategory" name="vehicleSubcategory"
+                                    placeholder="Vehicle Subcategory" [(ngModel)]="vehicleSubcategory"
+                                    formControlName="subCategoryName"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleCategory.errors  && !update}">
+                                    <option value="-99">-- Select option --</option>
+                                    <option [ngValue]="i" *ngFor='let i of vehicleSubcategoryList'>{{i.subCategoryName}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <label class="label-header" for="ownerHeader"
+                            style="font-size: 150%; font-variant-caps: all-petite-caps;">Owner
+                            Details</label>
+
+                        <div class="form-group">
+                            <label for="ownerContactName">Contact Name</label>
+                            <div class="input-group">
+                            <input type="text" id="ownerContactName" class="form-control form-control-sm"
+                                placeholder="Contact Name" name="ownerContactName" [(ngModel)]="vehicle.ownerContactName"
+                                formControlName="ownerContactName"
+                                [ngClass]="{ 'is-invalid': submitted && validate.ownerContactName.errors }">
+                            <div *ngIf="submitted && validate.ownerContactName.errors" class="invalid-feedback">
+                                <div *ngIf="validate.ownerContactName.errors.required && !update">Contact Name is required</div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="ownerContactNumber">Contact Number</label>
+                                <div class="input-group">
+                                <input type="text" id="ownerContactNumber" class="form-control form-control-sm"
+                                    placeholder="Contact Number" name="ownerContactNumber" [(ngModel)]="vehicle.ownerContactNumber"
+                                    formControlName="ownerContactNumber"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.ownerContactNumber.errors }">
+                                <div *ngIf="submitted && validate.ownerContactNumber.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.ownerContactNumber.errors.required && !update">Contact Number is required
+                                    </div>
+                                    <div *ngIf="validate.ownerContactNumber.errors.pattern && !update">Contact Number must be a
+                                    valid number
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="ownerContactEmail">Contact Email</label>
+                                <div class="input-group">
+                                <input type="email" id="ownerContactEmail" class="form-control form-control-sm"
+                                    placeholder="Contact Email" name="ownerContactEmail" [(ngModel)]="vehicle.ownerContactEmail"
+                                    formControlName="ownerContactEmail"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.ownerContactEmail.errors }">
+                                <div *ngIf="submitted && validate.ownerContactEmail.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.ownerContactEmail.errors.required && !update">Email is required</div>
+                                    <div *ngIf="validate.ownerContactEmail.errors.email && !update">Email must be a valid email
+                                    address</div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <div class="input-group">
+                                <input type="text" id="address" class="form-control form-control-sm" placeholder="Address"
+                                    name="address" [(ngModel)]="vehicle.address" formControlName="address">
+                                <!-- <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.address.errors.required && !update">Address is required</div>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="street">Street</label>
+                                <div class="input-group">
+                                    <input type="text" id="street" class="form-control form-control-sm" placeholder="Street"
+                                        name="street" [(ngModel)]="vehicle.street" formControlName="street"
+                                    >
+                                    <!-- <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+                                        <div *ngIf="validate.street.errors.required && !update">Street is required</div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <div class="input-group">
+                                    <input type="text" id="city" class="form-control form-control-sm" placeholder="City" name="city"
+                                        [(ngModel)]="vehicle.city" formControlName="city"
+                                    >
+                                    <!-- <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+                                        <div *ngIf="validate.city.errors.required && !update">City is required</div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="zipcode">Zipcode</label>
+                                <div class="input-group">
+                                <input type="number" id="zipcode" class="form-control form-control-sm" placeholder="Zipcode"
+                                    name="zipcode" [(ngModel)]="vehicle.zipcode" formControlName="zipcode">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <div class="input-group">
+                                <input type="text" id="country" class="form-control form-control-sm" placeholder="Country"
+                                    name="country" [(ngModel)]="vehicle.country" formControlName="country">
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="driverId">Driver</label>
+                            <!-- <div class="input-group"> -->
+                                <ng-select class="" [items]="driverList" bindLabel="firstName"
+                                    bindValue="_id" [(ngModel)]="selectedDriver" name="selectedDriver" formControlName="driverId"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.driverId.errors && !update}">
+                                    <div *ngIf="submitted && validate.driverId.errors  && !update" class="invalid-feedback">
+                                        <div *ngIf="validate.driverId.errors.required">Driver Id is required</div>
+                                    </div>
+                                </ng-select>
+                            <!-- </div> -->
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                            <mat-checkbox class="example-margin" [(ngModel)]="vehicle.ownerVerify" formControlName="ownerVerify">
+                                Owner Verify</mat-checkbox>
+                            </div>
+                        </div>
+                        <hr />
+                        <label class="label-header" for="ownerHeader"
+                            style="font-size: 150%; font-variant-caps: all-petite-caps;">Vehicle
+                            Details</label>
+                        <div class="row">
+                            <div class="col">
+                            <!-- <div class="form-group">
+                                <label for="vehicleRevenueNo">Vehicle Revenue No</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleRevenueNo" class="form-control form-control-sm"
+                                    placeholder="Vehicle Revenue No" name="vehicleRevenueNo" [(ngModel)]="vehicle.vehicleRevenueNo"
+                                    formControlName="vehicleRevenueNo"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleRevenueNo.errors }">
+                                <div *ngIf="submitted && validate.vehicleRevenueNo.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleRevenueNo.errors.required && !update">Vehicle Revenue No is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div> -->
+                            <!-- <div class="form-group">
+                                <label for="vehicleLicenceNo">Vehicle Licence No</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleLicenceNo" class="form-control form-control-sm"
+                                    placeholder="Vehicle Licence No" name="vehicleLicenceNo" [(ngModel)]="vehicle.vehicleLicenceNo"
+                                    formControlName="vehicleLicenceNo"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleLicenceNo.errors }">
+                                <div *ngIf="submitted && validate.vehicleLicenceNo.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleLicenceNo.errors.required && !update">Vehicle Licence No is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label for="vehicleColor">Vehicle Color</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleColor" class="form-control form-control-sm"
+                                    placeholder="Vehicle Color" name="vehicleColor" [(ngModel)]="vehicle.vehicleColor"
+                                    formControlName="vehicleColor">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicleBrandName">Vehicle Brand Name</label>
+                                <div class="input-group">
+                                <input type="text" type=text d="vehicleBrandName" class="form-control form-control-sm"
+                                    placeholder="Vehicle Brand Name" name="vehicleBrandName" [(ngModel)]="vehicle.vehicleBrandName"
+                                    formControlName="vehicleBrandName"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleBrandName.errors }">
+                                <div *ngIf="submitted && validate.vehicleBrandName.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleBrandName.errors.required && !update">Vehicle Brand Name is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col">
+                            <!-- <div class="form-group">
+                                <label for="vehicleRevenueExpiryDate">Vehicle Revenue Expiry Date</label>
+                                <div class="input-group">
+                                <input type="date" id="vehicleRevenueExpiryDate" class="form-control form-control-sm"
+                                    placeholder="yyyy-mm-dd" name="vehicleRevenueExpiryDate"
+                                    [(ngModel)]="vehicle.vehicleRevenueExpiryDate" formControlName="vehicleRevenueExpiryDate"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleRevenueExpiryDate.errors }">
+                                <div *ngIf="submitted && validate.vehicleRevenueExpiryDate.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleRevenueExpiryDate.errors.required && !update">Vehicle Revenue Expiry
+                                    Date is
+                                    required</div>
+                                </div>
+                                </div>
+                            </div> -->
+                            <div class="form-group">
+                                <label for="vehicleRegistrationNo">Vehicle Registration No</label>
+                                <div class="input-group">
+                                <input type="text" id="vehicleRegistrationNo" class="form-control form-control-sm"
+                                    placeholder="Vehicle Registration No" name="vehicleRegistrationNo"
+                                    [(ngModel)]="vehicle.vehicleRegistrationNo" formControlName="vehicleRegistrationNo"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.vehicleRegistrationNo.errors }">
+                                <div *ngIf="submitted && validate.vehicleRegistrationNo.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.vehicleRegistrationNo.errors.required && !update">Vehicle Registration No
+                                    is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label for="manufactureYear">Manufacture Year</label>
+                                <div class="input-group">
+                                <input type="text" id="manufactureYear" class="form-control form-control-sm"
+                                    placeholder="Manufacture Year (yyyy)" name="manufactureYear"
+                                    [(ngModel)]="vehicle.manufactureYear" formControlName="manufactureYear"
+                                    [ngClass]="{ 'is-invalid': submitted && validate.manufactureYear.errors }">
+                                <div *ngIf="submitted && validate.manufactureYear.errors" class="invalid-feedback">
+                                    <div *ngIf="validate.manufactureYear.errors.required && !update">Manufacture Year is required
+                                    </div>
+                                </div>
+                                </div>
+                            </div> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+
+                            <div class="form-group">
+                                <label for="street">Vehicle Book Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleBookPic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                    <input type="file" id="vehicleBookPic" class="" name="vehicleBookPic"
+                                        (change)=onFileSelected($event) formControlName="vehicleBookPic">
+
+                                    <div class="col-md-3" *ngIf="imageBookPic">
+                                        <img class="p-2" id="blah" [src]="imageBookPic" alt="your image" style="width:100%" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicleFrontPic">Vehicle Front Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleFrontPic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleFrontPic" class=""
+                                    name="vehicleFrontPic" (change)=onFileSelected($event) formControlName="vehicleFrontPic">
+
+                                <div class="col-md-3" *ngIf="imageFrontPic">
+                                    <img class="p-2" id="blah" [src]="imageFrontPic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicleRevenuePic">Vehicle Revenue Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleRevenuePic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleRevenuePic" class=""
+                                    name="vehicleRevenuePic" (change)=onFileSelected($event) formControlName="vehicleRevenuePic">
+
+                                <div class="col-md-3" *ngIf="imageRevenuePic">
+                                    <img class="p-2" id="blah" [src]="imageRevenuePic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <div class="col">
+                            <div class="form-group">
+                                <label for="vehicleInsurancePic">Vehicle Insurance Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleInsurancePic.invalid  && !update"><sup>*required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleInsurancePic" class=""
+                                    name="vehicleInsurancePic" (change)=onFileSelected($event)
+                                    formControlName="vehicleInsurancePic">
+
+                                <div class="col-md-3" *ngIf="imageInsurancePic">
+                                    <img class="p-2" id="blah" [src]="imageInsurancePic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="vehicleSideViewPic">Vehicle Side View Picture</label>
+                                <span class="required"
+                                *ngIf="submitted && addVehicleForm.controls.vehicleSideViewPic.invalid  && !update"><sup>*
+                                    required</sup></span>
+                                <div class="input-group">
+                                <input type="file" id="vehicleSideViewPic" class=""
+                                    name="vehicleSideViewPic" (change)=onFileSelected($event) formControlName="vehicleSideViewPic">
+
+                                <div class="col-md-3" *ngIf="imageSideViewPic">
+                                    <img class="p-2" id="blah" [src]="imageSideViewPic" alt="your image" style="width:100%" />
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary ml-2" (click)="addVehicle()">Update</button>
+                            
+                        </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attachments Modal-->
+<div class="modal fade bd-example-modal-lg" id="attachmentModal" tabindex="-1" role="dialog"
+  aria-labelledby="attachmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <h4 class="modal-title text-white">Attachments</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+            <div class="modal-body">
+                <!-- <div class="card"> -->
+                <div class="row">
+                    <div class="col-md-4">
+                    <label><b>Vehicle Book Picture</b></label>
+                    <div class="card ">
+                        <a href="{{vehicleBookPic1}}" target="_blank"><img src="{{vehicleBookPic1}}" alt="attachments"
+                            style="width: 190px;height: 190px;"></a>
+                    </div>
+                    <br>
+                    </div>
+                    <div class="col-md-4">
+                    <label><b>Vehicle Front Picture</b></label>
+                    <div class="card ">
+                        <a href="{{vehicleFrontPic1}}" target="_blank"><img src="{{vehicleFrontPic1}}" alt="attachments"
+                            style="width: 190px;height: 190px;"></a>
+                    </div>
+                    <br>
+                    </div>
+                    <div class="col-md-4">
+                    <label><b>Vehicle Insurance Picture</b></label>
+                    <div class="card ">
+                        <a href="{{vehicleInsurancePic1}}" target="_blank"><img src="{{vehicleInsurancePic1}}" alt="attachments"
+                            style="width: 190px;height: 190px;"></a>
+                    </div>
+                    <br>
+                    </div>
+                </div>
+            
+                <div class="row">
+                    <div class="col-md-4">
+                    <label><b>Vehicle Revenue Picture</b></label>
+                    <div class="card ">
+                        <a href="{{vehicleRevenuePic1}}" target="_blank"><img src="{{vehicleRevenuePic1}}" alt="attachments"
+                            style="width: 190px;height: 190px;"></a>
+                    </div>
+                    <br>
+                    </div>
+                    <div class="col-md-4">
+                    <label><b>Vehicle Side View Picture</b></label>
+                    <div class="card ">
+                        <a href="{{vehicleSideViewPic1}}" target="_blank"><img src="{{vehicleSideViewPic1}}" alt="attachments"
+                            style="width: 190px;height: 190px;"></a>
+                    </div>
+                    <br>
+                    </div>
+                </div>
+            <!-- </div> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+<!-- manage Vehicle Modal-->
+<div class="modal fade bd-example-modal-lg" id="exampleModal2" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Manage Vehicle</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table>
+          <tbody>
+            <tr *ngFor="let driver of assignedDrivers; let j = index" style="font-weight:10">
+              <td>
+                <mat-card>
+                  <div class="row">
+                    <div class="col-md-3">
+                      <mat-card-header>
+                        <div mat-card-avatar class="example-header-image">
+                          <img src="{{driver.driverInformation[0].driver.driverPic}}" class="img-circle"
+                            alt="a" width="45" height="45">
+                        </div>
+                        <mat-card-title>
+                          <h3>{{driver.driverInformation[0].driver.firstName}}
+                            {{driver.driverInformation[0].driver.lastName}}</h3>
+                        </mat-card-title>
+                        <mat-card-subtitle>
+                        </mat-card-subtitle>
+                        <p>{{driver.driverInformation[0].driver.email}} {{driver.driverInformation[0].driver.mobile}}
+                        </p>
+                      </mat-card-header><br>
+                      <mat-card-content>
+                      </mat-card-content>
+                    </div>
+                    <div class="col-md-6"></div>
+
+                    <div class="col-md-3">
+                      <!-- <mat-card-actions> -->
+                      <mat-checkbox class="example-margin1" [(ngModel)]="driver.driverInfo.isEnableDriver"
+                        (change)="enableDriver(driver.driverInformation[0].driver._id,$event.checked)">Enable
+                      </mat-checkbox>
+                      <!-- </mat-card-actions> -->
+                    </div>
+
+                  </div>
+                </mat-card>
+              </td>
+              <br>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,176 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<div class="card border">
+  <!-- <div class="card-header border border-dark">Pending Drivers</div> -->
+  <div class="card-body">
+    <br>
+    <!-- <div class="row"> -->
+    <!-- <div class="col-md-4" *ngFor="let driver of driveDetails; let i = index" style="font-weight:10;">
+        <mat-card class="example-card" style="width:100%">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image">
+              <img src="{{driver.driverPic}}" class="img-circle" alt="a" width="45" height="45">
+            </div>
+            <mat-card-title>
+              <h3>{{driver.firstName}} {{driver.lastName}}</h3>
+            </mat-card-title>
+            <mat-card-subtitle>{{driver.mobile}} | {{driver.recordedTime | date: 'dd/MM/yyyy'}} </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Address : {{driver.address.address}}, {{driver.address.street}}, {{driver.address.city}},
+              {{driver.address.country}} {{driver.address.zipcode}}</p>
+            <p>E-mail : {{driver.email}}</p>
+            <p>NIC : {{driver.nic}}</p>
+            <p>Birthday : {{driver.birthday | date: 'dd/MM/yyyy'}}</p>
+            <p>Gender : {{driver.gender}}</p>
+            <p>Life Insurance Expire Date : {{driver.lifeInsuranceExpiryDate}}</p>
+            <p>Life Insurance Number : {{lifeInsuranceNo}}</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2" (click)="openVerticallyCentered(content,driver)">Attachments</button>
+            <button mat-button class="btn btn-sm btn-danger" (click)="approveDriver(driver._id)">Approve</button>
+          </mat-card-actions>
+        </mat-card>
+        <br>
+      </div> -->
+
+    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+
+      <thead>
+        <tr>
+          <th>
+            Pending Drivers
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button (click)="exportAsXLSX()"><i class="fa fa-file-excel-o"
+                style="font-size:35px;color:blue"></i></button>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- <br> -->
+        <tr *ngFor="let driver of driveDetails; let i = index" style="font-weight:10">
+          <td> <p style="display:none">
+                        {{driver.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{driver.recordedTime | date: 'a'}}
+                        {{driver.recordedTime | date: 'hh:mm.ss a'}}</p>
+            <mat-card>
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-card-header>
+                    <div mat-card-avatar class="example-header-image">
+                      <img src="{{driver.driverPic}}" class="img-circle" alt="a" width="45" height="45">
+                    </div>
+                    <mat-card-title>
+                     
+
+                      <h3>{{driver.firstName}} {{driver.lastName}}</h3>
+                    </mat-card-title>
+                    <mat-card-subtitle>{{driver.mobile}} | {{driver.recordedTime | date: 'dd/MM/yyyy'}}
+                    </mat-card-subtitle>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p>{{driver.address.address}}, {{driver.address.street}}, {{driver.address.city}},
+                      {{driver.address.country}} {{driver.address.zipcode}}
+                    </p>
+                  </mat-card-content>
+
+                </div>
+
+                <div class="col-md-4">
+                  <p>E-mail: {{driver.email}}</p>
+                  <p>NIC: {{driver.nic}}</p>
+                  <p>Birthday: {{driver.birthday | date: 'dd/MM/yyyy'}}</p>
+                  <p>Gender: {{driver.gender}}</p>
+                  <p>Life Insurance Expire Date: {{driver.lifeInsuranceExpiryDate | date: 'dd/MM/yyyy'}}</p>
+                  <p>Life Insurance Number: {{driver.lifeInsuranceNo}}</p>
+                  <!-- <p>Contact Number Confirm: {{driver.contactNoConfirm}}</p> -->
+                </div>
+
+                <div class="col-md-4">
+                  <mat-card-actions>
+                    <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2"
+                      (click)="openVerticallyCentered(content,driver)">Attachments</button>
+                    <button mat-button class="btn btn-sm btn-success"
+                      (click)="approveDriver(driver._id)">Approve</button>
+                    <button mat-button class="btn btn-sm btn-danger" (click)="deleteDriver(driver._id)">Delete</button>
+                  </mat-card-actions>
+
+                  <b>Registered Time : {{driver.recordedTime | date: 'dd/MM/yyyy'}}
+                    {{driver.recordedTime | date: 'hh:mm.ss a'}}</b>
+                </div>
+              </div>
+            </mat-card>
+          </td>
+          <br>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <!-- </div> -->
+</div>
+
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Attachments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <div class="card"> -->
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Driver Pic</b></label>
+        <div class="card ">
+          <a href="{{driverPic}}" target="_blank"><img src="{{driverPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Driving Licence Back Pic</b></label>
+        <div class="card ">
+          <a href="{{drivingLicenceBackPic}}" target="_blank"><img src="{{drivingLicenceBackPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Driving Licence Front Pic</b></label>
+        <div class="card ">
+          <a href="{{drivingLicenceFrontPic}}" target="_blank"><img src="{{drivingLicenceFrontPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Nic Back Pic</b></label>
+        <div class="card ">
+          <a href="{{nicBackPic}}" target="_blank"><img src="{{nicBackPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Nic Front Pic</b></label>
+        <div class="card ">
+          <a href="{{nicFrontPic}}" target="_blank"><img src="{{nicFrontPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>

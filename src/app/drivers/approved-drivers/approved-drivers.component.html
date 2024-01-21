@@ -1,0 +1,869 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<mat-card class="mb-4">
+    <mat-card-content>
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <div class="row d-flex align-items-center">
+
+                    <div class="col-md-3 text-white">
+                        <select class='form-control' [(ngModel)]="attribute" name="attribute">
+                            <option value="-99">-- Select Option --</option>
+                            <option value="firstName">First Name</option>
+                            <option value="mobile">Mobile Number</option>
+                            <option value="nic">NIC</option>
+                            <option value="email">Email</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 text-white">
+                        <input type="text" class="form-control" [(ngModel)]=attributeText name="attributeText"placeholder="Enter">
+                    </div>
+                    <div class="col-md-3">
+                        
+                        <button mat-button class="btn btn-success"
+                            (click)="getApprovedDriversPagination()">Search</button>
+                    
+                    </div>
+
+                </div>
+                <br>
+                <div class="row d-flex align-items-center" *ngIf="driveDetails">
+                    <div class="col-md-4 text-white">
+                        showing {{driveDetails.length}} records out of {{noOfRecords}}
+                    </div>
+                    <div class="col-md-8 text-right" *ngIf="driveDetails.length > 0">
+                        <!-- <div style="text-align:center" *ngIf="failedDispatches.length > 0" > -->
+
+                            <table class="table">
+                                <tr *ngFor="let item of driveDetails | paginate: config" style="font-weight:10"></tr>
+                            </table>
+
+                            <pagination-controls style="background-color: aliceblue" (pageChange)="pageChanged($event)"></pagination-controls>
+                            
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-body">
+        
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                  <thead>
+                      
+                      <tr>
+                          <th>
+                              <div class="row d-flex align-items-center">
+                                  <h3 class="text-body">Approved Drivers</h3>
+                                  <a mat-button class="btn btn-primary text-white" (click)="getDrivers()" data-toggle="tooltip" title="Download approved drivers data" *ngIf="driveDetails && driveDetails.length > 0">
+                                      <i class="fa fa-download"></i>
+                                      excel</a>
+                              </div>
+                          </th>
+                      </tr>
+                      
+                  </thead>
+                  <tbody>
+                        <tr *ngFor="let driver of driveDetails; let i = index" style="font-weight:10">
+                            <td>
+                            <!-- <p style="display:none">
+                            {{driver.recordedTime | date: 'yyyy-MM-dd'}}
+                            {{driver.recordedTime | date: 'a'}}
+                            {{driver.recordedTime | date: 'hh:mm.ss a'}}</p> -->
+                            <mat-card class="mb-3">
+          
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <mat-card-title>
+                                        <h5><b>Driver Info</b></h5>
+                                    </mat-card-title>
+                                        
+                                    <img src="{{driver.driverPic}}" class="img-rounded" alt="driver-image" width="100" height="100" *ngIf="driver.driverPic">
+                                    <img src="/src/assets/images/avatar.png" class="img-rounded" alt="driver-image" width="100" height="100" *ngIf="driver.driverPic == null">
+                                    <span class="badge badge-success p-2 ml-2" *ngIf="driver.dispatcher[0] != null">
+                                        <strong>Dispatcher</strong>
+                                    </span>
+                                    
+                                    <p><b>Name: </b>{{driver.firstName}} {{driver.lastName}}</p>
+                                    <p><b>Mobile: </b>{{driver.mobile}}</p>
+                                    <p><b>Company: </b>{{driver.company}}</p>
+                                    <p><b>Ratings: </b></p>
+                                    <!-- <mat-card-content>
+                                        <p>{{driver.address.address}}, {{driver.address.street}}, {{driver.address.city}},
+                                        {{driver.address.country}} {{driver.address.zipcode}}
+                                        </p>
+                                    </mat-card-content> -->
+                                    
+                                </div>
+          
+                                <div class="col-md-3">
+                                    <mat-card-title>
+                                        <h5><b>Company Info</b></h5>
+                                    </mat-card-title>
+
+                                    <p><b>Company: </b>{{driver.company}}</p>
+                                    <p><b>Company Refferel: </b>{{driver.companyCode}}</p>
+
+                                    <!-- <p><b>Total Trips: </b></p>
+                                    <p><b>Road Pickups: </b></p>
+                                    <p><b>Dispatch Trips: </b></p>
+                                    <p><b>Canceled Trips: </b></p>
+                                    <p><b>Last Trip: </b></p> -->
+
+                                    <!-- <p>E-mail: {{driver.email}}</p>
+                                    <p>NIC: {{driver.nic}}</p>
+                                    <p>Birthday: {{driver.birthday | date: 'dd/MM/yyyy'}}</p>
+                                    <p>Gender: {{driver.gender}}</p>
+                                    <p>Life Insurance Expire Date: {{driver.lifeInsuranceExpiryDate | date: 'dd/MM/yyyy'}}</p>
+                                    <p>Life Insurance Number: {{driver.lifeInsuranceNo}}</p>
+                                    <p>Registered Date :
+                                        {{driver.recordedTime | date: 'yyyy-MM-dd'}}
+                                        {{driver.recordedTime | date: 'hh:mm.ss a'}}</p> -->
+                
+                                    <div style="width:250px">
+                                        <p><b>Driver Code: </b><input type="text" id="driverCode" class="form-control form-control-sm"
+                                            [(ngModel)]="driver.driverCode" placeholder="Driver Code" name="driverCode"></p>
+                                        <button mat-button type="button" class="btn btn-primary  pull-right"
+                                        (click)="changeCode(driver._id, driver.driverCode)">Change</button>
+                                    </div>
+                                </div>
+          
+                                <div class="col-md-3">
+                                    <mat-card-title>
+                                        <h5><b>Wallet</b></h5>
+                                    </mat-card-title>
+
+                                    <p *ngIf="driver.wallet[0]">
+                                        <b>Driver Earnings: </b>{{currency}} {{driver.wallet[0].driverEarnings | number : '.2-2' }}
+                                    </p>
+                                    <p *ngIf="driver.wallet[0]">
+                                        <b>Wallet Balance: </b>{{currency}} {{driver.wallet[0].totalWalletPoints | number : '.2-2' }}
+                                    </p>
+
+                                    <!-- <div *ngIf="driver.wallet[0]"> -->
+                                        <span class="badge badge-danger p-2 ml-2" *ngIf="driver.wallet[0] && driver.wallet[0].totalWalletPoints <= 0">
+                                            <strong>Driver credit low</strong>
+                                        </span>
+                                    <!-- </div> -->
+                                    
+
+                                    <!-- <div class="row">
+                                        <div class="col-md-8"></div>
+                                        <div class="col-md-4" *ngIf="driver.wallet[0]">
+                                        wallet Balance : {{driver.wallet[0].totalWalletPoints}}
+                                        </div>
+                                    </div> -->
+                                    
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-card-title class="text-right">
+                                        <h5><b>Actions</b></h5>
+                                    </mat-card-title>
+                                    
+                                    <div class="text-right mb-2">
+                                        <button mat-button class="btn btn-info btn-sm mr-2 text-white"
+                                        [routerLink]="['/drivers/profile-driver', driver._id]"
+                                        data-toggle="tooltip" title="Click here to view driver profile">
+                                                <i class="fa fa-user"></i>
+                                                View Profile</button>
+                                        <button mat-button class="btn btn-warning btn-sm" data-toggle="modal"
+                                            data-target="#exampleModal" (click)="feedData(driver, driver.address)">Edit</button>
+                                    </div>
+
+                                    <div class="text-right mb-2">
+                                        <button mat-button class="btn btn-outline-primary btn-sm mr-2"
+                                            (click)="openVerticallyCentered(content,driver)">Attachments</button>
+                                        <button *ngIf="COMPANY_TYPE == 'master' " mat-button class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target="#exampleModal2" (click)="getwalletData(driver._id)">Wallet</button>
+                                        <button *ngIf="COMPANY_TYPE == 'agent' " mat-button class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target="#agentWalletModal" (click)="getwalletData(driver._id)">Wallet</button>
+                                    </div>
+                                    
+
+                                    <div class="text-right mb-2">
+                                        <button mat-button class="btn btn-outline-primary btn-sm" data-toggle="modal"
+                                            data-target="#exampleModal1" (click)="getRoadpickupData(driver._id)">RoadPickup Data</button>
+                                    </div>
+
+                                    <div class="text-right mb-2">
+                                        <!-- <div class="isDispatchEnable text-right" *ngIf="driver.dispatcher[0] != null">
+                                            <p><b>Dispatcher</b></p>
+                                        </div> -->
+                                        <div class="text-right" *ngIf="driver.dispatcher[0] == null">
+                                            <button mat-button class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                                                data-target="#exampleModal3" (click)="assignDispatcher(driver._id)">Dispatch Enable</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-right mb-2">
+                                        <mat-checkbox class="example-margin" [(ngModel)]="driver.isEnable"
+                                            (change)="enableDriver(driver._id,$event.checked)">Enable</mat-checkbox>
+                                    </div>
+                                    
+                                </div>
+                          </div>
+                        </mat-card>
+                      </td>
+                      <br>
+                    </tr>
+                  </tbody>
+                </table>
+          
+              </div>
+
+
+
+
+        </div>
+
+    </mat-card-content>
+</mat-card>
+
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Attachments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Driver Pic</b></label>
+        <div class="card ">
+          <a href="{{driverPic}}" target="_blank"><img src="{{driverPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Driving Licence Back Pic</b></label>
+        <div class="card ">
+          <a href="{{drivingLicenceBackPic}}" target="_blank"><img src="{{drivingLicenceBackPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Driving Licence Front Pic</b></label>
+        <div class="card ">
+          <a href="{{drivingLicenceFrontPic}}" target="_blank"><img src="{{drivingLicenceFrontPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Nic Back Pic</b></label>
+        <div class="card ">
+          <a href="{{nicBackPic}}" target="_blank"><img src="{{nicBackPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Nic Front Pic</b></label>
+        <div class="card ">
+          <a href="{{nicFrontPic}}" target="_blank"><img src="{{nicFrontPic}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" id="close-modal" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<!-- add new driver floating button -->
+<div class="float" data-toggle="modal" data-target="#exampleModal" (click)="modalUpdate()">
+  <i class="fa fa-plus my-float"></i>
+</div>
+
+<!-- add new driver modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <h5 class="modal-title text-white" id="exampleModalLabel">Add Driver</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                <label for="firstName">First Name</label>
+                <input class="form-control form-control-sm" id="firstName" type="text" formControlName="firstName"
+                    [(ngModel)]="driver.firstName" placeholder="Enter First Name"
+                    [ngClass]="{ 'is-invalid': submitted && validate.firstName.errors }">
+                <div *ngIf="submitted && validate.firstName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.firstName.errors.required">First Name is required</div>
+                </div>
+                </div>
+
+                <div class="col-md-6">
+                <label for="lastName">Last Name</label>
+                <input class="form-control form-control-sm" id="lastName" type="text" formControlName="lastName"
+                    [(ngModel)]="driver.lastName" placeholder="Enter Last Name"
+                    [ngClass]="{ 'is-invalid': submitted && validate.lastName.errors }">
+                <div *ngIf="submitted && validate.lastName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.lastName.errors.required">Last Name is required</div>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp"
+                [(ngModel)]="driver.email" formControlName="email" placeholder="Enter email"
+                [ngClass]="{ 'is-invalid': submitted && validate.email.errors }">
+                <div *ngIf="submitted && validate.email.errors" class="invalid-feedback">
+                <div *ngIf="validate.email.errors.required">Email is required</div>
+                <div *ngIf="validate.email.errors.email">Email must be a valid email address</div>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp"
+                [(ngModel)]="driver.email" formControlName="email" placeholder="Enter email"
+                [ngClass]="{ 'is-invalid': submitted && validate.email.errors }">
+                <div *ngIf="submitted && validate.email.errors" class="invalid-feedback">
+                <div *ngIf="validate.email.errors.email">Email must be a valid email address</div>
+                </div>
+            </div> -->
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                <label for="nic">NIC</label>
+                <input class="form-control form-control-sm" id="nic" type="text" placeholder="Enter NIC Number"
+                    [(ngModel)]="driver.nic" formControlName="nic"
+                    [ngClass]="{ 'is-invalid': submitted && validate.nic.errors }">
+                <div *ngIf="submitted && validate.nic.errors" class="invalid-feedback">
+                    <div *ngIf="validate.nic.errors.required">NIC Number is required</div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <label for="birthday">Birthday</label>
+                <input class="form-control form-control-sm" type="date" placeholder="yyyy-mm-dd" name="birthday"
+                    [(ngModel)]="birthday" formControlName="birthday"
+                    [ngClass]="{ 'is-invalid': submitted && validate.birthday.errors }">
+                <div *ngIf="submitted && validate.birthday.errors" class="invalid-feedback">
+                    <div *ngIf="validate.birthday.errors.required">Birthday is required</div>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-6">
+                <label for="mobile">Mobile</label>
+                <input class="form-control form-control-sm" id="mobile" type="text" placeholder="Enter Mobile Number"
+                    [(ngModel)]="driver.mobile" formControlName="mobile"
+                    [ngClass]="{ 'is-invalid': submitted && validate.mobile.errors }">
+                <div *ngIf="submitted && validate.mobile.errors" class="invalid-feedback">
+                    <div *ngIf="validate.mobile.errors.required">Mobile Number is required</div>
+                    <div *ngIf="validate.mobile.errors.pattern">Mobile number must be a valid number</div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <label for="mobile">Gender</label><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="male"
+                    formControlName="gender" [(ngModel)]="driver.gender">
+                    <label class="form-check-label" for="male">Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="female"
+                    formControlName="gender" [(ngModel)]="driver.gender">
+                    <label class="form-check-label" for="female">Female</label>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-12">
+                <label for="address">Address</label>
+                </div>
+                <div class="col-md-3">
+                <input class="form-control form-control-sm" id="address" type="text" placeholder="No."
+                    formControlName="address" [(ngModel)]="driver.address"
+                    [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+                <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                    <div *ngIf="validate.address.errors.required">Number is required</div>
+                </div>
+                </div>
+
+                <div class="col-md-5">
+                <input class="form-control form-control-sm" id="street" type="text" placeholder="Street"
+                    formControlName="street" [(ngModel)]="driver.street"
+                    [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+                <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+                    <div *ngIf="validate.street.errors.required">Street is required</div>
+                </div>
+                </div>
+
+                <div class="col-md-4">
+                <input class="form-control form-control-sm" id="city" type="text" placeholder="City"
+                    formControlName="city" [(ngModel)]="driver.city"
+                    [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+                <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+                    <div *ngIf="validate.city.errors.required">City is required</div>
+                </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-4">
+                <input class="form-control form-control-sm" id="zipcode" type="number" placeholder="Zip Code"
+                    [(ngModel)]="driver.zipcode" formControlName="zipcode">
+                </div>
+                <div class="col-md-5">
+                <input class="form-control form-control-sm" id="country" type="text" placeholder="Country"
+                    [(ngModel)]="driver.country" formControlName="country">
+                </div>
+            </div>
+
+                <!-- <div class="form-group row">
+                    <div class="col-md-6">
+                    <label for="nic">Life Insurance Number</label>
+                    <input class="form-control form-control-sm" id="lifeInsuranceNo" type="text"
+                        placeholder="Enter Life Insurance No." [(ngModel)]="driver.lifeInsuranceNo"
+                        formControlName="lifeInsuranceNo"
+                        [ngClass]="{ 'is-invalid': submitted && validate.lifeInsuranceNo.errors }">
+                    <div *ngIf="submitted && validate.lifeInsuranceNo.errors" class="invalid-feedback">
+                        <div *ngIf="validate.lifeInsuranceNo.errors.required">Life Insurance Number is required</div>
+                    </div>
+                    </div>
+
+                    <div class="col-md-6">
+                    <label for="lifeInsuranceExpiryDate">Life Insurance Expire Date</label>
+                    <input class="form-control form-control-sm" type="date" placeholder="yyyy-mm-dd"
+                        name="lifeInsuranceExpiryDate" [(ngModel)]="driver.lifeInsuranceExpiryDate"
+                        formControlName="lifeInsuranceExpiryDate"
+                        [ngClass]="{ 'is-invalid': submitted && validate.lifeInsuranceExpiryDate.errors }">
+                    <div *ngIf="submitted && validate.lifeInsuranceExpiryDate.errors" class="invalid-feedback">
+                        <div *ngIf="validate.lifeInsuranceExpiryDate.errors.required">Life Insurance Expiry Date is required
+                        </div>
+                    </div>
+                    </div>
+                </div> -->
+
+                <!-- <div class="form-group row">
+                    <div class="col-md-6">
+                    <label for="nic">Life Insurance Amount</label>
+                    <input class="form-control form-control-sm" id="lifeInsuranceAmount" type="number"
+                        placeholder="Enter Life Insurance Amount" [(ngModel)]="driver.lifeInsuranceAmount"
+                        formControlName="lifeInsuranceAmount"
+                        [ngClass]="{ 'is-invalid': submitted && validate.lifeInsuranceAmount.errors }">
+                    <div *ngIf="submitted && validate.lifeInsuranceAmount.errors" class="invalid-feedback">
+                        <div *ngIf="validate.lifeInsuranceAmount.errors.required">Life Insurance Amount is required</div>
+                        <div *ngIf="validate.lifeInsuranceAmount.errors.pattern">Life Insurance Amount must be a valid number
+                        </div>
+                    </div>
+                    </div>
+                </div> -->
+
+            <div class="form-group card">
+                <div class="custom-file col-md-9">
+
+                <div class="row">
+                    <div class="pic col-md-3">
+                    <label class="pt-3" for="driverPic">Driver Picture</label>
+                    <span class="required" *ngIf="submitted && registerForm.controls.driverPic.invalid"><sup>*
+                        required</sup></span>
+                    </div>
+
+                    <div class="picture col-md-3">
+                    <img class="p-3" id="blah" [src]="imageDriver" alt="your image" style="width:60%" />
+                    </div>
+
+                    <div class="pic col-md-3">
+                    <label class="driverPic" for="driverPic"></label>
+                    <input type="file" class="driverPic" id="driverPic" (change)="selectDriverPic($event)"
+                        formControlName="driverPic">
+                    </div>
+                </div>
+
+                </div>
+            </div>
+            <br>
+
+            <div class="form-group card">
+                <div class="custom-file col-md-9">
+
+                <div class="row">
+                    <div class="pic col-md-3">
+                    <label class="pt-3" for="nicFrontPic">NIC Front Picture</label>
+                    <span class="required" *ngIf="submitted && registerForm.controls.nicFrontPic.invalid"><sup>*
+                        required</sup></span>
+                    </div>
+
+                    <div class="picture col-md-3">
+                    <img class="p-3" id="blah" [src]="imageNicFrontPic" alt="your image" style="width:60%" />
+                    </div>
+
+                    <div class="pic col-md-3">
+                    <label class="nicFrontPic" for="nicFrontPic"></label>
+                    <input type="file" class="nicFrontPic" id="nicFrontPic" (change)="selectNicFrontPic($event)"
+                        formControlName="nicFrontPic">
+                    </div>
+
+                </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="form-group card">
+                <div class="custom-file col-md-9">
+
+                <div class="row">
+                    <div class="pic col-md-3">
+                    <label class="pt-3" for="nicBackPic">NIC Back Picture</label>
+                    <span class="required" *ngIf="submitted && registerForm.controls.nicBackPic.invalid"><sup>*
+                        required</sup></span>
+                    </div>
+
+                    <div class="picture col-md-3">
+                    <img class="p-3" id="blah" [src]="imageNicBackPic" alt="your image" style="width:60%" />
+                    </div>
+
+                    <div class="pic col-md-3">
+                    <label class="nicBackPic" for="nicBackPic"></label>
+                    <input type="file" class="nicBackPic" id="nicBackPic" (change)="selectNicBackPic($event)"
+                        formControlName="nicBackPic">
+                    </div>
+
+                </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="form-group card">
+                <div class="custom-file col-md-9">
+
+                <div class="row">
+                    <div class="pic col-md-3">
+                    <label class="pt-3" for="drivingLicenceFrontPic">Driving Licence Front Picture</label>
+                    <span class="required"
+                        *ngIf="submitted && registerForm.controls.drivingLicenceFrontPic.invalid"><sup>*
+                        required</sup></span>
+                    </div>
+
+                    <div class="picture col-md-3">
+                    <img class="p-3" id="blah" [src]="imageDrivingLicenceFrontPic" alt="your image" style="width:60%" />
+                    </div>
+
+                    <div class="pic col-md-3">
+                    <label class="drivingLicenceFrontPic" for="drivingLicenceFrontPic"></label>
+                    <input type="file" class="drivingLicenceFrontPic" id="drivingLicenceFrontPic"
+                        (change)="selectDrivingLicenceFrontPic($event)" formControlName="drivingLicenceFrontPic">
+                    </div>
+
+                </div>
+                </div>
+            </div>
+            <br>
+
+            <div class="form-group card">
+                <div class="custom-file col-md-9">
+
+                <div class="row">
+                    <div class="pic col-md-3">
+                    <label class="pt-3" for="drivingLicenceBackPic">Driving Licence Back Picture</label>
+                    <span class="required" *ngIf="submitted && registerForm.controls.drivingLicenceBackPic.invalid"><sup>*
+                        required</sup></span>
+                    </div>
+
+                    <div class="picture col-md-3">
+                    <img class="p-3" id="blah" [src]="imageDrivingLicenceBackPic" alt="your image" style="width:60%" />
+                    </div>
+
+                    <div class="pic col-md-3">
+                    <label class="drivingLicenceBackPic" for="drivingLicenceBackPic"></label>
+                    <input type="file" class="drivingLicenceBackPic" id="drivingLicenceBackPic"
+                        (change)="selectDrivingLicenceBackPic($event)" formControlName="drivingLicenceBackPic">
+                    </div>
+
+                </div>
+                </div>
+            </div>
+            <br>
+
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="close-modal" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="onSubmit()">+ Add</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="exampleModal1" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title" id="exampleModalLabel">RoadPickup History</h5>
+        <button type="button" class="close" id="close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <h3 *ngIf="roadPickupData?.length <= 0"><b>No RoadPickup record for this driver</b></h3>
+
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger1">
+
+          <tr *ngFor="let data of roadPickupData" style="font-weight:10">
+            <td>
+              <mat-card>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <h4><b>Customer</b></h4>
+                        <h3>{{data.firstName}} {{data.lastName}}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle>
+                        {{data.mobile}}
+                      </mat-card-subtitle>
+                      <mat-card-subtitle>
+                        {{data.email}}
+                      </mat-card-subtitle>
+                    </mat-card-header>
+                  </div>
+
+                  <div class="col-md-4">
+                    <p><b>Vehicle Id:</b> {{data.vehicleId}}</p>
+                    <p><b>Vehicle Category:</b> {{data.vehicleCategory}}</p>
+                    <p><b>Vehicle Sub Category:</b> {{data.vehicleSubCategory}}</p>
+                  </div>
+
+                  <div class="col-md-4">
+                    <p><b>Pickup Location:</b> {{data.pickupLocation.address}}</p>
+                    <p><b>Pickup Time:</b> {{data.pickupDateTime}}</p>
+                    <p *ngIf="data.dropLocations[0]"><b>Drop Location:</b> {{data.dropLocations[0].address}}</p>
+                    <p><b>Recorded Time:</b> {{data.recordedTime}}</p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <button mat-button class="btn btn-success btn-sm ml-3">{{data.status}}</button>
+                </div>
+
+                <div class="row">
+                  <p *ngIf="data.totalCost" class="p-3">Rs : {{data.totalCost}}</p>
+                </div>
+              </mat-card>
+            </td>
+            <br>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal" id="exampleModal3" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title" id="exampleModalLabel">Dispatcher Enable</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="registerForm1" (ngSubmit)="dispatchEnable()">
+
+          <div class="col-md-6">
+            <label for="mobile">Dispatcher Type</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="dispatchPackageType" id="commission" value="commission"
+                formControlName="dispatchPackageType" [(ngModel)]="dispatcher.dispatchPackageType">
+              <label class="form-check-label" for="commission">Commission</label>
+            </div>
+            <!-- <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="dispatchPackageType" id="subscription"
+                value="subscription" formControlName="dispatchPackageType" [(ngModel)]="dispatcher.dispatchPackageType">
+              <label class="form-check-label" for="subscription">Subscription</label>
+            </div> -->
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="dispatcherCommission">Dispatcher Commission</label>
+              <input class="form-control form-control-sm" id="dispatcherCommission" type="number"
+                formControlName="dispatcherCommission" [(ngModel)]="dispatcher.dispatcherCommission"
+                placeholder="Enter Dispatcher Commission">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="dispatchAdminCommission">Dispatch Admin Commission</label>
+              <input class="form-control form-control-sm" id="dispatchAdminCommission" type="number"
+                formControlName="dispatchAdminCommission" [(ngModel)]="dispatcher.dispatchAdminCommission"
+                placeholder="Enter Dispatch Admin Commission">
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-modal" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="dispatchEnable()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="exampleModal2" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Driver Wallet</h5>
+        <button type="button" class="close" id="close-modal" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card pl-3 pr-3">
+          <div class="row p-2"
+            [style.background-color]="walletData.totalWalletPoints >= 0 ? 'rgb(79, 168, 95)' : 'rgb(237, 135, 160)'">
+            <div class="col-md-4"></div>
+            <div class="col-md-6">
+              <h2><b>Driver Earnings</b></h2> <br>
+              <h3><b>RS : {{ walletData.driverEarnings | number : '.2-2' }}</b></h3> <br>
+
+              <h4><b>Balance Rs : {{ walletData.totalWalletPoints | number : '.2-2' }}</b></h4>
+
+            </div>
+          </div>
+
+          <div class="row p-4">
+            <button type="button" style="width:100%" class="btn btn-primary" (click)="isCollapsedRe = !isCollapsedRe"
+              [attr.aria-expanded]="!isCollapsedRe" aria-controls="collapseExample">
+              Recharge Wallet
+            </button>
+            <br>
+            <div class="col-md-12">
+              <div id="collapseExample" [ngbCollapse]="isCollapsedRe">
+                <div class="card">
+                  <div class="card-body p-2">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label id="label">Points</label>
+                        <input type="number" class="form-control form-control-sm" id="walletPoints" placeholder=" "
+                          name="rechargeAmount" [(ngModel)]="rechargeAmount">
+                      </div>
+                      <div class="col-md-8">
+                        <label id="label">Method</label>
+                        <input type="text" class="form-control form-control-sm" id="walletMethod" placeholder=" "
+                          name="rechargeMethod" [(ngModel)]="rechargeMethod">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label id="label">Description</label>
+                        <textarea type="text" class="form-control form-control-sm" id="walletDescription"
+                          placeholder=" " name="rechargeDescription" [(ngModel)]="rechargeDescription"></textarea>
+                      </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <button type="button" class="btn btn-primary pull-right" (click)="rechargeWallet()">
+                          Recharge
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- agent wallet -->
+
+<div class="modal fade bd-example-modal-lg" id="agentWalletModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Recharge Driver Wallet</h5>
+                <button type="button" class="close" id="close-modal" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                
+                <div class="row">
+                    <div class="col-md-12 mt-3 mb-3">
+                        <h4><b>Driver Earnings: {{currency}} {{ walletData.driverEarnings | number : '.2-2' }}</b></h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mt-3 mb-3">
+                        <h4><b>Wallet Balance: {{currency}} {{ walletData.totalWalletPoints | number : '.2-2' }}</b></h4>
+                    </div>
+                </div>
+                
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label id="label">Points</label>
+                        <input type="number" class="form-control form-control-sm" id="walletPoints" placeholder=" "
+                        name="rechargeAmount" [(ngModel)]="rechargeAmount">
+                    </div>
+                    <!-- <div class="col-md-8">
+                        <label id="label">Method</label>
+                        <input type="text" class="form-control form-control-sm" id="walletMethod" placeholder=" "
+                        name="rechargeMethod" [(ngModel)]="rechargeMethod">
+                    </div> -->
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label id="label">Description</label>
+                        <textarea type="text" class="form-control form-control-sm" id="walletDescription"
+                        placeholder=" " name="rechargeDescription" [(ngModel)]="rechargeDescription"></textarea>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close-recharge-modal" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="rechargeWallet()">Recharge</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+export interface TimeBaseVM {
+    timeSlotName ? : string,
+    startingTime ? : string,
+    endingTime ? : string,
+    districtPrice ? : Number,
+    lowerBidLimit ?: Number,
+    upperBidLimit ?: Number,
+    baseFare ? : string,
+    minimumFare ? : string,
+    minimumKM ? : string,
+    belowAboveKMRange ? : string,
+    aboveKMFare ? : Number,
+    belowKMFare ? : Number,
+    trafficWaitingChargePerMinute ? : string,
+    normalWaitingChargePerMinute ? : string,
+    radius ? : string,
+    packageDeliveryKMPerHour ? : string,
+    packageDeliveryKMPerDay ? : string,
+    tripCancelationFee ?: Number,
+    maxWaitingTimeWithoutCharge ?: Number
+}

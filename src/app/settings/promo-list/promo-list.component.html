@@ -1,0 +1,268 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<mat-card class="mt-4">
+  <mat-card-content class="pl-3 pr-3">
+
+    <div class="d-flex align-items-center">
+        <h3 class="text-body">Promotion List</h3>
+    </div>
+
+    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="hover">
+            
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Code
+                </th>
+                <th>
+                    Type
+                </th>
+                <th>
+                    Commission(%)
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Last Modified
+                </th>
+                <th>
+                    Created
+                </th>
+                <th class="text-right">
+                    Action
+                </th>
+            </tr>
+        </thead>
+  
+        <tbody>
+            <!-- <br> -->
+            <tr *ngFor="let promo of promoDetails; let i = index" style="font-weight:10">
+                <td>
+                    {{i+1}}
+                </td>
+                <td>
+                    {{promo?.name}}
+                </td>
+                <td>
+                    {{promo?.promocode}}
+                </td>
+                <td>
+                    {{promo?.promoFor}}
+                </td>
+                <td>
+                    {{promo?.commission}}
+                </td>
+                <td>
+                    <span class="badge badge-success p-2 ml-2" *ngIf="promo?.isEnable == true">
+                        <strong>Enabled</strong>
+                    </span>
+                    <span class="badge badge-danger p-2 ml-2" *ngIf="promo?.isEnable == false">
+                        <strong>Disabled</strong>
+                    </span>
+                </td>
+                
+                <td>
+                    {{promo?.modifiedTime | date: 'yyyy-MM-dd'}}
+                    {{promo?.modifiedTime | date: 'hh:mm.ss a'}}
+                </td>
+                <td>
+                    {{promo?.recordedTime | date: 'yyyy-MM-dd'}}
+                    {{promo?.recordedTime | date: 'hh:mm.ss a'}}
+                </td>
+                <td>
+                    <div class="text-right">
+                        <button mat-button class="btn btn-info btn-sm ml-1 text-white"
+                        data-toggle="modal" data-target="#editPromoModal" (click)="updatePromoId(promo?._id)"
+                        title="Click here to edit">
+                                Edit</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="companyName">Agent Company Name</label>
+                <input class="form-control form-control-sm" id="companyName" type="text" formControlName="companyName"
+                    placeholder="Enter Agent Name" [ngClass]="{ 'is-invalid': submitted && validate.companyName.errors }">
+                <div *ngIf="submitted && validate.companyName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.companyName.errors.required">Agent Company Name is required</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="companyCode">Agent Company Code</label>
+                <input class="form-control form-control-sm" id="companyCode" type="text" formControlName="companyCode"
+                    placeholder="Enter Agent Code" [ngClass]="{ 'is-invalid': submitted && validate.companyCode.errors }">
+                <div *ngIf="submitted && validate.companyCode.errors" class="invalid-feedback">
+                    <div *ngIf="validate.companyCode.errors.required">Agent Company Code is required</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="ownerFirstName">Owner First Name</label>
+                <input class="form-control form-control-sm" id="ownerFirstName" type="text" formControlName="ownerFirstName"
+                    placeholder="Enter Owner Name" [ngClass]="{ 'is-invalid': submitted && validate.ownerFirstName.errors }">
+                <div *ngIf="submitted && validate.ownerFirstName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.ownerFirstName.errors.required">Owner First Name is required</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="ownerLastName">Owner Last Name</label>
+                <input class="form-control form-control-sm" id="ownerLastName" type="text" formControlName="ownerLastName"
+                    placeholder="Enter Last Name" [ngClass]="{ 'is-invalid': submitted && validate.ownerLastName.errors }">
+                <div *ngIf="submitted && validate.ownerLastName.errors" class="invalid-feedback">
+                    <div *ngIf="validate.ownerLastName.errors.required">Owner Last Name is required</div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="agentEmail" class="form-control form-control-sm" id="agentEmail" aria-describedby="emailHelp"
+                  formControlName="agentEmail" placeholder="Enter email"
+                  [ngClass]="{ 'is-invalid': submitted && validate.agentEmail.errors }">
+                <div *ngIf="submitted && validate.agentEmail.errors" class="invalid-feedback">
+                  <div *ngIf="validate.agentEmail.errors.required">Email is required</div>
+                  <div *ngIf="validate.agentEmail.errors.agentEmail">Email must be a valid email address</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label for="agentContactNumber">Mobile</label>
+                <input class="form-control form-control-sm" id="agentContactNumber" type="text" placeholder="Enter Mobile Number"
+                    formControlName="agentContactNumber" [ngClass]="{ 'is-invalid': submitted && validate.agentContactNumber.errors }">
+                <div *ngIf="submitted && validate.agentContactNumber.errors" class="invalid-feedback">
+                    <div *ngIf="validate.agentContactNumber.errors.required">Mobile Number is required</div>
+                    <div *ngIf="validate.agentContactNumber.errors.pattern">Mobile number must be a valid number</div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="nic">NIC</label>
+                <input class="form-control form-control-sm" id="nic" type="text" placeholder="Enter NIC Number"
+                  formControlName="nic" [ngClass]="{ 'is-invalid': submitted && validate.nic.errors }">
+                <div *ngIf="submitted && validate.nic.errors" class="invalid-feedback">
+                  <div *ngIf="validate.nic.errors.required">NIC Number is required</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+            <label for="birthday">Birthday</label>
+            <input class="form-control form-control-sm" type="date" placeholder="yyyy-mm-dd" name="birthday"
+                formControlName="birthday" [ngClass]="{ 'is-invalid': submitted && validate.birthday.errors }">
+            <div *ngIf="submitted && validate.birthday.errors" class="invalid-feedback">
+                <div *ngIf="validate.birthday.errors.required">Birthday is required</div>
+            </div>
+            </div>
+            <div class="col-md-4">
+            <label for="mobile">Gender</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="male" formControlName="gender"
+                [ngClass]="{ 'is-invalid': submitted && validate.gender.errors }">
+                <label class="form-check-label" for="male">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="female"
+                formControlName="gender" [ngClass]="{ 'is-invalid': submitted && validate.gender.errors }">
+                <label class="form-check-label" for="female">Female</label>
+            </div>
+            
+            </div>
+        </div>
+
+      <div class="form-group row">
+        <div class="col-md-12">
+          <label for="address">Address</label>
+        </div>
+        <div class="col-md-3">
+          <input class="form-control form-control-sm" id="address" type="text" placeholder="No."
+            formControlName="address" [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+          <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+            <div *ngIf="validate.address.errors.required">Number is required</div>
+          </div>
+        </div>
+
+        <div class="col-md-5">
+          <input class="form-control form-control-sm" id="street" type="text" placeholder="Street"
+            formControlName="street" [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+          <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+            <div *ngIf="validate.street.errors.required">Street is required</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <input class="form-control form-control-sm" id="city" type="text" placeholder="City" formControlName="city"
+            [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+          <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+            <div *ngIf="validate.city.errors.required">City is required</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="onSubmit()"> Submit</button>
+      </div>
+    </form> -->
+
+  </mat-card-content>
+</mat-card>
+
+<!-- edit promotion -->
+<div class="modal fade bd-example-modal-lg" id="editPromoModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="exampleModalLabel">Edit Promo Commission</h5>
+                <button type="button" class="close" id="close-modal" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="promoDetails?.length > 0">
+                
+                <!-- <div class="row">
+                    <div class="col-md-12 mt-3 mb-3">
+                        <h4><b>Wallet Balance: {{currency}} {{ agentDetails[0].wallet[0].totalWalletPoints | number : '.2-2' }}</b></h4>
+                    </div>
+                </div> -->
+                
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <label id="label">Commission</label>
+                        <input type="number" class="form-control form-control-sm" id="commission" placeholder=" "
+                        name="commission" [(ngModel)]="commission">
+                    </div>
+                    <!-- <div class="col-md-8">
+                        <label id="label">Method</label>
+                        <input type="text" class="form-control form-control-sm" id="walletMethod" placeholder=" "
+                        name="rechargeMethod" [(ngModel)]="rechargeMethod">
+                    </div> -->
+                </div>
+                <!-- <div class="row">
+                    <div class="col-md-12">
+                        <label id="label">Description</label>
+                        <textarea type="text" class="form-control form-control-sm" id="walletDescription"
+                        placeholder=" " name="rechargeDescription" [(ngModel)]="rechargeDescription"></textarea>
+                    </div>
+                </div> -->
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close-update-modal" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="updatePromoCommission()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+export interface CorporateUser {
+    firstName?: string,
+    lastName?: string,
+    mobile?: string,
+    companyName?: string,
+    nic?:string,
+    birthday?:string,
+    email?: string,
+    password?: string,
+    gender?: string,
+    address?: string,
+    street?: string,
+    city?: string,
+    zipcode?: number,
+    country?: string,
+    companyPic?: any,
+    isEnable?: any,
+    isApproved?: any,
+    employeeStrength?: any
+}

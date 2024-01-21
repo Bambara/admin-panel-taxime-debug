@@ -1,0 +1,245 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<div class="col-md-12">
+  <div class="card card-outline-inverse">
+    <div class="card-body">
+
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead>
+          <tr>
+            <th>
+              Added Corporate Users
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of corporateUsers">
+            <td>
+
+              <mat-card class="example-card">
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-card-header>
+                      <div mat-card-avatar class="example-header-image">
+                        <img src="{{uri}}{{user.companyPic}}" class="img-circle" alt="a" width="45" height="45">
+                      </div>
+                      <mat-card-title>
+                        <h3>{{user.companyName}}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle>{{user.companyEmail}}</mat-card-subtitle>
+                      <mat-card-subtitle>Employee strength : {{user.employeeStrength}}</mat-card-subtitle>  
+                      <p>{{user.recordedTime | date: 'dd/MM/yyyy'}}</p>
+                    </mat-card-header>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-card-content>
+                      <p>Enable : {{user.isEnable}}</p>
+                      <p>Approve : {{user.isApproved}}</p>
+                    </mat-card-content>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-card-title>
+                      <h5>Contact Person</h5>
+                    </mat-card-title>
+                    <mat-card-content>
+                        <p>Name : {{user.firstName}} {{user.lastName}}</p>
+                        <p>Address : {{user.address.zipcode}}, {{user.address.address}}, {{user.address.city}}, {{user.address.country}}</p>
+                        <p>Contact number : {{user.contactNumber}}</p>
+                    </mat-card-content>
+                  </div>
+
+                  <!-- <div class="col-md-4">
+                    <mat-card-actions>
+                      <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2">Attachments</button>
+                      <button mat-button class="btn btn-sm btn-danger">Approve</button>
+                    </mat-card-actions>
+                  </div> -->
+                </div>
+
+              </mat-card>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+
+<!-- corporateUser Add Button -->
+<div class="float" data-toggle="modal" data-target="#exampleModal">
+  <i class="fa fa-plus my-float"></i>
+</div>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Cooperate User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group">
+                <label for="comName">Company Name</label>
+                <input class="form-control form-control-sm" id="comName" type="text" placeholder="Enter Company Name"
+                  [(ngModel)]="corporateUser.companyName" formControlName="comName" [ngClass]="{ 'is-invalid': submitted && validate.comName.errors }">
+                <div *ngIf="submitted && validate.comName.errors" class="invalid-feedback">
+                  <div *ngIf="validate.comName.errors.required">Company Name Number is required</div>
+                </div>
+              </div>
+    
+              <div class="form-group row">
+                <div class="col-md-6">
+                  <label for="exampleInputEmail1">Company Email</label>
+                  <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp"
+                    [(ngModel)]="corporateUser.email" formControlName="email" placeholder="Enter email" [ngClass]="{ 'is-invalid': submitted && validate.email.errors }">
+                  <div *ngIf="submitted && validate.email.errors" class="invalid-feedback">
+                    <div *ngIf="validate.email.errors.required">Email is required</div>
+                    <div *ngIf="validate.email.errors.email">Email must be a valid email address</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="exampleInputEmail1">Password</label>
+                  <input type="password" class="form-control form-control-sm" id="password" [(ngModel)]="corporateUser.password"
+                    formControlName="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && validate.password.errors }">
+                  <div *ngIf="submitted && validate.password.errors" class="invalid-feedback">
+                    <div *ngIf="validate.password.errors.required">Password is required</div>
+                    <div *ngIf="validate.password.errors.minlength">Password must be at least 6 characters</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label for="empstr">Employee Strength</label>
+                  <input class="form-control form-control-sm" id="comName" type="number" placeholder="Enter Company Name"
+                    [(ngModel)]="corporateUser.employeeStrength" formControlName="comName" >
+                  </div>
+                </div>
+
+          <div class="form-group row">
+            
+            <div class="col-md-6">
+              <label for="firstName">First Name</label>
+              <input class="form-control form-control-sm" id="firstName" type="text" formControlName="firstName"
+                [(ngModel)]="corporateUser.firstName" placeholder="Enter First Name" [ngClass]="{ 'is-invalid': submitted && validate.firstName.errors }">
+              <div *ngIf="submitted && validate.firstName.errors" class="invalid-feedback">
+                <div *ngIf="validate.firstName.errors.required">First Name is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="lastName">Last Name</label>
+              <input class="form-control form-control-sm" id="lastName" type="text" formControlName="lastName"
+                [(ngModel)]="corporateUser.lastName" placeholder="Enter Last Name" [ngClass]="{ 'is-invalid': submitted && validate.lastName.errors }">
+              <div *ngIf="submitted && validate.lastName.errors" class="invalid-feedback">
+                <div *ngIf="validate.lastName.errors.required">Last Name is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label for="mobile">Mobile</label>
+              <input class="form-control form-control-sm" id="mobile" type="text" placeholder="Enter Mobile Number"
+                [(ngModel)]="corporateUser.mobile" formControlName="mobile" [ngClass]="{ 'is-invalid': submitted && validate.mobile.errors }">
+              <div *ngIf="submitted && validate.mobile.errors" class="invalid-feedback">
+                <div *ngIf="validate.mobile.errors.required">Mobile Number is required</div>
+                <div *ngIf="validate.mobile.errors.pattern">Mobile number must be a valid number</div>
+              </div>
+            </div>
+          </div>
+
+         
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <label for="address">Address</label>
+            </div>
+            <div class="col-md-3">
+              <input class="form-control form-control-sm" id="address" type="text" placeholder="Address" formControlName="address"
+                [(ngModel)]="corporateUser.address" [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+              <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                <div *ngIf="validate.address.errors.required">address is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-5">
+              <input class="form-control form-control-sm" id="street" type="text" placeholder="Street" formControlName="street"
+                [(ngModel)]="corporateUser.street" [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+              <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+                <div *ngIf="validate.street.errors.required">Street is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <input class="form-control form-control-sm" id="city" type="text" placeholder="City" formControlName="city"
+                [(ngModel)]="corporateUser.city" [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+              <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+                <div *ngIf="validate.city.errors.required">City is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-4">
+              <input class="form-control form-control-sm" id="zipcode" type="text" placeholder="Zip Code" [(ngModel)]="corporateUser.zipcode"
+                formControlName="zipcode">
+            </div>
+            <div class="col-md-5">
+              <input class="form-control form-control-sm" id="country" type="text" placeholder="Country" [(ngModel)]="corporateUser.country"
+                formControlName="country">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="custom-file col-md-6">
+              <label for="companyPic">Company Picture</label>
+              <span class="required" *ngIf="submitted && registerForm.controls.companyPic.invalid"><sup>* required</sup></span>
+              <label class="companyPic" for="companyPic"></label>
+              <input type="file" class="companyPic" id="companyPic" (change)="companyPicture($event)" formControlName="companyPic">
+              <div class="col-md-3">
+                <img id="blah" [src]="imageCompany" alt="your image" style="width:100%" />
+              </div>
+            </div>
+          </div><br>
+
+          <div class="form-group row">
+            <div class="col-md-4">
+              <mat-checkbox class="form-control form-control-sm" [(ngModel)]="corporateUser.isEnable" (change)="enable($event.checked)"
+                formControlName="isEnable">Is Enable</mat-checkbox>
+            </div>
+            <div class="col-md-4">
+              <mat-checkbox class="form-control form-control-sm" [(ngModel)]="corporateUser.isApproved" (change)="approved($event.checked)"
+                formControlName="isApproved">Is Approved</mat-checkbox>
+            </div>
+            <!-- <div class="col-md-4">
+              <mat-checkbox class="form-control form-control-sm" [(ngModel)]="corporateUser.isVerified" (change)="verified($event.checked)"
+                formControlName="isVerified">Is Verified</mat-checkbox>
+            </div> -->
+          </div>
+
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-dark" (click)="onSubmit()">+ Add</button>
+      </div>
+    </div>
+  </div>
+</div>

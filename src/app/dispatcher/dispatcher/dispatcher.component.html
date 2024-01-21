@@ -1,0 +1,374 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+
+<ng-snotify></ng-snotify>
+
+<div class="col-md-12">
+  <div class="card card-outline-inverse">
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              Dispatcher Users
+              <button (click)="getDispatchers()"><i class="fa fa-file-excel-o"
+                  style="font-size:35px;color:blue"></i></button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <mat-card>
+                <!-- <mat-card-content>
+                    <label>From : </label><input type="date" [(ngModel)]="from"><label>To : </label><input type="date"
+                      [(ngModel)]="to">
+                  </mat-card-content> -->
+                <mat-card-content>
+                  <form>
+                    <div class="row">
+                      <div class="col-md-1">
+                        <label for="attribute">Attribute:</label>
+                      </div>
+                      <div class="col-md-4">
+                        <select class='form-control' [(ngModel)]="attribute" name="attribute">
+                          <option value="-99">-- Select Option --</option>
+                          <option value="firstName">First Name</option>
+                          <option value="mobile">Mobile Number</option>
+                          <option value="nic">NIC</option>
+                          <option value="email">Email</option>
+                          <option value="type">Type</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <input type="text" class="form-control" [(ngModel)]=attributeText name="attributeText"
+                          placeholder="Enter">
+                      </div>
+                      <div class="col-md-2">
+                        <button mat-button class="btn btn-success btn-sm ml-5"
+                          (click)="getDispatcherspagination()">Search</button>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row pt-3">
+                      <div class="col-md-4">
+                        showing {{details.length}} records out of {{noOfRecords}}
+                      </div>
+                      <div class="col-md-8">
+                        <div style="text-align:center">
+
+                          <table class="table">
+                            <tr *ngFor="let item of details | paginate: config" style="font-weight:10"></tr>
+                          </table>
+
+                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+                </mat-card-content>
+
+              </mat-card>
+            </td>
+          </tr>
+          <tr *ngFor="let dispatcher of details" style="font-weight:10">
+            <td>
+              <p style="display:none">
+                {{dispatcher.recordedTime | date: 'yyyy-MM-dd'}}
+                {{dispatcher.recordedTime | date: 'a'}}
+                {{dispatcher.recordedTime | date: 'hh:mm.ss a'}}</p>
+              <mat-card>
+                <div class="row">
+                  <div class="col-md-3">
+                    <mat-card-header>
+
+                      <div *ngIf="dispatcher.type == 'Driver'">
+
+                        <div mat-card-avatar class="example-header-image">
+                          <img *ngIf="dispatcher.dispatcherId" src="{{dispatcher.dispatcherId.driverPic}}"
+                            class="img-circle" alt="a" width="45" height="45">
+                        </div>
+                        <mat-card-title>
+                          <h3 *ngIf="dispatcher.dispatcherId">{{dispatcher.dispatcherId.firstName}}
+                            {{dispatcher.dispatcherId.lastName}}</h3>
+                        </mat-card-title>
+                        <mat-card-subtitle *ngIf="dispatcher.dispatcherId">{{dispatcher.dispatcherId.mobile}}
+                        </mat-card-subtitle>
+
+                      </div>
+
+                      <div *ngIf="dispatcher.type == 'User'">
+
+                        <div mat-card-avatar class="example-header-image">
+                          <img *ngIf="dispatcher.dispatcherId"
+                            src="{{dispatcher.dispatcherId.userProfilePic}}" class="img-circle" alt="a"
+                            width="45" height="45">
+                        </div>
+                        <mat-card-title>
+                          <h3 *ngIf="dispatcher.dispatcherId">{{dispatcher.dispatcherId.name}}</h3>
+                        </mat-card-title>
+                        <mat-card-subtitle *ngIf="dispatcher.dispatcherId">{{dispatcher.dispatcherId.contactNumber}}
+                        </mat-card-subtitle>
+
+                      </div>
+
+                    </mat-card-header>
+                    <mat-card-content>
+                      <!-- <p *ngIf="dispatcher.dispatcherId.address" >{{dispatcher.dispatcherId.address.address}}, {{dispatcher.dispatcherId.address.street}},
+                                  {{dispatcher.dispatcherId.address.city}},
+                                  {{dispatcher.dispatcherId.address.country}} {{dispatcher.dispatcherId.address.zipcode}}
+                                </p> -->
+                    </mat-card-content>
+                  </div>
+
+                  <div class="col-md-3">
+                    <p>Dispatcher Type: {{dispatcher.type}}</p>
+                    <p>Dispatcher Packege Type: {{dispatcher.dispatchPackageType}}</p>
+
+                    <p>Dispatcher Code : <input type="text" id="dispatcherCode" class="form-control form-control-sm"
+                        [(ngModel)]="dispatcher.dispatcherCode" placeholder="Dispatcher Code" name="dispatcherCode"></p>
+                    <button mat-button type="button" class="btn btn-primary  pull-right"
+                      (click)="changeCode(dispatcher._id, dispatcher.dispatcherCode)">Change </button>
+
+                  </div>
+
+                  <div class="col-md-3">
+                    <p *ngIf="dispatcher.dispatcherId">E-mail: {{dispatcher.dispatcherId.email}}</p>
+                    <p *ngIf="dispatcher.dispatcherId">NIC: {{dispatcher.dispatcherId.nic}}</p>
+                    <p *ngIf="dispatcher.dispatcherId">Birthday:
+                      {{dispatcher.dispatcherId.birthday | date: 'yyyy-MM-dd'}}
+                    </p>
+                    <p *ngIf="dispatcher.dispatcherId">Gender: {{dispatcher.dispatcherId.gender}}</p>
+                    <p *ngIf="dispatcher.dispatcherId">Added as Dispatcher :
+                      {{dispatcher.recordedTime | date: 'yyyy-MM-dd'}}
+                      {{dispatcher.recordedTime | date: 'hh:mm.ss a'}}</p>
+                    <!-- <p>Life Insurance Expire Date: {{dispatcher.dispatcherId.lifeInsuranceExpiryDate | date: 'dd/MM/yyyy'}}</p>
+                              <p>Life Insurance Number: {{dispatcher.dispatcherId.lifeInsuranceNo}}</p> -->
+                  </div>
+
+                  <div class="col-md-3">
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <p *ngIf="dispatcher.commission">Admin Commission :
+                          {{dispatcher.commission.dispatchAdminCommission}}</p>
+                        <p *ngIf="dispatcher.commission">Dispatcher Commission :
+                          {{dispatcher.commission.dispatcherCommission}}</p>
+
+                        <button mat-button class="btn btn-success btn-sm mb-2 mr-2" data-toggle="modal"
+                          data-target="#exampleModal3" (click)="editCommission(dispatcher)">Edit Commission</button>
+                        <!-- <p *ngIf="dispatcher.commission">From : {{dispatcher.commission.fromDate | date: 'yyyy-MM-dd'}}</p>
+                        <p *ngIf="dispatcher.commission">To : {{dispatcher.commission.toDate | date: 'yyyy-MM-dd'}}</p> -->
+                        <mat-card-actions>
+                          <mat-checkbox class="example-margin" [(ngModel)]="dispatcher.isEnable"
+                            (change)="enableDispatcher(dispatcher._id,$event.checked)">Enable</mat-checkbox>
+                        </mat-card-actions>
+                      </div>
+                      <div class="col-md-6">
+
+                        <button mat-button class="btn btn-success btn-sm mb-2 mr-2" data-toggle="modal"
+                          data-target="#exampleModal2"
+                          (click)="getwalletData(dispatcher.dispatcherId._id)">Wallet</button>
+
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </mat-card>
+            </td>
+            <br>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="exampleModal2" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Dispatcher Wallet</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="card pl-3 pr-3">
+          <div class="row p-2"
+            [style.background-color]="walletData.totalWalletPoints >= 0 ? 'rgb(79, 168, 95)' : 'rgb(237, 135, 160)'">
+            <div class="col-md-4"></div>
+            <div class="col-md-6">
+              <h2><b>Dispatcher Earnings</b></h2> <br>
+              <h3><b>RS : {{walletData.dispatcherEarnings}}</b></h3> <br>
+
+              <h4><b>Balance Rs : {{walletData.totalWalletPoints}}</b></h4>
+
+            </div>
+          </div>
+
+          <div class="row p-4">
+            <button type="button" style="width:100%" class="btn btn-primary" (click)="isCollapsedRe = !isCollapsedRe"
+              [attr.aria-expanded]="!isCollapsedRe" aria-controls="collapseExample">
+              Recharge Wallet
+            </button>
+            <br>
+            <div class="col-md-12">
+              <div id="collapseExample" [ngbCollapse]="isCollapsedRe">
+                <div class="card">
+                  <div class="card-body p-2">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <label id="label">Points</label>
+                        <input type="number" class="form-control form-control-sm" id="walletPoints" placeholder=" "
+                          name="rechargeAmount" [(ngModel)]="rechargeAmount">
+                      </div>
+                      <div class="col-md-8">
+                        <label id="label">Method</label>
+                        <input type="text" class="form-control form-control-sm" id="walletMethod" placeholder=" "
+                          name="rechargeMethod" [(ngModel)]="rechargeMethod">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label id="label">Description</label>
+                        <textarea type="text" class="form-control form-control-sm" id="walletDescription"
+                          placeholder=" " name="rechargeDescription" [(ngModel)]="rechargeDescription"></textarea>
+                      </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <button type="button" class="btn btn-primary pull-right" (click)="rechargeWallet()">
+                          Recharge
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- <div class="row p-4">
+                        <button type="button" style="width:100%" class="btn btn-primary"
+                            (click)="isCollapsedad = !isCollapsedad" [attr.aria-expanded]="!isCollapsedad"
+                            aria-controls="collapseExample">
+                            Update Wallet Points
+                        </button>
+                        <br>
+                        <div class="col-md-12">
+                            <div id="collapseExample" [ngbCollapse]="isCollapsedad">
+                                <div class="card">
+                                    <div class="card-body p-2">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label id="label">Points</label>
+                                                <input type="number" class="form-control form-control-sm"
+                                                    id="walletPoints" placeholder=" " name="rechargeAmount"
+                                                    [(ngModel)]="rechargeAmount">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <label id="label">Method</label>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    id="walletMethod" placeholder=" " name="rechargeMethod"
+                                                    [(ngModel)]="rechargeMethod">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label id="label">Description</label>
+                                                <textarea type="text" class="form-control form-control-sm"
+                                                    id="walletDescription" placeholder=" " name="rechargeDescription"
+                                                    [(ngModel)]="rechargeDescription"></textarea>
+                                            </div>
+
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-primary pull-right"
+                                                    (click)="updateWalletPoints()">
+                                                    Update
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade bd-example-modal" id="exampleModal3" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Dispatcher Commission edit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div>
+
+          <div class="col-md-6">
+            <label for="mobile">Dispatcher Type</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="dispatchPackageType" id="commission" value="commission"
+                [(ngModel)]="type">
+              <label class="form-check-label" for="commission">Commission</label>
+            </div>
+            <!-- <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="dispatchPackageType" id="subscription"
+                value="subscription" [(ngModel)]="type">
+              <label class="form-check-label" for="subscription">Subscription</label>
+            </div> -->
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="dispatcherCommisssion">Dispatcher Commission</label>
+              <input class="form-control form-control-sm" id="dispatcherCommisssion" type="number"
+                [(ngModel)]="dispatcherCommisssion" placeholder="Enter Dispatcher Commission">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="adminCommission">Dispatch Admin Commission</label>
+              <input class="form-control form-control-sm" id="adminCommission" type="number"
+                [(ngModel)]="adminCommission" placeholder="Enter Dispatch Admin Commission">
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <label>From : </label><input type="date" [(ngModel)]="from"><label>To : </label><input type="date"
+              [(ngModel)]="to">
+          </div> -->
+
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-dark" (click)="saveCommission()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

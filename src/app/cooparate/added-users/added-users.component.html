@@ -1,0 +1,396 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<div class="col-md-12">
+  <ng-snotify></ng-snotify>
+  <div class="card card-outline-inverse">
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              App Users
+              <button (click)="addedUsers()"><i class="fa fa-file-excel-o"
+                  style="font-size:35px;color:blue"></i></button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <mat-card>
+                <!-- <mat-card-content>
+                      <label>From : </label><input type="date" [(ngModel)]="from"><label>To : </label><input type="date"
+                        [(ngModel)]="to">
+                    </mat-card-content> -->
+                <mat-card-content>
+                  <form>
+                    <div class="row">
+                      <div class="col-md-1">
+                        <label for="attribute">Attribute:</label>
+                      </div>
+                      <div class="col-md-4">
+                        <select class='form-control' [(ngModel)]="attribute" name="attribute">
+                          <option value="-99">-- Select Option --</option>
+                          <option value="name">Name</option>
+                          <option value="contactNumber">Mobile Number</option>
+                          <option value="nic">NIC</option>
+                          <option value="referral">Refferal Dispatcher Code</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <input type="text" class="form-control" [(ngModel)]=attributeText name="attributeText"
+                          placeholder="Enter">
+                      </div>
+                      <div class="col-md-2">
+                        <button mat-button class="btn btn-success btn-sm ml-5"
+                          (click)="getAllUserspagination()">Search</button>
+                      </div>
+                    </div>
+
+                    <br>
+                    <div class="row pt-3">
+                      <div class="col-md-4">
+                        showing {{addedusers.length}} records out of {{noOfRecords}}
+                      </div>
+                      <div class="col-md-8">
+                        <div style="text-align:center">
+
+                          <table class="table">
+                            <tr *ngFor="let item of addedusers | paginate: config" style="font-weight:10"></tr>
+                          </table>
+
+                          <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+                        </div>
+                      </div>
+                    </div>
+
+                  </form>
+                </mat-card-content>
+
+              </mat-card>
+            </td>
+          </tr>
+
+          <tr *ngFor="let user of addedusers">
+            <td>
+
+              <mat-card class="example-card">
+
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-card-header>
+                      <div mat-card-avatar class="example-header-image">
+                        <img src="{{uri}}{{user.userProfilePic}}" class="img-circle" alt="a" width="45" height="45">
+                      </div>
+                      <mat-card-title>
+                        <h3>{{user.name}}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle>{{user.userPlatform}}</mat-card-subtitle>
+                      <mat-card-subtitle>{{user.userType}}</mat-card-subtitle>
+                    </mat-card-header>
+                    <mat-card-content>
+                      <div class="isDispatchEnable" *ngIf="user.isDispatchEnable == true">
+                        <p><b>Dispatcher</b></p>
+                      </div>
+                      <div *ngIf="user.isDispatchEnable == false">
+                        <div class="row">
+                          <button mat-button class="btn btn-outline-danger btn-sm mb-2 ml-2" data-toggle="modal"
+                            data-target="#exampleModal3" (click)="assignDispatcher(user._id)">Dispatch Enable</button>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </div>
+
+                  <div class="col-md-4">
+                    <mat-card-content>
+                      <p>Address : {{user.address}}</p>
+                      <p>Contact number : {{user.contactNumber}}</p>
+                      <p>Gender : {{user.gender}}</p>
+                      <p>Birthday : {{user.birthday}}</p>
+                      <p>Enable : {{user.enableUser}}</p>
+                    </mat-card-content>
+                  </div>
+
+                  <div class="col-md-4">
+                    <h6 *ngIf="user.wallet[0] && user.wallet[0].referral[0]">Refferal : {{user.wallet[0].referral[0].referralId}}</h6>
+                  </div>
+
+                  <!-- <div class="col-md-4">
+                      <mat-card-title>
+                        <h5>Favourite Locations</h5>
+                      </mat-card-title>
+                      <mat-card-content>
+                        <div *ngFor="let data of user.favouriteLocations">
+                          <p>Name : {{data.favourName}}</p>
+                          <p>Address : {{data.address}}</p>
+                        </div>
+                      </mat-card-content>
+                    </div> -->
+
+                  <!-- <div class="col-md-4">
+                      <mat-card-actions>
+                        <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2">Attachments</button>
+                        <button mat-button class="btn btn-sm btn-danger">Approve</button>
+                      </mat-card-actions>
+                    </div> -->
+                </div>
+
+              </mat-card>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!--dispatch modal -->
+<div class="modal fade bd-example-modal" id="exampleModal3" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Dispatcher Enable</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="registerForm1" (ngSubmit)="dispatchEnable()">
+
+          <div class="col-md-6">
+            <label for="mobile">Dispatcher Type</label><br>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="dispatchPackageType" id="commission" value="commission"
+                formControlName="dispatchPackageType" [(ngModel)]="dispatcher.dispatchPackageType">
+              <label class="form-check-label" for="commission">Commission</label>
+            </div>
+            <!-- <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="dispatchPackageType" id="subscription"
+                value="subscription" formControlName="dispatchPackageType" [(ngModel)]="dispatcher.dispatchPackageType">
+              <label class="form-check-label" for="subscription">Subscription</label>
+            </div> -->
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="dispatcherCommission">Dispatcher Commission</label>
+              <input class="form-control form-control-sm" id="dispatcherCommission" type="number"
+                formControlName="dispatcherCommission" [(ngModel)]="dispatcher.dispatcherCommission"
+                placeholder="Enter Dispatcher Commission">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <label for="dispatchAdminCommission">Dispatch Admin Commission</label>
+              <input class="form-control form-control-sm" id="dispatchAdminCommission" type="number"
+                formControlName="dispatchAdminCommission" [(ngModel)]="dispatcher.dispatchAdminCommission"
+                placeholder="Enter Dispatch Admin Commission">
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-dark" (click)="dispatchEnable()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Driver Add Button -->
+<div class="float" data-toggle="modal" data-target="#exampleModal">
+  <i class="fa fa-plus my-float"></i>
+</div>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Passenger</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label for="firstName">First Name</label>
+              <input class="form-control form-control-sm" id="firstName" type="text" formControlName="firstName"
+                [(ngModel)]="driver.firstName" placeholder="Enter First Name"
+                [ngClass]="{ 'is-invalid': submitted && validate.firstName.errors }">
+              <div *ngIf="submitted && validate.firstName.errors" class="invalid-feedback">
+                <div *ngIf="validate.firstName.errors.required">First Name is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="lastName">Last Name</label>
+              <input class="form-control form-control-sm" id="lastName" type="text" formControlName="lastName"
+                [(ngModel)]="driver.lastName" placeholder="Enter Last Name"
+                [ngClass]="{ 'is-invalid': submitted && validate.lastName.errors }">
+              <div *ngIf="submitted && validate.lastName.errors" class="invalid-feedback">
+                <div *ngIf="validate.lastName.errors.required">Last Name is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label for="nic">NIC</label>
+              <input class="form-control form-control-sm" id="nic" type="text" formControlName="nic"
+                [(ngModel)]="driver.nic" placeholder="Enter NIC Number"
+                [ngClass]="{ 'is-invalid': submitted && validate.nic.errors }">
+              <div *ngIf="submitted && validate.nic.errors" class="invalid-feedback">
+                <div *ngIf="validate.nic.errors.required">NIC is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="birthday">Birth day</label>
+              <input class="form-control form-control-sm" id="birthday" type="date" formControlName="birthday"
+                [(ngModel)]="driver.birthday" placeholder="Enter Last Name"
+                [ngClass]="{ 'is-invalid': submitted && validate.birthday.errors }">
+              <div *ngIf="submitted && validate.birthday.errors" class="invalid-feedback">
+                <div *ngIf="validate.birthday.errors.required">Birthday is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-6">
+              <label for="mobile">Mobile</label>
+              <input class="form-control form-control-sm" id="mobile" type="text" placeholder="Enter Mobile Number"
+                [(ngModel)]="driver.mobile" formControlName="mobile"
+                [ngClass]="{ 'is-invalid': submitted && validate.mobile.errors }">
+              <div *ngIf="submitted && validate.mobile.errors" class="invalid-feedback">
+                <div *ngIf="validate.mobile.errors.required">Mobile Number is required</div>
+                <div *ngIf="validate.mobile.errors.pattern">Mobile number must be a valid number</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+              <label for="comName">Company Name</label>
+              <input class="form-control form-control-sm" id="comName" type="text" placeholder="Enter Company Name"
+                [(ngModel)]="driver.comName" formControlName="comName" [ngClass]="{ 'is-invalid': submitted && validate.comName.errors }">
+              <div *ngIf="submitted && validate.comName.errors" class="invalid-feedback">
+                <div *ngIf="validate.comName.errors.required">Company Name Number is required</div>
+              </div>
+            </div>
+  
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="exampleInputEmail1">Company Email</label>
+                <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp"
+                  [(ngModel)]="driver.email" formControlName="email" placeholder="Enter email" [ngClass]="{ 'is-invalid': submitted && validate.email.errors }">
+                <div *ngIf="submitted && validate.email.errors" class="invalid-feedback">
+                  <div *ngIf="validate.email.errors.required">Email is required</div>
+                  <div *ngIf="validate.email.errors.email">Email must be a valid email address</div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="exampleInputEmail1">Password</label>
+                <input type="password" class="form-control form-control-sm" id="password" [(ngModel)]="driver.password"
+                  formControlName="password" placeholder="Password" [ngClass]="{ 'is-invalid': submitted && validate.password.errors }">
+                <div *ngIf="submitted && validate.password.errors" class="invalid-feedback">
+                  <div *ngIf="validate.password.errors.required">Password is required</div>
+                  <div *ngIf="validate.password.errors.minlength">Password must be at least 6 characters</div>
+                </div>
+              </div>
+            </div> -->
+
+          <div class="form-group row">
+            <div class="col-md-12">
+              <label for="address">Address</label>
+            </div>
+            <div class="col-md-3">
+              <input class="form-control form-control-sm" id="address" type="text" placeholder="No."
+                formControlName="address" [(ngModel)]="driver.address"
+                [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+              <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                <div *ngIf="validate.address.errors.required">Number is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-5">
+              <input class="form-control form-control-sm" id="street" type="text" placeholder="Street"
+                formControlName="street" [(ngModel)]="driver.street"
+                [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+              <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+                <div *ngIf="validate.street.errors.required">Street is required</div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <input class="form-control form-control-sm" id="city" type="text" placeholder="City"
+                formControlName="city" [(ngModel)]="driver.city"
+                [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+              <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+                <div *ngIf="validate.city.errors.required">City is required</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-md-4">
+              <input class="form-control form-control-sm" id="zipcode" type="text" placeholder="Zip Code"
+                [(ngModel)]="driver.zipcode" formControlName="zipcode">
+            </div>
+            <div class="col-md-5">
+              <input class="form-control form-control-sm" id="country" type="text" placeholder="Country"
+                [(ngModel)]="driver.country" formControlName="country">
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+              <div class="custom-file col-md-6">
+                <label for="companyPic">Company Picture</label>
+                <label class="companyPic" for="companyPic"></label>
+                <input type="file" class="companyPic" id="companyPic" (change)="companyPicture($event)">
+                <div class="col-md-3">
+                  <img id="blah" [src]="imageCompany" alt="your image" style="width:100%" />
+                </div>
+              </div>
+            </div><br>
+  
+            <div class="form-group row">
+              <div class="col-md-4">
+                <mat-checkbox class="form-control form-control-sm" [(ngModel)]="driver.isEnable" (change)="enable($event.checked)"
+                  formControlName="isEnable">Is Enable</mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-checkbox class="form-control form-control-sm" [(ngModel)]="driver.isApproved" (change)="approved($event.checked)"
+                  formControlName="isApproved">Is Approved</mat-checkbox>
+              </div>
+              <div class="col-md-4">
+                <mat-checkbox class="form-control form-control-sm" [(ngModel)]="driver.isVerified" (change)="verified($event.checked)"
+                  formControlName="isVerified">Is Verified</mat-checkbox>
+              </div>
+            </div> -->
+
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-dark" (click)="onSubmit()">+ Add</button>
+      </div>
+    </div>
+  </div>
+</div>

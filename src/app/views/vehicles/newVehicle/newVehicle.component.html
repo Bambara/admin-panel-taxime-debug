@@ -1,0 +1,211 @@
+<!-- Add Vehicle Card -->
+<div class="col-md-12">
+  <div class="card card-outline-inverse">
+    <div class="card-header">
+      <h4 class="m-b-0 text-white">Register Vehicle</h4>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="form-group">
+          <label for="vehicleCategory">Vehicle Category</label>
+          <div class="input-group">
+            <select required class="form-control" id="vehicleCategory" name="vehicleCategory" placeholder="Vehicle Category"
+              [(ngModel)]="vehicleCategory" (ngModelChange)='getSubcategorys($event)'>
+              <option [ngValue]="i" *ngFor='let i of vehicleCategoryList'>{{i.categoryName}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="vehicleSubcategory">Vehicle Subcategory</label>
+          <div class="input-group">
+            <select required class="form-control" id="vehicleSubcategory" name="vehicleSubcategory" placeholder="Vehicle Subcategory"
+              [(ngModel)]="vehicleSubcategory">
+              <option [ngValue]="i" *ngFor='let i of vehicleSubcategoryList'>{{i.subCategoryName}}</option>
+            </select>
+          </div>
+        </div>
+        <hr />
+        <label class="label-header" for="ownerHeader" style="font-size: 150%; font-variant-caps: all-petite-caps;">Owner
+          Details</label>
+        <div class="form-group">
+          <label for="ownerContactName">Contact Name</label>
+          <div class="input-group">
+            <input required type="text" id="ownerContactName" class="form-control" placeholder="Contact Name" name="ownerContactName"
+              [(ngModel)]="vehicle.ownerContactName">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="ownerContactNumber">Contact Number</label>
+              <div class="input-group">
+                <input required type="text" id="ownerContactNumber" class="form-control" placeholder="Contact Number"
+                  name="ownerContactNumber" [(ngModel)]="vehicle.ownerContactNumber">
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="ownerContactEmail">Contact Email</label>
+              <div class="input-group">
+                <input required type="email" id="ownerContactEmail" class="form-control" placeholder="Contact Email"
+                  name="ownerContactEmail" [(ngModel)]="vehicle.ownerContactEmail">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <div class="input-group">
+            <input required type="text" id="address" class="form-control" placeholder="Address" name="address"
+              [(ngModel)]="vehicle.address">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="street">Street</label>
+              <div class="input-group">
+                <input required type="text" id="street" class="form-control" placeholder="Street" name="street"
+                  [(ngModel)]="vehicle.street">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="city">City</label>
+              <div class="input-group">
+                <input required type="text" id="city" class="form-control" placeholder="City" name="city" [(ngModel)]="vehicle.city">
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="zipcode">Zipcode</label>
+              <div class="input-group">
+                <input type="text" id="zipcode" class="form-control" placeholder="Zipcode" name="zipcode" [(ngModel)]="vehicle.zipcode">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <div class="input-group">
+                <input type="text" id="country" class="form-control" placeholder="Country" name="country" [(ngModel)]="vehicle.country">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="driverId">Driver Id</label>
+          <div class="input-group">
+            <ng-select required class="form-control" [items]="driverList" bindLabel="_id" bindValue="_id" [(ngModel)]="selectedDriver"
+              name="selectedDriver">
+            </ng-select>
+          </div>
+        </div>
+        <hr />
+        <label class="label-header" for="ownerHeader" style="font-size: 150%; font-variant-caps: all-petite-caps;">Vehicle
+          Details</label>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="vehicleRevenueNo">Vehicle Revenue No</label>
+              <div class="input-group">
+                <input required type="text" id="vehicleRevenueNo" class="form-control" placeholder="Vehicle Revenue No"
+                  name="vehicleRevenueNo" [(ngModel)]="vehicle.vehicleRevenueNo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vehicleLicenceNo">Vehicle Licence No</label>
+              <div class="input-group">
+                <input required type="text" id="vehicleLicenceNo" class="form-control" placeholder="Vehicle Licence No"
+                  name="vehicleLicenceNo" [(ngModel)]="vehicle.vehicleLicenceNo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vehicleColor">Vehicle Color</label>
+              <div class="input-group">
+                <input required type="text" id="vehicleColor" class="form-control" placeholder="Vehicle Color" name="vehicleColor"
+                  [(ngModel)]="vehicle.vehicleColor">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vehicleBrandName">Vehicle Brand Name</label>
+              <div class="input-group">
+                <input required type="text" type=text d="vehicleBrandName" class="form-control" placeholder="Vehicle Brand Name"
+                  name="vehicleBrandName" [(ngModel)]="vehicle.vehicleBrandName">
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="vehicleRevenueExpiryDate">Vehicle Revenue Expiry Date</label>
+              <div class="input-group">
+                <input required id="vehicleRevenueExpiryDate" class="form-control" placeholder="yyyy-mm-dd" name="vehicleRevenueExpiryDate"
+                  [(ngModel)]="vehicle.vehicleRevenueExpiryDate" ngbDatepicker #vehicleRevenueExpiryDate="ngbDatepicker">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="vehicleRevenueExpiryDate.toggle()" type="button"></button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vehicleRegistrationNo">Vehicle Registration No</label>
+              <div class="input-group">
+                <input required type="text" id="vehicleRegistrationNo" class="form-control" placeholder="Vehicle Registration No"
+                  name="vehicleRegistrationNo" [(ngModel)]="vehicle.vehicleRegistrationNo">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="manufactureYear">Manufacture Year</label>
+              <div class="input-group">
+                <input required type="text" id="manufactureYear" class="form-control" placeholder="Manufacture Year (yyyy)"
+                  name="manufactureYear" [(ngModel)]="vehicle.manufactureYear">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="street">Vehicle Book Pic</label>
+              <div class="input-group">
+                <input required type="file" id="vehicleBookPic" class="form-control" name="vehicleBookPic" (change)=onFileSelected($event)>
+              </div>
+            </div>
+            <div class="form-group">
+              <label required for="vehicleFrontPic">Vehicle Front Pic</label>
+              <div class="input-group">
+                <input type="file" id="vehicleFrontPic" class="form-control" name="vehicleFrontPic" (change)=onFileSelected($event)>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vehicleRevenuePic">Vehicle Revenue Pic</label>
+              <div class="input-group">
+                <input required type="file" id="vehicleRevenuePic" class="form-control" name="vehicleRevenuePic"
+                  (change)=onFileSelected($event)>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="vehicleInsurancePic">Vehicle Insurance Pic</label>
+              <div class="input-group">
+                <input required type="file" id="vehicleInsurancePic" class="form-control" name="vehicleInsurancePic"
+                  (change)=onFileSelected($event)>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="vehicleSideViewPic">Vehicle Side View Pic</label>
+              <div class="input-group">
+                <input required type="file" id="vehicleSideViewPic" class="form-control" name="vehicleSideViewPic"
+                  (change)=onFileSelected($event)>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <input type="submit" class="btn btn-secondary" (click)="addVehicle()" value="ADD">
+          <button type="reset" class="btn btn-secondary" (click)="reset()">CANCEL</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

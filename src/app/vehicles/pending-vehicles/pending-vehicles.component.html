@@ -1,0 +1,233 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<div class="col-md-12">
+  <div class="card card-outline-inverse">
+ 
+    <div class="card-body">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+        <thead>
+          <tr>
+            <th>
+              Pending Approvel Vehicles
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vehicle of vehicleDetails; let i = index" style="font-weight:10">
+            <td><p style="display:none">
+                        {{vehicle.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{vehicle.recordedTime | date: 'a'}}
+                          {{vehicle.recordedTime | date: 'hh:mm.ss a'}}</p>
+              <mat-card>
+                <div class="row">
+                  <div class="col-md-3">
+                    <mat-card-header>
+                      <div mat-card-avatar class="example-header-image">
+                        <img src="{{vehicle.vehicleSideViewPic}}" class="img-circle" alt="a" width="45"
+                          height="45">
+                      </div>
+                      
+                      <mat-card-title>
+                        <h3>{{vehicle.vehicleRegistrationNo}}</h3>
+                      </mat-card-title>
+                      <mat-card-subtitle>
+                      </mat-card-subtitle>
+                      <p>{{vehicle.ownerInfo.vehicleCategory}} {{vehicle.vehicleSubCategory}}</p>
+                      
+                    </mat-card-header><br>
+                    <mat-card-content>
+                      <p>Category: {{vehicle.vehicleCategory}}</p>
+                      <p>Sub Category: {{vehicle.vehicleSubCategory}}</p>
+                      <p>Registered Date : 
+                        {{vehicle.recordedTime | date: 'yyyy-MM-dd'}}
+                          {{vehicle.recordedTime | date: 'hh:mm.ss a'}}</p>
+                    </mat-card-content>
+                  </div>
+                  <div class="col-md-3">
+                    <h5>Vehicle Info</h5>
+                    <p>Registration No: {{vehicle.vehicleRegistrationNo}}</p>
+                    <p>Brand Name: {{vehicle.vehicleBrandName}}</p>
+                    <p>Manufacture Year: {{vehicle.manufactureYear}}</p>
+                    <p>Color: {{vehicle.vehicleColor}}</p>
+                    <p>Revenue No: {{vehicle.vehicleRevenueNo}}</p>
+                  </div>
+                  <div class="col-md-3">
+                    <h5>Owner Info</h5>
+                    <p>Contact Name: {{vehicle.ownerInfo.ownerContactName}}</p>
+                    <p>Contact Email: {{vehicle.ownerInfo.ownerContactEmail}}</p>
+                    <p>Contact Number: {{vehicle.ownerInfo.ownerContactNumber}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Address: {{vehicle.ownerInfo.address.address}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Street: {{vehicle.ownerInfo.address.street}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">City: {{vehicle.ownerInfo.address.city}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Country: {{vehicle.ownerInfo.address.country}}</p>
+                    <p *ngIf="vehicle.ownerInfo.address">Zipcode: {{vehicle.ownerInfo.address.zipcode}}</p>
+                  </div>
+
+                  <div class="col-md-3">
+                     <!-- <h5>Assign Driver</h5> -->
+
+                    <div>
+                      <!-- <div class="col-md-12">
+                        <div class="form-group">
+                          <label for="driverId">Driver</label>
+                          <select class='form-control form-control-sm' [(ngModel)]="driverIdAssignDriver"
+                            name="driverIdAssignDriver">
+                            <option [value]="driver._id" *ngFor='let driver of driverList'>
+                              {{driver.firstName}}</option>
+                          </select>
+                        </div>
+                      </div> -->
+
+                     
+                      <button mat-button class="btn btn-primary btn-sm mb-2 mr-2 "
+                        (click)="approveVehicle(vehicle._id)">Approve</button>
+                        <button mat-button class="btn btn-sm btn-danger" (click)="deleteVehicle(vehicle._id)">Delete</button>
+                    </div>
+
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-card-actions>
+                      <button mat-button class="btn btn-outline-primary btn-sm mb-2 mr-2"
+                        (click)="openVerticallyCentered(content,vehicle)">Attachments</button>
+
+                        <!-- <button mat-button class="btn btn-primary btn-sm mb-2 mr-2"
+                        (click)="assignCatDate(vehicle, vehicle.ownerInfo)" data-toggle="modal" data-target="#exampleModal">Assign category and sub category</button> -->
+
+                    
+                    </mat-card-actions>
+                  </div>
+
+                </div>
+              </mat-card>
+            </td>
+            <br>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Attachments Modal-->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Attachments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <div class="card"> -->
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Vehicle Book Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleBookPic1}}" target="_blank"><img src="{{vehicleBookPic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Vehicle Front Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleFrontPic1}}" target="_blank"><img src="{{vehicleFrontPic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Vehicle Insurance Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleInsurancePic1}}" target="_blank"><img src="{{vehicleInsurancePic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <label><b>Vehicle Revenue Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleRevenuePic1}}" target="_blank"><img src="{{vehicleRevenuePic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+      <div class="col-md-4">
+        <label><b>Vehicle Side View Picture</b></label>
+        <div class="card ">
+          <a href="{{vehicleSideViewPic1}}" target="_blank"><img src="{{vehicleSideViewPic1}}" alt="attachments"
+              style="width: 190px;height: 190px;"></a>
+        </div>
+        <br>
+      </div>
+    </div>
+    <!-- </div> -->
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">Close</button>
+  </div>
+</ng-template>
+
+
+<!-- new Vehicle Modal-->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Vehicle</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Add Vehicle Card -->
+        <div class="col-md-12">
+          <div class="card card-outline-inverse">
+
+            <!-- <div class="card-body"> -->
+            <form  >
+
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="vehicleCategory">Vehicle Category</label>
+                    <div class="input-group">
+                      <select class="form-control form-control-sm" id="vehicleCategory" name="vehicleCategory"
+                        placeholder="Vehicle Category" [(ngModel)]="vehicleCategory" (change)="getSubcategorys(i)">
+                        <option [ngValue]="i" *ngFor='let i of vehicleCategoryList'>{{i.categoryName}}</option>
+                      </select>
+                      
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="vehicleSubcategory">Vehicle Subcategory</label>
+                    <div class="input-group">
+                      <select class="form-control form-control-sm" id="vehicleSubcategory" name="vehicleSubcategory"
+                        placeholder="Vehicle Subcategory" [(ngModel)]="vehicleSubcategory">
+                        <option [ngValue]="i" *ngFor='let i of vehicleSubcategoryList'>{{i.subCategoryName}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-dark" >+ Assign</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

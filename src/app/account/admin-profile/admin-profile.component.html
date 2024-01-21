@@ -1,0 +1,883 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<!-- <mat-card *ngIf="driverDetails?.length > 0" class="bg-primary">
+    <mat-card-content>
+        <h3 class="text-white">{{driverDetails[0].firstName}} {{driverDetails[0].lastName}}</h3>
+    </mat-card-content>
+</mat-card>
+
+<ngb-alert [dismissible]="false" class="alert-success">
+    <strong>Warning!</strong> Better check yourself, you're not looking too good.
+</ngb-alert> -->
+<div *ngIf="adminDetails != null">
+    <div class="alert alert-danger" *ngIf="adminDetails.role == 'super' ">
+        <strong><b>Super Admin</b></strong>
+    </div>
+    
+    <!-- <div class="alert alert-danger" *ngIf="driverDetails[0].isEnable == false">
+        <strong>Driver disabled</strong>
+    </div>
+    
+    <div class="alert alert-danger" *ngIf="driverDetails[0].wallet[0].totalWalletPoints <= 0">
+        <strong>Driver credit low</strong>
+    </div> -->
+</div>
+
+
+<mat-card *ngIf="adminDetails != null" class="mt-4">
+    <mat-card-content class="pl-3 pr-3">
+        <div class="row ml-2 mb-2">
+            <div>
+                <img src="assets/images/avatar.png" class="img-rounded" alt="image" width="100" height="100">
+            </div>
+            <div class="ml-3">
+                <h3 class="text-dark"><b>{{adminDetails.firstName}} {{adminDetails.lastName}}</b></h3>
+                <!-- <span class="badge badge-success p-2 ml-2" *ngIf="driverDetails[0].isDispatchEnable == true">
+                    <strong>Dispatcher</strong>
+                </span> -->
+            </div>
+        </div>
+        
+        <!-- <div class="row">
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Registerd on: </b>{{driverDetails[0].recordedTime | date: 'dd/MM/yyyy'}}</h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Ratings: </b></h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Wallet Balance: </b>{{currency}} {{driverDetails[0].wallet[0].totalWalletPoints | number : '.2-2'}}</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Company: </b>{{driverDetails[0].company}}</h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Package Type: </b>{{driverDetails[0].packageType}}</h5>
+            </div>
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Earnings: </b>{{currency}} {{driverDetails[0].wallet[0].driverEarnings | number : '.2-2'}}</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="mt-2"><b>Company Refferel: </b></h5>
+            </div>
+        </div> -->
+
+        <!-- tabs -->
+        <div class="mt-5 mb-5">
+            <ngb-tabset >
+                <ngb-tab>
+                    <ng-template ngbTabTitle>Personal Info</ng-template>
+                    <ng-template ngbTabContent class="">
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>Name: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.firstName}} {{adminDetails.lastName}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>Mobile: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.mobile}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>Email: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.email}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>NIC: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.nic}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>Birthday: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.birthday | date: 'dd/MM/yyyy'}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>Gender: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.gender}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h6 class="mt-2"><b>Role: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{adminDetails.role}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row">
+                                        <div class="col-md-1">
+                                            <h6 class="mt-2"><b>City: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{driverDetails[0].address.city}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <h6 class="mt-2"><b>District: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{driverDetails[0].address.district}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <h6 class="mt-2"><b>Province: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{driverDetails[0].address.province}}</b></h6>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <h6 class="mt-2"><b>Country: </b></h6>
+                                        </div>
+                                        
+                                        <div class="d-flex">
+                                            <h6 class="mt-2"><b>{{driverDetails[0].address.country}}</b></h6>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="col-md-4">
+                                    
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <!-- <div class="text-right mb-2">
+                                        <button mat-button class="btn btn-success" data-toggle="modal"
+                                            data-target="#adminAddModal">Add New Admin</button>
+                                    </div> -->
+                                    <div class="text-right mb-2">
+                                        <button mat-button class="btn btn-warning" data-toggle="modal"
+                                            data-target="#adminUpdateModal">Edit Profile</button>
+                                    </div>
+
+                                    <div class="text-right mb-2">
+                                        <button mat-button class="btn btn-warning" data-toggle="modal"
+                                            data-target="#adminUpdatePasswordModal">Change Password</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+                
+                <!-- <ngb-tab title="Permissions" class="" *ngIf="adminDetails.role == 'super' ">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Brand Name: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleBrandName}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Model: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleModel}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Color: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleColor}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Registration No: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.vehicleRegistrationNo}}</b></h6>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Owner Name: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.ownerInfo.ownerContactName}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Owner Email: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.ownerInfo.ownerContactEmail}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Owner Contact Number: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{vehicleData.ownerInfo.ownerContactNumber}}</b></h6>
+                                </div>
+                            </div>
+                            
+                            
+
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Revenue: </b></h6>
+                                    <img src="{{vehicleData.vehicleRevenuePic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Front: </b></h6>
+                                    <img src="{{vehicleData.vehicleFrontPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Insurance: </b></h6>
+                                    <img src="{{vehicleData.vehicleInsurancePic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Book: </b></h6>
+                                    <img src="{{vehicleData.vehicleBookPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Side View: </b></h6>
+                                    <img src="{{vehicleData.vehicleSideViewPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </ng-template>
+                </ngb-tab> -->
+                <!-- <ngb-tab title="Dispatcher" class="" *ngIf="driverDetails[0].isDispatchEnable == true">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Dispatcher Type: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].type}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Registerd on: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].recordedTime | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>From: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.fromDate | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>To: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.toDate | date: 'dd/MM/yyyy'}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Admin Commission: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.dispatchAdminCommission}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Dispatcher Commission: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].commission.dispatcherCommission}}</b></h6>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h6 class="mt-2"><b>Dispatch Package Type: </b></h6>
+                                </div>
+                                
+                                <div class="d-flex">
+                                    <h6 class="mt-2"><b>{{driverDetails[0].dispatcher[0].dispatchPackageType}}</b></h6>
+                                </div>
+                            </div>
+                            
+                            
+
+                        </div>
+
+
+                    </ng-template>
+                </ngb-tab> -->
+                <ngb-tab class="" *ngIf="adminDetails.role == 'super' ">
+                    <ng-template ngbTabTitle>
+                        <div (click)="getAdminList()">Admins</div>
+                    </ng-template>
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4" *ngIf="allAdmins?.length > 0">
+
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="hover">
+
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            #
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Role
+                                        </th>
+                                        <th>
+                                            Mobile
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th *ngIf="adminDetails.role == 'super' ">
+                                            Logged In
+                                        </th>
+                                        <th>
+                                            Last Login
+                                        </th>
+                                        <th>
+                                            Created
+                                        </th>
+                                        <th class="" *ngIf="adminDetails.role == 'super' ">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                          
+                                <tbody>
+                                    <!-- <br> -->
+                                    <tr *ngFor="let adminData of allAdmins; let i = index" style="font-weight:10">
+                                        <td>
+                                            {{i+1}}
+                                        </td>
+                                        <td>
+                                            {{adminData?.firstName}} {{adminData?.lastName}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-danger p-2 ml-2" *ngIf="adminData.role == 'super' ">
+                                                <strong>{{adminData?.role}}</strong>
+                                            </span>
+                                            <span class="badge badge-info p-2 ml-2" *ngIf="adminData.role != 'super' ">
+                                                <strong>{{adminData?.role}}</strong>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{adminData?.mobile}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-success p-2 ml-2" *ngIf="adminData?.isEnable == true">
+                                                <strong>Enabled</strong>
+                                            </span>
+                                            <span class="badge badge-danger p-2 ml-2" *ngIf="adminData?.isEnable == false">
+                                                <strong>Disabled</strong>
+                                            </span>
+                                        </td>
+                                        <td *ngIf="adminDetails.role == 'super' ">
+                                            <span class="badge badge-success p-2 ml-2" *ngIf="adminData?.isLoggedIn == true">
+                                                <strong>Yes</strong>
+                                            </span>
+                                            <span class="badge badge-danger p-2 ml-2" *ngIf="adminData?.isLoggedIn == false">
+                                                <strong>No</strong>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{adminData?.lastLogin | date: 'yyyy-MM-dd'}}
+                                            {{adminData?.lastLogin | date: 'hh:mm.ss a'}}
+                                        </td>
+                                        <td>
+                                            {{adminData?.recordedTime | date: 'yyyy-MM-dd'}}
+                                            {{adminData?.recordedTime | date: 'hh:mm.ss a'}}
+                                        </td>
+                                        <td *ngIf="adminDetails.role == 'super' ">
+                                            <div class="text-right mb-2">
+                                                <button mat-button class="btn btn-info btn-sm ml-1 text-white"
+                                                
+                                                data-toggle="tooltip" title="Click here to view admin profile">
+                                                        View Profile</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <!-- <div class="col-md-12 pt-4 pb-4" *ngIf="allAdmins?.length <= 0">
+                            <mat-card-title>
+                                <h4>No data found</h4>
+                            </mat-card-title>
+                        </div> -->
+
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Operations" class="" *ngIf="adminDetails.role == 'super' ">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="mb-2">
+                                        <button mat-button class="btn btn-success" data-toggle="modal"
+                                            data-target="#adminAddModal">Add New Admin</button>
+                                    </div>
+                                    
+    
+                                </div>
+                                <div class="col-md-4">
+                                    
+                                    
+    
+                                </div>
+                                <div class="col-md-4">
+                                    
+                                    
+    
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </ng-template>
+                </ngb-tab>
+                <!-- <ngb-tab title="Logs" class="" *ngIf="adminDetails.role == 'super' ">
+                    <ng-template ngbTabContent>
+                        
+                        <div class="col-md-12 pt-4 pb-4">
+                            <div class="row mt-4">
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Driver: </b></h6>
+                                    <img src="{{driverDetails[0].driverPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Driver Licence Front: </b></h6>
+                                    <img src="{{driverDetails[0].drivingLicenceFrontPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>Driver Licence Back: </b></h6>
+                                    <img src="{{driverDetails[0].drivingLicenceBackPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>NIC Front: </b></h6>
+                                    <img src="{{driverDetails[0].nicFrontPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="mt-2"><b>NIC Back: </b></h6>
+                                    <img src="{{driverDetails[0].nicBackPic}}" class="img-rounded" alt="driver-image" width="200" height="200">
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </ngb-tab> -->
+            </ngb-tabset>
+        </div>
+            
+            
+        
+        
+
+        
+
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="adminDetails == null">
+    <mat-card-content>
+        <h2>Admin not found</h2>
+    </mat-card-content>
+</mat-card>
+
+
+<!-- add new admin modal -->
+<div class="modal fade bd-example-modal-lg" id="adminAddModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <h5 class="modal-title text-white" id="exampleModalLabel">Add New Admin</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="driverId">Admin Role</label>
+                    <ng-select class="" 
+                        placeholder="Select Admin Role"
+                        [items]="adminRoles" 
+                        bindLabel="roleName"
+                        bindValue="roleName"
+                        name="role"
+                        id="role"
+                        formControlName="role"
+                        [ngClass]="{ 'is-invalid': submitted && validate.role.errors}">
+                        <div *ngIf="submitted && validate.role.errors" class="invalid-feedback">
+                            <div *ngIf="validate.role.errors.required">Admin role is required</div>
+                        </div>
+                    </ng-select>
+
+                    <!-- <ng-select [items]="adminRoles"
+                            bindLabel="roleName"
+                            placeholder="Select Admin Role"
+                            [(ngModel)]="role">
+                    </ng-select> -->
+                    
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="firstName">First Name</label>
+                        <input class="form-control form-control-sm" id="firstName" type="text" formControlName="firstName"
+                            placeholder="Enter First Name"
+                            [ngClass]="{ 'is-invalid': submitted && validate.firstName.errors }">
+                        <div *ngIf="submitted && validate.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="validate.firstName.errors.required">First Name is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-6">
+                        <label for="lastName">Last Name</label>
+                        <input class="form-control form-control-sm" id="lastName" type="text" formControlName="lastName"
+                            placeholder="Enter Last Name"
+                            [ngClass]="{ 'is-invalid': submitted && validate.lastName.errors }">
+                        <div *ngIf="submitted && validate.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="validate.lastName.errors.required">Last Name is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="mobile">Mobile</label>
+                        <input class="form-control form-control-sm" id="mobile" type="text" placeholder="Enter Mobile Number"
+                            formControlName="mobile"
+                            [ngClass]="{ 'is-invalid': submitted && validate.mobile.errors }">
+                        <div *ngIf="submitted && validate.mobile.errors" class="invalid-feedback">
+                            <div *ngIf="validate.mobile.errors.required">Mobile Number is required</div>
+                            <div *ngIf="validate.mobile.errors.pattern">Mobile number must be a valid number</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp"
+                        formControlName="email" placeholder="Enter email"
+                        [ngClass]="{ 'is-invalid': submitted && validate.email.errors }">
+                        <div *ngIf="submitted && validate.email.errors" class="invalid-feedback">
+                            <div *ngIf="validate.email.errors.required">Email is required</div>
+                            <div *ngIf="validate.email.errors.email">Email must be a valid email address</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="nic">NIC</label>
+                        <input class="form-control form-control-sm" id="nic" type="text" placeholder="Enter NIC Number"
+                            formControlName="nic"
+                            [ngClass]="{ 'is-invalid': submitted && validate.nic.errors }">
+                        <div *ngIf="submitted && validate.nic.errors" class="invalid-feedback">
+                            <div *ngIf="validate.nic.errors.required">NIC Number is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="birthday">Birthday</label>
+                        <input class="form-control form-control-sm" type="date" placeholder="yyyy-mm-dd" name="birthday"
+                            formControlName="birthday"
+                            [ngClass]="{ 'is-invalid': submitted && validate.birthday.errors }">
+                        <div *ngIf="submitted && validate.birthday.errors" class="invalid-feedback">
+                            <div *ngIf="validate.birthday.errors.required">Birthday is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="mobile">Gender</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="male" value="male"
+                            formControlName="gender" [ngClass]="{ 'is-invalid': submitted && validate.gender.errors }">
+                            <label class="form-check-label" for="male">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="female" value="female"
+                            formControlName="gender" [ngClass]="{ 'is-invalid': submitted && validate.gender.errors }">
+                            <label class="form-check-label" for="female">Female</label>
+                        </div>
+                        <!-- <div *ngIf="submitted && validate.gender.errors" class="invalid-feedback">
+                            <div *ngIf="validate.gender.errors.required">Gender is required</div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="address">Address</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control form-control-sm" id="address" type="text" placeholder="No."
+                            formControlName="address"
+                            [ngClass]="{ 'is-invalid': submitted && validate.address.errors }">
+                        <div *ngIf="submitted && validate.address.errors" class="invalid-feedback">
+                            <div *ngIf="validate.address.errors.required">Number is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-5">
+                        <input class="form-control form-control-sm" id="street" type="text" placeholder="Street"
+                            formControlName="street"
+                            [ngClass]="{ 'is-invalid': submitted && validate.street.errors }">
+                        <div *ngIf="submitted && validate.street.errors" class="invalid-feedback">
+                            <div *ngIf="validate.street.errors.required">Street is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-4">
+                        <input class="form-control form-control-sm" id="city" type="text" placeholder="City"
+                            formControlName="city"
+                            [ngClass]="{ 'is-invalid': submitted && validate.city.errors }">
+                        <div *ngIf="submitted && validate.city.errors" class="invalid-feedback">
+                            <div *ngIf="validate.city.errors.required">City is required</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="close-modal" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="onSubmit()"> Submit</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- update admin modal -->
+<div class="modal fade bd-example-modal-lg" id="adminUpdateModal" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true" *ngIf="adminDetails != null">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header bg-primary">
+            <h5 class="modal-title text-white" id="exampleModalLabel">Update Admin</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="updateForm" (ngSubmit)="updateOnSubmit()">
+                <div class="form-group">
+                    <label for="driverId">Admin Role</label>
+                    <ng-select class="" 
+                        placeholder="Select Admin Role"
+                        [(ngModel)]="adminDetails.role"
+                        [items]="adminRoles" 
+                        bindLabel="roleName"
+                        bindValue="roleName"
+                        name="role"
+                        id="role"
+                        formControlName="role"
+                        [ngClass]="{ 'is-invalid': updated && validateUpdateForm.role.errors}">
+                        <div *ngIf="updated && validateUpdateForm.role.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.role.errors.required">Admin role is required</div>
+                        </div>
+                    </ng-select>
+
+                    <!-- <ng-select [items]="adminRoles"
+                            bindLabel="roleName"
+                            placeholder="Select Admin Role"
+                            [(ngModel)]="role">
+                    </ng-select> -->
+                    
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="firstName">First Name</label>
+                        <input class="form-control form-control-sm" id="firstName" type="text" formControlName="firstName"
+                            placeholder="Enter First Name" [(ngModel)]="adminDetails.firstName"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.firstName.errors }">
+                        <div *ngIf="updated && validateUpdateForm.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.firstName.errors.required">First Name is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-6">
+                        <label for="lastName">Last Name</label>
+                        <input class="form-control form-control-sm" id="lastName" type="text" formControlName="lastName"
+                            placeholder="Enter Last Name" [(ngModel)]="adminDetails.lastName"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.lastName.errors }">
+                        <div *ngIf="updated && validateUpdateForm.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.lastName.errors.required">Last Name is required</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <label for="mobile">Mobile</label>
+                        <input class="form-control form-control-sm" id="mobile" type="text" placeholder="Enter Mobile Number"
+                            formControlName="mobile" [(ngModel)]="adminDetails.mobile"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.mobile.errors }">
+                        <div *ngIf="updated && validateUpdateForm.mobile.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.mobile.errors.required">Mobile Number is required</div>
+                            <div *ngIf="validateUpdateForm.mobile.errors.pattern">Mobile number must be a valid number</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control form-control-sm" id="email" aria-describedby="emailHelp"
+                        formControlName="email" placeholder="Enter email" [(ngModel)]="adminDetails.email"
+                        [ngClass]="{ 'is-invalid': updated && validateUpdateForm.email.errors }">
+                        <div *ngIf="updated && validateUpdateForm.email.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.email.errors.required">Email is required</div>
+                            <div *ngIf="validateUpdateForm.email.errors.email">Email must be a valid email address</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="nic">NIC</label>
+                        <input class="form-control form-control-sm" id="nic" type="text" placeholder="Enter NIC Number"
+                            formControlName="nic" [(ngModel)]="adminDetails.nic"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.nic.errors }">
+                        <div *ngIf="updated && validateUpdateForm.nic.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.nic.errors.required">NIC Number is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="birthday">Birthday</label>
+                        <input class="form-control form-control-sm" type="date" placeholder="yyyy-mm-dd" name="birthday"
+                            formControlName="birthday" [(ngModel)]="adminDetails.birthday"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.birthday.errors }">
+                        <div *ngIf="updated && validateUpdateForm.birthday.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.birthday.errors.required">Birthday is required</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="mobile">Gender</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="male" value="male"
+                            formControlName="gender" [(ngModel)]="adminDetails.gender" [ngClass]="{ 'is-invalid': updated && validateUpdateForm.gender.errors }">
+                            <label class="form-check-label" for="male">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="female" value="female"
+                            formControlName="gender" [(ngModel)]="adminDetails.gender" [ngClass]="{ 'is-invalid': updated && validateUpdateForm.gender.errors }">
+                            <label class="form-check-label" for="female">Female</label>
+                        </div>
+                        <!-- <div *ngIf="updated && validateUpdateForm.gender.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.gender.errors.required">Gender is required</div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <label for="address">Address</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control form-control-sm" id="address" type="text" placeholder="No."
+                            formControlName="address" [(ngModel)]="adminDetails.address.address"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.address.errors }">
+                        <div *ngIf="updated && validateUpdateForm.address.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.address.errors.required">Number is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-5">
+                        <input class="form-control form-control-sm" id="street" type="text" placeholder="Street"
+                            formControlName="street" [(ngModel)]="adminDetails.address.street"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.street.errors }">
+                        <div *ngIf="updated && validateUpdateForm.street.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.street.errors.required">Street is required</div>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-4">
+                        <input class="form-control form-control-sm" id="city" type="text" placeholder="City"
+                            formControlName="city" [(ngModel)]="adminDetails.address.city"
+                            [ngClass]="{ 'is-invalid': updated && validateUpdateForm.city.errors }">
+                        <div *ngIf="updated && validateUpdateForm.city.errors" class="invalid-feedback">
+                            <div *ngIf="validateUpdateForm.city.errors.required">City is required</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="close-update-modal" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" (click)="updateOnSubmit()"> Submit</button>
+        </div>
+        </div>
+    </div>
+</div>

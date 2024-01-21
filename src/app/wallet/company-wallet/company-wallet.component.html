@@ -1,0 +1,268 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+
+<div class="card">
+    <div class="card-body bg-primary rounded">
+        <div class="row d-flex align-items-center">
+            <div class="col-md-6">
+                <h3 class="text-white">Company Total Earning: {{currency}} {{ totalEranings | number : '1.2-2'}}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- table -->
+<!-- <mat-card>
+    <mat-card-content>
+        
+        <div class="table-responsive-sm">          
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th><b>Date</b></th>
+                  <th><b>Method</b></th>
+                  <th><b>Trip Cost</b></th>
+                  <th><b>Earning</b></th>
+                  <th><b>Type</b></th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of walletData" style="font-weight:10">
+                  <td>{{data.transactionHistory.dateTime | date: 'dd/MM/yyyy'}}
+                    {{data.transactionHistory.dateTime | date: 'hh:mm.ss a'}}</td>
+                  <td>{{data.transactionHistory.method}}</td>
+                  <td>{{data.transactionHistory.trip.totalTripValue | number : '1.2-2'}}</td>
+                  <td>{{data.transactionHistory.transactionAmount}}</td>
+                  <td>{{data.transactionHistory.transactionType}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        
+    </mat-card-content>
+</mat-card> -->
+
+<mat-card>
+    <mat-card-content>
+
+        <div class="card">
+            <div class="card-header bg-primary">
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-2 text-white">
+                        From : <input type="date" class="form-control form-control-sm" [(ngModel)]="from">
+                    </div>
+                    <div class="col-md-2 text-white">
+                        To : <input type="date" class="form-control form-control-sm" [(ngModel)]="to">
+                    </div>
+                    <div class="col-md-2">
+                        <br/>
+                        <button mat-button class="btn btn-success btn-sm btn-block" (click)="getCompanyWallet()">Search</button>
+                    </div>
+                </div>
+                <!-- From : <input type="date" [(ngModel)]="from"> To : <input type="date" [(ngModel)]="to">
+                <button mat-button class="btn btn-success btn-sm ml-5" (click)="getCompanyWallet()">Search</button> -->
+                <br>
+                <!-- author ghost / need to develop -->
+                <!-- <div class="row d-flex align-items-center">
+                    <div class="col-md-4 text-white">
+                        showing {{walletData.length}} records out of {{total}}
+                    </div>
+                    <div class="col-md-8 text-right" *ngIf="failedDispatches.length > 0">
+                        
+                        <table class="table">
+                            <tr *ngFor="let item of failedDispatches | paginate: config" style="font-weight:10"></tr>
+                        </table>
+
+                        <pagination-controls style="background-color: aliceblue" (pageChange)="pageChanged($event)">
+                        </pagination-controls>
+
+                        
+                    </div>
+                </div> -->
+            </div>
+
+            <!-- <div class="col-md-12"> -->
+                <!-- <div class="card card-outline-inverse"> -->
+                    <div class="card-body">
+                        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <!-- <button (click)="exportAsXLSX()"><i class="fa fa-file-excel-o"
+                                        style="font-size:35px;color:blue"></i></button> -->
+                                        <div class="row d-flex align-items-center">
+                                            <h3 class="text-body">Company Wallet</h3>
+                                            <a *ngIf="walletData?.length > 0" mat-button class="btn btn-primary text-white" (click)="exportAsXLSX()" data-toggle="tooltip" title="Download wallet data">
+                                                <i class="fa fa-download"></i>
+                                                excel</a>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of walletData" style="font-weight:10">
+                                <td>
+                                    <mat-card>
+                                        <div class="row">
+                                            <!-- <div class="col-md-3">
+                                            <mat-card-header>
+                                                <mat-card-subtitle>
+                                                <h4>Admin Earning : </h4>{{data.adminEarnings}}
+                                                </mat-card-subtitle>
+                                                <mat-card-subtitle>
+                                                <h4>Company Name : </h4>{{data.companyName}}
+                                                </mat-card-subtitle>
+                                            </mat-card-header>
+                                            </div> -->
+
+                                            <div class="col-md-4">
+                                                <mat-card-title>
+                                                    <h5><b>Transaction Info</b></h5>                                                    
+                                                </mat-card-title>
+                                                <p><b>Date and Time: </b>{{data.transactionHistory.dateTime | date: 'dd/MM/yyyy'}}
+                                                    {{data.transactionHistory.dateTime | date: 'hh:mm.ss a'}}</p>
+                                                <!-- <p><b>Trip Status : </b> {{data.transactionHistory.isATrip}}</p> -->
+                                                <!-- <p><b>Creadited Status : </b> {{data.transactionHistory.isCredited}}</p> -->
+                                                
+
+                                                <p>
+                                                    <b>Transaction Method: </b>
+                                                    <span class="badge badge-info p-1 pl-2 pr-2">
+                                                        <strong>{{data.transactionHistory.method}}</strong>
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <b>Transaction Type: </b>
+                                                    <span class="badge badge-info p-1 pl-2 pr-2">
+                                                        <strong>{{data.transactionHistory.transactionType}}</strong>
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <b>Transaction Amount: </b>
+                                                    <span class="badge badge-success p-1 pl-2 pr-2">
+                                                        <strong>{{currency}} {{data.transactionHistory.transactionAmount | number : '1.2-2'}}</strong>
+                                                    </span>
+                                                </p>
+
+                                                <p>
+                                                    <b>Company Code: </b>
+                                                    <strong>{{data.companyCode}}</strong>
+                                                </p>
+
+
+                                                
+
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <mat-card-title>
+                                                    <h5><b>Trip Details</b></h5>                                                    
+                                                </mat-card-title>
+                                                <p *ngIf="data.transactionHistory.trip.pickupLocation"><b>Pickup Location: </b>{{data.transactionHistory.trip.pickupLocation.address}}</p>
+                                                <p *ngIf="data.transactionHistory.trip.destinations[0]"><b>Destination: </b>{{data.transactionHistory.trip.destinations[0].address}}</p>
+                                                <p><b>Trip Earning: </b>{{currency}} {{data.transactionHistory.trip.tripEarning | number : '1.2-2'}}</p>
+                                                    <!-- <p><b>Admin Commission : </b> {{data.transactionHistory.trip.tripAdminCommission}}</p> -->
+                                                <p><b>Total Trip Value: </b>{{currency}} {{data.transactionHistory.trip.totalTripValue | number : '1.2-2'}}</p>
+                                            </div>
+
+                                        <div class="col-md-4">
+                                            <mat-card-title>
+                                                <h5><b>Type: {{data.transactionHistory.transactionType | titlecase}}</b></h5>                                                    
+                                            </mat-card-title>
+                                        
+                                            <div *ngIf="data.transactionHistory.transactionType == 'dispatch'">
+                                                <p><b>Customer Name : </b> {{data.tripdataDispatch[0].customerName}}</p>
+                                                <p><b>Customer Telephone Number : </b> {{data.tripdataDispatch[0].customerTelephoneNo}}</p>
+
+                                                <div *ngFor='let dr of data.tripdataDispatch[0].noifiedDrivers'>
+                                                <p *ngIf="data.tripdataDispatch[0].assignedDriverId == dr.driverId">
+                                                    <b>Driver : </b>{{dr.driverInfo.driverName}} | {{dr.driverInfo.driverContactNumber}}
+                                                    <br>
+                                                    <b>Vehicle : </b> {{dr.vehicleInfo.vehicleRegistrationNo}}
+                                                </p>
+                                                </div>
+
+                                                <!-- <p><b>Estimated Cost : </b> {{data.tripdataDispatch[0].hireCost}}</p> -->
+                                                <p><b>Type : </b> {{data.tripdataDispatch[0].type}}</p>
+                                                <p><b>Vehicle Category : </b> {{data.tripdataDispatch[0].vehicleCategory}}</p>
+                                                <p><b>Vehicle Sub-category : </b> {{data.tripdataDispatch[0].vehicleSubCategory}}</p>
+
+                                            </div>
+
+                                            <div *ngIf="data.transactionHistory.transactionType == 'roadPickup'">
+                                                <p><b>Customer Name: </b>{{data.tripdataRoadpickup[0].firstName}}</p>
+                                                <p><b>Customer Telephone Number: </b>{{data.tripdataRoadpickup[0].mobile}}</p>
+
+                                                <p><b>Vehicle Category: </b>{{data.tripdataRoadpickup[0].vehicleCategory}}</p>
+                                                <p><b>Vehicle Sub-category: </b>{{data.tripdataRoadpickup[0].vehicleSubCategory}}</p>
+
+                                            </div>
+
+                                            <div  *ngIf="data.transactionHistory.transactionType == 'trip'">
+                                                <p><b>Customer Name: </b>{{data.tripdataTrip[0].passengerDetails.name}}</p>
+                                                <p><b>Customer Telephone Number: </b>{{data.tripdataTrip[0].passengerDetails.contactNumber}}</p>
+                    
+                                                <div *ngIf="!(data.transactionHistory.transactionType == 'other')">
+                                                    <div *ngFor='let dr of data.tripdataTrip[0].noifiedDrivers'>
+                                                    <p *ngIf="data.tripdataTrip[0].assignedDriverId == dr.driverId">
+                                                        <b>Driver : </b>{{dr.driverInfo.driverName}} | {{dr.driverInfo.driverContactNumber}}
+                                                        <br>
+                                                        <b>Vehicle : </b> {{dr.vehicleInfo.vehicleRegistrationNo}}
+                                                    </p>
+                                                    </div>
+                                                </div>
+                    
+                                                <!-- <p><b>Estimated Cost : </b> {{data.tripdataRoadpickup[0].hireCost}}</p> -->
+                                                <!-- <p><b>Type : </b> {{data.tripdataRoadpickup[0].type}}</p> -->
+
+                                                <p><b>Vehicle Category: </b>{{data.tripdataTrip[0].vehicleCategory}}</p>
+                                                <p><b>Vehicle Sub-category: </b>{{data.tripdataTrip[0].vehicleSubCategory}}</p>
+
+                                            </div>
+
+                                            <div  *ngIf="data.transactionHistory.transactionType == 'other'">
+                                                <p><b>Customer Name: </b>{{data.tripdataTrip[0].passengerDetails.name}}</p>
+                                                <p><b>Customer Telephone Number: </b>{{data.tripdataTrip[0].passengerDetails.contactNumber}}</p>
+                    
+                                                <div *ngFor='let dr of data.tripdataTrip[0].noifiedDrivers'>
+                                                    <p *ngIf="data.tripdataTrip[0].assignedDriverId == dr.driverId">
+                                                    <b>Driver: </b>{{dr.driverInfo.driverName}} | {{dr.driverInfo.driverContactNumber}}
+                                                    <br>
+                                                    <b>Vehicle: </b>{{dr.vehicleInfo.vehicleRegistrationNo}}
+                                                    </p>
+                                                </div>
+                    
+                                                <!-- <p><b>Estimated Cost : </b> {{data.tripdataRoadpickup[0].hireCost}}</p> -->
+                                                <!-- <p><b>Type : </b> {{data.tripdataRoadpickup[0].type}}</p> -->
+                
+                                                <p><b>Vehicle Category: </b>{{data.tripdataTrip[0].vehicleCategory}}</p>
+                                                <p><b>Vehicle Sub-category: </b>{{data.tripdataTrip[0].vehicleSubCategory}}</p>
+                
+                                                <!-- <button class="btn btn-danger" *ngIf="data.transactionHistory.transactionType == 'other'">Canceled</button> -->
+                                                
+                                                <span class="badge badge-danger" *ngIf="data.transactionHistory.transactionType == 'other'">
+                                                    <strong>Canceled</strong>
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    </mat-card>
+                                </td>
+                                <br>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                <!-- </div> -->
+            <!-- </div> -->
+
+        </div>
+    </mat-card-content>
+<mat-card>

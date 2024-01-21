@@ -1,0 +1,550 @@
+<!-- ============================================================== -->
+<!-- Start Page Content -->
+<!-- ============================================================== -->
+<ng-container *ngIf="adminRole != roleEnum.agent">
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                
+                <div class="row d-flex align-items-center">
+                    <div class="col-md-3">
+                        <div class="row d-flex align-items-center">
+                            <div class="auto d-flex">
+                                From :
+                            </div> 
+                            <div class="col-sm-8">
+                                <input type="date" [(ngModel)]="from">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row d-flex align-items-center">
+                            <div class="auto d-flex">
+                                To : 
+                            </div> 
+                            <div class="col-sm-8">
+                                <input type="date" [(ngModel)]="to">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="col-md-6 align-items-center">
+                        <button mat-button class="btn btn-success" (click)="getDashboardData()">Search</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="showData">
+    
+    <!-- You can find this in the dashboard-component -->
+    <!-- <app-project-counter></app-project-counter> -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-cash-usd text-success"></i>
+                        </h1>
+                        <h3 class="">{{currency}} {{dashboardData.totalIncome | number : '1.2-2'}}</h3>
+                        <h6 class="card-subtitle">Total Income</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="info" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Column -->
+        <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-cash-multiple text-info"></i>
+                        </h1>
+                        <h3 class="">{{currency}} {{dashboardData.commissionIncome | number : '1.2-2'}}</h3>
+                        <h6 class="card-subtitle">Commission Income</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="success" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Column -->
+        <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-briefcase-check text-success"></i>
+                        </h1>
+                        <h3 class="">{{dashboardData.CompletedTrips}}</h3>
+                        <h6 class="card-subtitle">Completed Trips</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="primary" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Column -->
+        <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-close-circle text-warning"></i>
+                        </h1>
+                        <h3 class="">{{dashboardData.CanceledTrips}}</h3>
+                        <h6 class="card-subtitle">Canceled Trips</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="warning" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div class="row" *ngIf="showData">
+    
+    <!-- You can find this in the dashboard-component -->
+    <!-- <app-project-counter></app-project-counter> -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-account-check text-success"></i>
+                        </h1>
+                        <h3 class="">{{dashboardData.RegisteredDriveres}}</h3>
+                        <h6 class="card-subtitle">Approved Drivers</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="info" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Column -->
+        <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-account-alert text-warning"></i>
+                        </h1>
+                        <h3 class="">{{dashboardData.pendingDrivers}}</h3>
+                        <h6 class="card-subtitle">Pending Drivers</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="success" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Column -->
+        <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-car text-purple"></i>
+                        </h1>
+                        <h3 class="">{{dashboardData.registeredVehicles}}</h3>
+                        <h6 class="card-subtitle">Registered Vehicles</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="primary" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Column -->
+        <!-- Column -->
+    <div class="col-lg-3 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h1 class="m-b-0">
+                            <i class="mdi mdi-alert-circle text-warning"></i>
+                        </h1>
+                        <h3 class="">{{dashboardData.pendingVehicles}}</h3>
+                        <h6 class="card-subtitle">Pending Vehicles</h6>
+                    </div>
+                    <!-- <div class="col-12">
+                        <ngb-progressbar [showValue]="false" type="warning" [value]="50"></ngb-progressbar>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<br>
+
+<mat-card class="example-card">
+  <mat-card-content>
+
+    <agm-map [streetViewControl]="false" [zoomControl]="false" [scrollwheel]="null" [gestureHandling]="'cooperative'"
+      [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+      <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+
+      <agm-marker [latitude]="data.currentLocation.latitude" [longitude]="data.currentLocation.longitude"
+        [iconUrl]="data.driverIcon" *ngFor="let data of vehicleTrackingData" (mouseOver)="window.open()"
+        (mouseOut)="window.close()">
+        <agm-info-window #window>
+          <h5>{{data.currentStatus}}</h5>
+          <p>{{data.vehicleCategory}} | {{data.vehicleSubCategory}}</p>
+          <b>{{data.driverInfo.driverName}} <br> {{data.driverInfo.driverContactNumber}} |
+            {{data.vehicleInfo.vehicleRegistrationNo}}</b>
+        </agm-info-window>
+      </agm-marker>
+
+    </agm-map>
+
+    <div class="over_map col-md-4 col-sm-6 pb-5">
+      <div class="navBarItem col ">
+        <div class="orderForm p-3">
+          <mat-card>
+            <h2>Filter <button (click)="getVehicleTracking()" class="btn btn-sm btn-success"><i class="fa fa-refresh" aria-hidden="true"></i></button></h2>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="radio">
+                  <label><input type="radio" name="optradio" value="all" checked
+                      (change)="filterVehicleTracking('all')">All ({{countAll}})</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optradio" value="online"
+                      (change)="filterVehicleTracking('online')">Online ({{countOnline}})</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optradio" value="offline"
+                      (change)="filterVehicleTracking('offline')">Offline ({{countOffline}})</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="optradio" value="offline"
+                      (change)="filterVehicleTracking('ontrip')">Ontrip ({{countOntrip}})</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="radio" *ngFor='let item of vehicleCategoryData'>
+                  <label><input type="radio" name="optradio1" value="{{item.name}}"
+                      (change)="filterVehicleTracking2(item.name)">{{item.name}} ({{item?.count}})</label>
+                </div>
+
+              </div>
+            </div>
+
+
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+  </mat-card-content>
+
+</mat-card>
+</ng-container>
+
+<!-- Agent dashboard -->
+
+<ng-container *ngIf="adminRole == roleEnum.agent">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    
+                    <div class="row d-flex align-items-center">
+                        <div class="col-md-3">
+                            <div class="row d-flex align-items-center">
+                                <div class="auto d-flex">
+                                    From :
+                                </div> 
+                                <div class="col-sm-8">
+                                    <input type="date" [(ngModel)]="from">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row d-flex align-items-center">
+                                <div class="auto d-flex">
+                                    To : 
+                                </div> 
+                                <div class="col-sm-8">
+                                    <input type="date" [(ngModel)]="to">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-md-6 align-items-center">
+                            <button mat-button class="btn btn-success" (click)="getDashboardData()">Search</button>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="showData">
+        
+        <!-- You can find this in the dashboard-component -->
+        <!-- <app-project-counter></app-project-counter> -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-cash-usd text-success"></i>
+                            </h1>
+                            <h3 class="">{{currency}} {{dashboardData.totalIncome | number : '1.2-2'}}</h3>
+                            <h6 class="card-subtitle">Total Income</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="info" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Column -->
+            <!-- Column -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-cash-multiple text-info"></i>
+                            </h1>
+                            <h3 class="">{{currency}} {{dashboardData.commissionIncome | number : '1.2-2'}}</h3>
+                            <h6 class="card-subtitle">Commission Income</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="success" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Column -->
+            <!-- Column -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-briefcase-check text-success"></i>
+                            </h1>
+                            <h3 class="">{{dashboardData.CompletedTrips}}</h3>
+                            <h6 class="card-subtitle">Completed Trips</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="primary" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Column -->
+            <!-- Column -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-close-circle text-warning"></i>
+                            </h1>
+                            <h3 class="">{{dashboardData.CanceledTrips}}</h3>
+                            <h6 class="card-subtitle">Canceled Trips</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="warning" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="row" *ngIf="showData">
+        
+        <!-- You can find this in the dashboard-component -->
+        <!-- <app-project-counter></app-project-counter> -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-account-check text-success"></i>
+                            </h1>
+                            <h3 class="">{{dashboardData.RegisteredDriveres}}</h3>
+                            <h6 class="card-subtitle">Approved Drivers</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="info" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Column -->
+            <!-- Column -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-account-alert text-warning"></i>
+                            </h1>
+                            <h3 class="">{{dashboardData.pendingDrivers}}</h3>
+                            <h6 class="card-subtitle">Pending Drivers</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="success" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Column -->
+            <!-- Column -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-car text-purple"></i>
+                            </h1>
+                            <h3 class="">{{dashboardData.registeredVehicles}}</h3>
+                            <h6 class="card-subtitle">Registered Vehicles</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="primary" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Column -->
+            <!-- Column -->
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="m-b-0">
+                                <i class="mdi mdi-alert-circle text-warning"></i>
+                            </h1>
+                            <h3 class="">{{dashboardData.pendingVehicles}}</h3>
+                            <h6 class="card-subtitle">Pending Vehicles</h6>
+                        </div>
+                        <!-- <div class="col-12">
+                            <ngb-progressbar [showValue]="false" type="warning" [value]="50"></ngb-progressbar>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <br>
+    
+    <mat-card class="example-card">
+      <mat-card-content>
+    
+        <agm-map [streetViewControl]="false" [zoomControl]="false" [scrollwheel]="null" [gestureHandling]="'cooperative'"
+          [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+          <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+    
+          <agm-marker [latitude]="data.currentLocation.latitude" [longitude]="data.currentLocation.longitude"
+            [iconUrl]="data.driverIcon" *ngFor="let data of vehicleTrackingData" (mouseOver)="window.open()"
+            (mouseOut)="window.close()">
+            <agm-info-window #window>
+              <h5>{{data.currentStatus}}</h5>
+              <p>{{data.vehicleCategory}} | {{data.vehicleSubCategory}}</p>
+              <b>{{data.driverInfo.driverName}} <br> {{data.driverInfo.driverContactNumber}} |
+                {{data.vehicleInfo.vehicleRegistrationNo}}</b>
+            </agm-info-window>
+          </agm-marker>
+    
+        </agm-map>
+    
+        <div class="over_map col-md-4 col-sm-6 pb-5">
+          <div class="navBarItem col ">
+            <div class="orderForm p-3">
+              <mat-card>
+                <h2>Filter <button (click)="getVehicleTracking()" class="btn btn-sm btn-success"><i class="fa fa-refresh" aria-hidden="true"></i></button></h2>
+    
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="radio">
+                      <label><input type="radio" name="optradio" value="all" checked
+                          (change)="filterVehicleTracking('all')">All ({{countAll}})</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="optradio" value="online"
+                          (change)="filterVehicleTracking('online')">Online ({{countOnline}})</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="optradio" value="offline"
+                          (change)="filterVehicleTracking('offline')">Offline ({{countOffline}})</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="optradio" value="offline"
+                          (change)="filterVehicleTracking('ontrip')">Ontrip ({{countOntrip}})</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="radio" *ngFor='let item of vehicleCategoryData'>
+                      <label><input type="radio" name="optradio1" value="{{item.name}}"
+                          (change)="filterVehicleTracking2(item.name)">{{item.name}} ({{item?.count}})</label>
+                    </div>
+    
+                  </div>
+                </div>
+    
+    
+              </mat-card>
+            </div>
+          </div>
+        </div>
+    
+      </mat-card-content>
+    
+    </mat-card>
+    </ng-container>

@@ -1,0 +1,104 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.5)" size="default" color="#3f51b5" type="ball-scale-pulse"></ngx-spinner>
+<ng-snotify></ng-snotify>
+
+<mat-card>
+  <mat-card-content>
+    <div class="card">
+      <div class="card-body">
+        <div class="row d-flex align-items-center" *ngIf="addedusers?.length > 0">
+            <h3 class="text-body">App Users</h3>
+            <a mat-button class="btn btn-primary text-white" (click)="exportAsXLSX()" data-toggle="tooltip"
+              title="Download agent data">
+              <i class="fa fa-download"></i>
+              excel</a>
+        </div>
+        <br>
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="hover">
+            
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Mobile
+                    </th>
+                    <th>
+                        Platform
+                    </th>
+                    <th>
+                        Code
+                    </th>
+                    <th>
+                        Dispatcher
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th class="text-right">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+      
+            <tbody>
+                <!-- <br> -->
+                <tr *ngFor="let user of addedusers; let i = index" style="font-weight:10">
+                    <td>
+                        {{i+1}}
+                    </td>
+                    <td>
+                        {{user?.name}}
+                    </td>
+                    <td>
+                        {{user?.contactNumber}}
+                    </td>
+                    <td>
+                        {{user?.userPlatform}}
+                    </td>
+                    <td>
+                        {{user?.passengerCode}}
+                    </td>
+                    <td>
+                        <span class="badge badge-success p-2 ml-2" *ngIf="user?.isDispatchEnable == true">
+                            <strong>Yes</strong>
+                        </span>
+                        <span class="badge badge-danger p-2 ml-2" *ngIf="user?.isDispatchEnable == false">
+                            <strong>No</strong>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-success p-2 ml-2" *ngIf="user?.isEnable == true">
+                            <strong>Enabled</strong>
+                        </span>
+                        <span class="badge badge-danger p-2 ml-2" *ngIf="user?.isEnable == false">
+                            <strong>Disabled</strong>
+                        </span>
+                    </td>
+                    <td>
+                        {{user?.recordedTime | date: 'yyyy-MM-dd'}}
+                        {{user?.recordedTime | date: 'hh:mm.ss a'}}
+                    </td>
+                    <td>
+                        <div class="text-right">
+                            <button mat-button class="btn btn-info btn-sm ml-1 text-white"
+                            [routerLink]="['/agent/profile-agent', user._id]"
+                            data-toggle="tooltip" title="Click here to view agent profile">
+                                    View Profile</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+      </div>
+      <!-- </div> -->
+    </div>
+  </mat-card-content>
+</mat-card>
